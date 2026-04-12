@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dbeafe"/>
+      <stop offset="55%" stop-color="#bfdbfe"/>
+      <stop offset="100%" stop-color="#93c5fd"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <rect width="2000" height="1000" fill="url(#wall)"/>
+  <rect y="620" width="2000" height="380" fill="url(#floor)"/>
+  <g fill="#e2e8f0">
+    <rect x="0" y="180" width="260" height="240"/>
+    <rect x="360" y="150" width="260" height="270"/>
+    <rect x="720" y="170" width="260" height="250"/>
+    <rect x="1040" y="165" width="260" height="255"/>
+    <rect x="1400" y="145" width="260" height="275"/>
+    <rect x="1740" y="185" width="260" height="235"/>
+  </g>
+  <g fill="#0f172a" opacity="0.22">
+    <rect x="90" y="300" width="80" height="120"/>
+    <rect x="460" y="270" width="80" height="150"/>
+    <rect x="820" y="290" width="80" height="130"/>
+    <rect x="1140" y="285" width="80" height="135"/>
+    <rect x="1500" y="265" width="80" height="155"/>
+    <rect x="1840" y="305" width="80" height="115"/>
+  </g>
+  <g>
+    <rect x="180" y="560" width="240" height="70" rx="20" fill="#0f766e"/>
+    <rect x="620" y="550" width="260" height="80" rx="20" fill="#0369a1"/>
+    <rect x="1080" y="555" width="260" height="75" rx="20" fill="#0f766e"/>
+    <rect x="1540" y="548" width="250" height="82" rx="20" fill="#0369a1"/>
+  </g>
+  <path d="M0 680 L2000 680" stroke="#f8fafc" stroke-width="10" opacity="0.55" stroke-dasharray="30 26"/>
+  <path d="M0 770 L2000 770" stroke="#f8fafc" stroke-width="6" opacity="0.4" stroke-dasharray="18 18"/>
+  <g fill="#ffffff" font-family="Arial, sans-serif" font-size="34" opacity="0.8">
+    <text x="180" y="530">Ruang Praktikum</text>
+    <text x="830" y="520">Koridor Laboratorium</text>
+    <text x="1540" y="522">Arah Perpustakaan</text>
+  </g>
+</svg>

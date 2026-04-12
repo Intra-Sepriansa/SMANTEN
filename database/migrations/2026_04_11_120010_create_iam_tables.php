@@ -1,0 +1,65 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->boolean('is_system')->default(false);
+            $table->timestamps();
+        });
+
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('resource')->nullable();
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('permission_role', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('role_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('permission_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
+
+            $table->unique(['role_id', 'permission_id']);
+        });
+
+        Schema::create('role_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('role_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('assigned_by_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('assigned_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamps();
+
+            $table->unique(['role_id', 'user_id']);
+            $table->index('expires_at');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('roles');
+    }
+};

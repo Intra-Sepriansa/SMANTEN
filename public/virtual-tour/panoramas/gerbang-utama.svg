@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="45%" stop-color="#a7f3d0"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#65a30d"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+  </defs>
+  <rect width="2000" height="1000" fill="url(#sky)"/>
+  <rect y="610" width="2000" height="390" fill="url(#ground)"/>
+  <g fill="#ffffff" opacity="0.3">
+    <circle cx="180" cy="140" r="58"/>
+    <circle cx="1580" cy="120" r="42"/>
+    <circle cx="1840" cy="150" r="64"/>
+  </g>
+  <g fill="#1f2937" opacity="0.22">
+    <rect x="0" y="480" width="120" height="150"/>
+    <rect x="160" y="500" width="120" height="130"/>
+    <rect x="360" y="510" width="170" height="120"/>
+    <rect x="640" y="500" width="180" height="130"/>
+    <rect x="1180" y="495" width="160" height="135"/>
+    <rect x="1440" y="500" width="160" height="130"/>
+    <rect x="1750" y="485" width="150" height="145"/>
+  </g>
+  <g>
+    <rect x="840" y="400" width="320" height="230" rx="18" fill="#0f766e"/>
+    <rect x="780" y="445" width="440" height="28" rx="14" fill="#115e59"/>
+    <rect x="930" y="470" width="140" height="160" rx="12" fill="#f8fafc"/>
+    <rect x="860" y="470" width="44" height="110" rx="8" fill="#dbeafe"/>
+    <rect x="1096" y="470" width="44" height="110" rx="8" fill="#dbeafe"/>
+  </g>
+  <g fill="#ca8a04">
+    <rect x="90" y="640" width="200" height="50" rx="25"/>
+    <rect x="450" y="660" width="260" height="36" rx="18"/>
+    <rect x="1240" y="655" width="260" height="36" rx="18"/>
+    <rect x="1680" y="640" width="210" height="48" rx="24"/>
+  </g>
+  <path d="M0 760 C160 720 320 720 480 760 S800 800 1000 760 S1360 720 1520 760 S1840 805 2000 760 V1000 H0 Z" fill="#166534" opacity="0.55"/>
+  <path d="M0 815 C180 780 330 785 500 815 S820 860 1000 820 S1350 780 1500 815 S1830 860 2000 820 V1000 H0 Z" fill="#0f3d22" opacity="0.55"/>
+  <g fill="#f8fafc" font-family="Arial, sans-serif" font-size="34" opacity="0.72">
+    <text x="260" y="562">Arah Kedatangan</text>
+    <text x="930" y="372">Gerbang SMAN 1 Tenjo</text>
+    <text x="1540" y="558">Lapangan dan Koridor</text>
+  </g>
+</svg>

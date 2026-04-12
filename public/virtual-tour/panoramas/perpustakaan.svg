@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1000">
+  <defs>
+    <linearGradient id="lib-wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="58%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <linearGradient id="lib-floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+  <rect width="2000" height="1000" fill="url(#lib-wall)"/>
+  <rect y="625" width="2000" height="375" fill="url(#lib-floor)"/>
+  <g fill="#7c2d12" opacity="0.7">
+    <rect x="50" y="260" width="180" height="365" rx="8"/>
+    <rect x="360" y="250" width="190" height="375" rx="8"/>
+    <rect x="710" y="250" width="170" height="375" rx="8"/>
+    <rect x="1120" y="250" width="170" height="375" rx="8"/>
+    <rect x="1460" y="250" width="190" height="375" rx="8"/>
+    <rect x="1780" y="260" width="170" height="365" rx="8"/>
+  </g>
+  <g fill="#fef3c7" opacity="0.9">
+    <rect x="70" y="290" width="140" height="16" rx="8"/>
+    <rect x="70" y="330" width="140" height="16" rx="8"/>
+    <rect x="70" y="370" width="140" height="16" rx="8"/>
+    <rect x="380" y="300" width="150" height="16" rx="8"/>
+    <rect x="380" y="340" width="150" height="16" rx="8"/>
+    <rect x="730" y="300" width="130" height="16" rx="8"/>
+    <rect x="730" y="340" width="130" height="16" rx="8"/>
+    <rect x="1140" y="300" width="130" height="16" rx="8"/>
+    <rect x="1140" y="340" width="130" height="16" rx="8"/>
+    <rect x="1480" y="300" width="150" height="16" rx="8"/>
+    <rect x="1480" y="340" width="150" height="16" rx="8"/>
+    <rect x="1800" y="300" width="130" height="16" rx="8"/>
+    <rect x="1800" y="340" width="130" height="16" rx="8"/>
+  </g>
+  <g fill="#f8fafc" opacity="0.86">
+    <rect x="760" y="655" width="480" height="90" rx="28"/>
+    <rect x="860" y="760" width="280" height="22" rx="11"/>
+  </g>
+  <g fill="#78350f" font-family="Arial, sans-serif" font-size="34" opacity="0.84">
+    <text x="160" y="226">Rak Referensi</text>
+    <text x="840" y="230">Zona Baca</text>
+    <text x="1540" y="226">Diskusi Literasi</text>
+  </g>
+</svg>
