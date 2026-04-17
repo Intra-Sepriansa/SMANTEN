@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PublicSiteController;
 use App\Http\Controllers\Api\Internal\Admin\ArticleController;
 use App\Http\Controllers\Api\Internal\Admin\OrganizationAssignmentController;
 use App\Http\Controllers\Api\Internal\Admin\PortfolioItemController;
@@ -9,29 +8,35 @@ use App\Http\Controllers\Api\Internal\Admin\RoleAssignmentController;
 use App\Http\Controllers\Api\Internal\Admin\RoomController;
 use App\Http\Controllers\Api\Internal\Admin\TimetableEntryController;
 use App\Http\Controllers\Api\Internal\Admin\TimetableVersionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InternalDashboardController;
+use App\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(PublicSiteController::class)->group(function () {
+    Route::get('/sitemap.xml', 'sitemap')->name('sitemap');
     Route::get('/', 'home')->name('home');
     Route::get('/profil', 'profile')->name('profile');
     Route::get('/akademik', 'akademik')->name('akademik');
     Route::get('/ppdb', 'ppdb')->name('ppdb');
-    Route::get('/karya', 'works')->name('works');
-    Route::get('/karya/{slug}', 'karyaShow')->name('works.show');
     Route::get('/berita', 'beritaIndex')->name('berita.index');
     Route::get('/berita/{slug}', 'beritaShow')->name('berita.show');
     Route::get('/organisasi', 'organization')->name('organization');
+    Route::get('/guru', 'guru')->name('guru');
     Route::get('/ekstrakurikuler', 'extracurricular')->name('extracurricular');
     Route::get('/alumni', 'alumni')->name('alumni');
+    Route::get('/alumni/tulis-cerita', 'alumniWriteStory')->name('alumni.write-story');
+    Route::get('/alumni/cerita/{slug}', 'alumniStoryShow')->name('alumni.story.show');
+    Route::get('/alumni/profil/{slug}', 'alumniProfileShow')->name('alumni.profile.show');
     Route::get('/virtual-tour', 'virtualTour')->name('virtual-tour');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', \App\Http\Controllers\DashboardController::class)->name('dashboard');
-    Route::get('dashboard/admin', [\App\Http\Controllers\InternalDashboardController::class, 'admin'])->name('dashboard.admin');
-    Route::get('dashboard/guru', [\App\Http\Controllers\InternalDashboardController::class, 'guru'])->name('dashboard.guru');
-    Route::get('dashboard/siswa', [\App\Http\Controllers\InternalDashboardController::class, 'siswa'])->name('dashboard.siswa');
-    Route::get('dashboard/wali', [\App\Http\Controllers\InternalDashboardController::class, 'wali'])->name('dashboard.wali');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('dashboard/admin', [InternalDashboardController::class, 'admin'])->name('dashboard.admin');
+    Route::get('dashboard/guru', [InternalDashboardController::class, 'guru'])->name('dashboard.guru');
+    Route::get('dashboard/siswa', [InternalDashboardController::class, 'siswa'])->name('dashboard.siswa');
+    Route::get('dashboard/wali', [InternalDashboardController::class, 'wali'])->name('dashboard.wali');
 
     Route::prefix('internal-api')->name('internal-api.')->group(function () {
         Route::middleware('role:super_admin,operator_sekolah')->group(function () {

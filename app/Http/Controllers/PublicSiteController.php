@@ -6,13 +6,17 @@ use App\Enums\ArticleStatus;
 use App\Enums\OrganizationScope;
 use App\Enums\PortfolioItemStatus;
 use App\Enums\PortfolioVisibility;
+use App\Models\AlumniForumPost;
 use App\Models\AlumniProfile;
 use App\Models\Article;
 use App\Models\OrganizationAssignment;
 use App\Models\PortfolioItem;
 use App\Models\PpdbCycle;
 use App\Models\SchoolProfile;
+use App\Services\AlumniForumPostPresenter;
+use App\Services\AlumniProfilePresenter;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -46,17 +50,17 @@ class PublicSiteController extends Controller
         ]);
     }
 
-    public function works(): Response
-    {
-        return Inertia::render('public/works', [
-            'school' => $this->schoolPayload(),
-            'featuredWorks' => $this->featuredWorksPayload(limit: 12),
-        ]);
-    }
-
     public function organization(): Response
     {
         return Inertia::render('public/organization', [
+            'school' => $this->schoolPayload(),
+            'leadership' => $this->organizationPayload(limit: 24),
+        ]);
+    }
+
+    public function guru(): Response
+    {
+        return Inertia::render('public/guru', [
             'school' => $this->schoolPayload(),
             'leadership' => $this->organizationPayload(limit: 24),
         ]);
@@ -70,11 +74,215 @@ class PublicSiteController extends Controller
         ]);
     }
 
-    public function alumni(): Response
+    public function sitemap(): HttpResponse
     {
+        $schoolUpdatedAt = SchoolProfile::query()
+            ->latest('updated_at')
+            ->first(['updated_at'])
+            ?->updated_at ?? now();
+
+        $staticUrls = collect([
+            ['route' => 'home', 'priority' => '1.0', 'changefreq' => 'weekly'],
+            ['route' => 'profile', 'priority' => '0.8', 'changefreq' => 'monthly'],
+            ['route' => 'akademik', 'priority' => '0.8', 'changefreq' => 'monthly'],
+            ['route' => 'ppdb', 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['route' => 'berita.index', 'priority' => '0.8', 'changefreq' => 'daily'],
+            ['route' => 'organization', 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['route' => 'guru', 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['route' => 'extracurricular', 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['route' => 'alumni', 'priority' => '0.9', 'changefreq' => 'daily'],
+            ['route' => 'virtual-tour', 'priority' => '0.6', 'changefreq' => 'monthly'],
+        ])->map(fn (array $page): array => [
+            'loc' => route($page['route']),
+            'lastmod' => $schoolUpdatedAt->toAtomString(),
+            'changefreq' => $page['changefreq'],
+            'priority' => $page['priority'],
+        ]);
+
+        $storyUrls = AlumniForumPost::query()
+            ->where('moderation_status', 'approved')
+            ->where('is_approved', true)
+            ->whereNotNull('slug')
+            ->latest('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (AlumniForumPost $post): array => [
+                'loc' => route('alumni.story.show', $post->slug),
+                'lastmod' => ($post->updated_at ?? now())->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.7',
+            ]);
+
+        $profileUrls = AlumniProfile::query()
+            ->where('is_public_profile', true)
+            ->whereNotNull('slug')
+            ->latest('updated_at')
+            ->get(['slug', 'updated_at'])
+            ->map(fn (AlumniProfile $profile): array => [
+                'loc' => route('alumni.profile.show', $profile->slug),
+                'lastmod' => ($profile->updated_at ?? now())->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.6',
+            ]);
+
+        $urls = $staticUrls
+            ->concat($storyUrls)
+            ->concat($profileUrls)
+            ->map(function (array $url): string {
+                $loc = htmlspecialchars($url['loc'], ENT_XML1);
+                $lastmod = htmlspecialchars($url['lastmod'], ENT_XML1);
+
+                return <<<XML
+    <url>
+        <loc>{$loc}</loc>
+        <lastmod>{$lastmod}</lastmod>
+        <changefreq>{$url['changefreq']}</changefreq>
+        <priority>{$url['priority']}</priority>
+    </url>
+XML;
+            })
+            ->implode("\n");
+
+        $xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{$urls}
+</urlset>
+XML;
+
+        return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+    }
+
+    public function alumni(AlumniForumPostPresenter $presenter): Response
+    {
+        $forumPosts = $presenter->presentMany(
+            AlumniForumPost::query()
+                ->with([
+                    'alumniProfile.forumPosts',
+                    'comments' => fn ($query) => $query->where('moderation_status', 'approved')->latest()->limit(3),
+                    'reactions',
+                ])
+                ->where('moderation_status', 'approved')
+                ->where('is_approved', true)
+                ->orderByDesc('is_featured')
+                ->orderByDesc('last_interaction_at')
+                ->orderByDesc('created_at')
+                ->limit(30)
+                ->get()
+        );
+
         return Inertia::render('public/alumni', [
             'school' => $this->schoolPayload(),
             'alumniSpotlight' => $this->alumniPayload(limit: 9),
+            'forumPosts' => $forumPosts,
+        ]);
+    }
+
+    public function alumniWriteStory(): Response
+    {
+        return Inertia::render('public/alumni-write-story', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
+    public function alumniStoryShow(string $slug, AlumniForumPostPresenter $presenter): Response
+    {
+        $post = AlumniForumPost::query()
+            ->with([
+                'alumniProfile.forumPosts',
+                'alumniProfile.tracerStudyResponses',
+                'comments' => fn ($query) => $query->where('moderation_status', 'approved')->latest()->limit(20),
+                'reactions',
+            ])
+            ->where('slug', $slug)
+            ->where('moderation_status', 'approved')
+            ->where('is_approved', true)
+            ->firstOrFail();
+
+        $post->increment('views_count');
+        $post->forceFill(['last_interaction_at' => now()])->saveQuietly();
+
+        $relatedPosts = $presenter->presentMany(
+            AlumniForumPost::query()
+                ->with([
+                    'alumniProfile.forumPosts',
+                    'comments' => fn ($query) => $query->where('moderation_status', 'approved')->latest()->limit(3),
+                    'reactions',
+                ])
+                ->where('moderation_status', 'approved')
+                ->where('is_approved', true)
+                ->whereKeyNot($post->id)
+                ->where(function ($query) use ($post): void {
+                    $query->where('category', $post->category)
+                        ->orWhere('graduation_year', $post->graduation_year)
+                        ->orWhere('city', $post->city);
+                })
+                ->orderByDesc('is_featured')
+                ->orderByDesc('last_interaction_at')
+                ->limit(4)
+                ->get()
+        );
+
+        return Inertia::render('public/alumni-story', [
+            'school' => $this->schoolPayload(),
+            'post' => $presenter->present($post->fresh([
+                'alumniProfile.forumPosts',
+                'alumniProfile.tracerStudyResponses',
+                'comments' => fn ($query) => $query->where('moderation_status', 'approved')->latest()->limit(20),
+                'reactions',
+            ]), detailed: true),
+            'relatedPosts' => $relatedPosts,
+        ]);
+    }
+
+    public function alumniProfileShow(string $slug, AlumniProfilePresenter $profilePresenter, AlumniForumPostPresenter $postPresenter): Response
+    {
+        $profile = AlumniProfile::query()
+            ->with([
+                'forumPosts' => fn ($query) => $query
+                    ->with([
+                        'alumniProfile.forumPosts',
+                        'comments' => fn ($commentQuery) => $commentQuery
+                            ->where('moderation_status', 'approved')
+                            ->latest()
+                            ->limit(3),
+                        'reactions',
+                    ])
+                    ->where('moderation_status', 'approved')
+                    ->where('is_approved', true)
+                    ->latest(),
+                'tracerStudyResponses' => fn ($query) => $query
+                    ->where('is_publicly_displayable', true)
+                    ->latest('submitted_at'),
+            ])
+            ->where('slug', $slug)
+            ->where('is_public_profile', true)
+            ->firstOrFail();
+
+        $latestTracer = $profile->tracerStudyResponses->first();
+
+        return Inertia::render('public/alumni-profile', [
+            'school' => $this->schoolPayload(),
+            'profile' => [
+                ...$profilePresenter->presentSummary($profile),
+                'careerCluster' => $profile->career_cluster,
+                'contactEmail' => $profile->contact_email,
+                'bio' => $profile->bio,
+                'stories' => $postPresenter->presentMany($profile->forumPosts),
+                'latestTracer' => $latestTracer ? [
+                    'status' => $latestTracer->status?->value ?? $latestTracer->status,
+                    'currentActivity' => $latestTracer->current_activity,
+                    'institutionName' => $latestTracer->institution_name,
+                    'major' => $latestTracer->major,
+                    'occupationTitle' => $latestTracer->occupation_title,
+                    'industry' => $latestTracer->industry,
+                    'locationCity' => $latestTracer->location_city,
+                    'locationProvince' => $latestTracer->location_province,
+                    'startedAt' => optional($latestTracer->started_at)?->toDateString(),
+                    'monthlyIncomeRange' => $latestTracer->monthly_income_range,
+                    'reflections' => $latestTracer->reflections,
+                    'submittedAt' => optional($latestTracer->submitted_at)?->toIso8601String(),
+                ] : null,
+            ],
         ]);
     }
 
@@ -132,66 +340,12 @@ class PublicSiteController extends Controller
                 'body' => $article->body,
                 'excerpt' => $article->excerpt,
                 'category' => $article->category?->name,
-                'authorName' => $article->author?->name,
+                'authorName' => $article->metadata['journalist'] ?? $article->author?->name,
+                'source' => $article->metadata['source'] ?? null,
+                'imageUrl' => $article->metadata['image_url'] ?? null,
                 'publishedAt' => optional($article->published_at)?->toIso8601String(),
             ],
             'relatedArticles' => $related,
-        ]);
-    }
-
-    public function karyaShow(string $slug): Response
-    {
-        $item = PortfolioItem::query()
-            ->with(['portfolioProject.p5Theme', 'mediaAssets', 'creator'])
-            ->where('status', PortfolioItemStatus::Published->value)
-            ->where('slug', $slug)
-            ->firstOrFail();
-
-        $gallery = $item->mediaAssets
-            ->map(fn ($asset) => [
-                'url' => $this->storageUrl($asset->disk, $asset->path),
-                'alt' => $asset->original_name ?? $item->title,
-            ])
-            ->values()
-            ->all();
-
-        $related = PortfolioItem::query()
-            ->where('status', PortfolioItemStatus::Published->value)
-            ->where('visibility', PortfolioVisibility::Public->value)
-            ->where('id', '!=', $item->id)
-            ->limit(4)
-            ->get()
-            ->map(fn (PortfolioItem $pi) => [
-                'id' => $pi->id,
-                'title' => $pi->title,
-                'slug' => $pi->slug,
-                'itemType' => $pi->item_type,
-                'imageUrl' => $pi->mediaAssets->first()
-                    ? $this->storageUrl($pi->mediaAssets->first()->disk, $pi->mediaAssets->first()->path)
-                    : null,
-            ])
-            ->values()
-            ->all();
-
-        $primaryImage = $item->mediaAssets->first();
-
-        return Inertia::render('public/karya/show', [
-            'work' => [
-                'id' => $item->id,
-                'title' => $item->title,
-                'slug' => $item->slug,
-                'itemType' => $item->item_type,
-                'summary' => $item->summary,
-                'body' => $item->summary,
-                'priceEstimate' => $item->price_estimate,
-                'publishedAt' => optional($item->published_at)?->toIso8601String(),
-                'projectTitle' => $item->portfolioProject?->title,
-                'themeName' => $item->portfolioProject?->p5Theme?->name,
-                'creatorName' => $item->creator?->name,
-                'imageUrl' => $primaryImage ? $this->storageUrl($primaryImage->disk, $primaryImage->path) : null,
-                'gallery' => $gallery,
-            ],
-            'relatedWorks' => $related,
         ]);
     }
 
@@ -373,7 +527,9 @@ class PublicSiteController extends Controller
                 'slug' => $article->slug,
                 'excerpt' => $article->excerpt,
                 'category' => $article->category?->name,
-                'authorName' => $article->author?->name,
+                'authorName' => $article->metadata['journalist'] ?? $article->author?->name,
+                'source' => $article->metadata['source'] ?? null,
+                'imageUrl' => $article->metadata['image_url'] ?? null,
                 'publishedAt' => optional($article->published_at)?->toIso8601String(),
             ])
             ->values()
@@ -418,23 +574,17 @@ class PublicSiteController extends Controller
      */
     protected function alumniPayload(int $limit): array
     {
-        return AlumniProfile::query()
-            ->where('is_public_profile', true)
-            ->orderByDesc('graduation_year')
-            ->limit($limit)
-            ->get()
-            ->map(fn (AlumniProfile $alumnus) => [
-                'id' => $alumnus->id,
-                'fullName' => $alumnus->full_name,
-                'graduationYear' => $alumnus->graduation_year,
-                'institutionName' => $alumnus->institution_name,
-                'occupationTitle' => $alumnus->occupation_title,
-                'city' => $alumnus->city,
-                'province' => $alumnus->province,
-                'bio' => $alumnus->bio,
-            ])
-            ->values()
-            ->all();
+        /** @var AlumniProfilePresenter $presenter */
+        $presenter = app(AlumniProfilePresenter::class);
+
+        return $presenter->presentMany(
+            AlumniProfile::query()
+                ->with('forumPosts')
+                ->where('is_public_profile', true)
+                ->orderByDesc('graduation_year')
+                ->limit($limit)
+                ->get()
+        );
     }
 
     /**

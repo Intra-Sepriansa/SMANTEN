@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -36,6 +39,27 @@ class AppServiceProvider extends ServiceProvider
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
         );
+
+        RateLimiter::for('alumni-forum-store', function (Request $request) {
+            return [
+                Limit::perMinute(4)->by($request->ip()),
+                Limit::perHour(18)->by($request->ip()),
+            ];
+        });
+
+        RateLimiter::for('alumni-forum-comment', function (Request $request) {
+            return [
+                Limit::perMinute(8)->by($request->ip()),
+                Limit::perHour(40)->by($request->ip()),
+            ];
+        });
+
+        RateLimiter::for('alumni-forum-react', function (Request $request) {
+            return [
+                Limit::perMinute(30)->by($request->ip()),
+                Limit::perHour(120)->by($request->ip()),
+            ];
+        });
 
         Password::defaults(fn (): ?Password => app()->isProduction()
             ? Password::min(12)

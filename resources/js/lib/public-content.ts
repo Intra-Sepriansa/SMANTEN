@@ -12,30 +12,77 @@ export const publicNavigation: NavItem[] = [
         href: '/profil',
         label: 'Profil',
         children: [
-            { href: '/profil#sejarah', label: 'Sejarah Singkat', description: 'Latar belakang dan perjalanan sekolah' },
-            { href: '/profil#visi-misi', label: 'Visi & Misi', description: 'Arah dan nilai-nilai sekolah' },
-            { href: '/profil#struktur-organisasi', label: 'Struktur Organisasi', description: 'Hierarki kepemimpinan dan manajemen' },
-            { href: '/profil#kurikulum', label: 'Struktur Kurikulum', description: 'Kurikulum Merdeka dan program P5' },
-            { href: '/profil#sarana-prasarana', label: 'Sarana Prasarana', description: 'Fasilitas dan infrastruktur' },
-            { href: '/profil#prestasi', label: 'Prestasi Sekolah', description: 'Capaian akademik dan non-akademik' },
-            { href: '/profil#komite', label: 'Komite Sekolah', description: 'Peran masyarakat dalam pendidikan' },
+            {
+                href: '/profil#sejarah',
+                label: 'Sejarah Singkat',
+                description: 'Latar belakang dan perjalanan sekolah',
+            },
+            {
+                href: '/profil#visi-misi',
+                label: 'Visi & Misi',
+                description: 'Arah dan nilai-nilai sekolah',
+            },
+            {
+                href: '/profil#sarana-prasarana',
+                label: 'Sarana Prasarana',
+                description: 'Fasilitas dan infrastruktur',
+            },
+            {
+                href: '/profil#prestasi',
+                label: 'Prestasi Sekolah',
+                description: 'Capaian akademik dan non-akademik',
+            },
         ],
     },
     {
         href: '/akademik',
         label: 'Akademik',
         children: [
-            { href: '/akademik#kurikulum', label: 'Kurikulum Merdeka', description: 'Implementasi kurikulum terbaru' },
-            { href: '/akademik#p5', label: 'Projek P5', description: 'Penguatan Profil Pelajar Pancasila' },
-            { href: '/akademik#eskul', label: 'Ekstrakurikuler', description: '6 eskul resmi terdokumentasi' },
-            { href: '/akademik#guru', label: 'Tenaga Pendidik', description: 'Profil guru dan staf pengajar' },
+            {
+                href: '/akademik#kurikulum',
+                label: 'Kurikulum Merdeka',
+                description: 'Implementasi kurikulum terbaru',
+            },
+            {
+                href: '/akademik#p5',
+                label: 'Projek P5',
+                description: 'Penguatan Profil Pelajar Pancasila',
+            },
+            {
+                href: '/akademik#eskul',
+                label: 'Ekstrakurikuler',
+                description: '6 eskul resmi terdokumentasi',
+            },
         ],
     },
     { href: '/ppdb', label: 'PPDB' },
-    { href: '/karya', label: 'Karya' },
     { href: '/berita', label: 'Berita' },
-    { href: '/organisasi', label: 'Organisasi' },
-    { href: '/virtual-tour', label: 'Virtual Tour' },
+    {
+        href: '/organisasi',
+        label: 'Sekolah',
+        children: [
+            {
+                href: '/organisasi',
+                label: 'Struktur Organisasi',
+                description: 'Hierarki kepemimpinan dan manajemen',
+            },
+            {
+                href: '/guru',
+                label: 'Tenaga Pendidik',
+                description: 'Profil guru dan staf pengajar',
+            },
+            {
+                href: '/alumni',
+                label: 'Forum Alumni',
+                description: 'Cerita, diskusi, dan jejak lulusan',
+            },
+            {
+                href: '/alumni/tulis-cerita',
+                label: 'Tulis Cerita',
+                description: 'Halaman khusus untuk mengirim cerita alumni',
+            },
+        ],
+    },
 ];
 
 export const schoolSocials = {

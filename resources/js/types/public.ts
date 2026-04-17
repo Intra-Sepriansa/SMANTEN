@@ -75,6 +75,8 @@ export type FeaturedArticle = {
     category: string | null;
     authorName: string | null;
     publishedAt: string | null;
+    source?: string | null;
+    imageUrl?: string | null;
 };
 
 export type OrganizationNode = {
@@ -156,6 +158,8 @@ export type VirtualTourScene = {
 
 export type AlumniSpotlight = {
     id: number;
+    slug?: string | null;
+    url?: string | null;
     fullName: string;
     graduationYear: number;
     institutionName: string | null;
@@ -163,4 +167,77 @@ export type AlumniSpotlight = {
     city: string | null;
     province: string | null;
     bio: string | null;
+    storyCount?: number;
+    isVerified?: boolean;
+    mentorshipBadge?: boolean;
+    hiringBadge?: boolean;
+    location?: { latitude: number; longitude: number } | null;
+    locationMapUrl?: string | null;
+};
+
+export type ForumComment = {
+    id: number;
+    authorName: string;
+    body: string;
+    createdAt: string | null;
+};
+
+export type AlumniProfileSummary = {
+    id: number;
+    slug?: string | null;
+    url?: string | null;
+    fullName: string;
+    graduationYear: number | null;
+    institutionName: string | null;
+    occupationTitle: string | null;
+    city: string | null;
+    province: string | null;
+    bio: string | null;
+    isVerified?: boolean;
+    mentorshipBadge?: boolean;
+    hiringBadge?: boolean;
+    storyCount?: number;
+    location?: { latitude: number; longitude: number } | null;
+    locationMapUrl?: string | null;
+};
+
+export type ForumPost = {
+    id: number;
+    slug?: string | null;
+    detailUrl?: string | null;
+    authorName: string;
+    graduationYear: number;
+    category: 'cerita' | 'karir' | 'kampus' | 'inspirasi';
+    title: string;
+    excerpt?: string | null;
+    body: string;
+    institutionName: string | null;
+    occupationTitle: string | null;
+    city: string | null;
+    province: string | null;
+    likesCount: number;
+    viewsCount: number;
+    commentsCount?: number;
+    bookmarksCount?: number;
+    shareCount?: number;
+    reportsCount?: number;
+    isFeatured: boolean;
+    moderationStatus?: string;
+    isOpenToMentor?: boolean;
+    hasHiringInfo?: boolean;
+    createdAt: string | null;
+    updatedAt?: string | null;
+    profile?: AlumniProfileSummary | null;
+    comments?: ForumComment[];
+    viewerState?: {
+        liked: boolean;
+        bookmarked: boolean;
+        reported: boolean;
+        shared: boolean;
+    };
+    isVerified?: boolean;
+    mentorshipBadge?: boolean;
+    hiringBadge?: boolean;
+    location?: { latitude: number; longitude: number } | null;
+    locationMapUrl?: string | null;
 };

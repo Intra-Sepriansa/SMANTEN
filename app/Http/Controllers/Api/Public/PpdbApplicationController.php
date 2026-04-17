@@ -6,6 +6,7 @@ use App\Enums\PpdbApplicationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SubmitPpdbApplicationRequest;
 use App\Http\Resources\PpdbApplicationResource;
+use App\Models\PpdbApplication;
 use Illuminate\Support\Str;
 
 class PpdbApplicationController extends Controller

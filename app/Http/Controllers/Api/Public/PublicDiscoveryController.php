@@ -44,6 +44,39 @@ class PublicDiscoveryController extends Controller
         ]);
     }
 
+    public function reverse(Request $request, AddressGeocodingService $geocodingService): JsonResponse
+    {
+        $validated = $request->validate([
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ]);
+
+        try {
+            $result = $geocodingService->reverse(
+                (float) $validated['latitude'],
+                (float) $validated['longitude'],
+            );
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'message' => 'Layanan geocoding belum dapat diakses. Coba lagi beberapa saat.',
+            ], 503);
+        }
+
+        if ($result === null) {
+            return response()->json([
+                'message' => 'Detail lokasi tidak dapat dikenali dari titik tersebut.',
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => [
+                'result' => $result,
+            ],
+        ]);
+    }
+
     public function organizationArchive(Request $request): JsonResponse
     {
         $validated = $request->validate([

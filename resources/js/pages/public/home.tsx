@@ -30,7 +30,7 @@ import { AnimatedCounter } from '@/components/public/animated-counter';
 import { BorderGlow } from '@/components/public/border-glow';
 import { HeroCarousel } from '@/components/public/hero-carousel';
 import { SectionHeading } from '@/components/public/section-heading';
-
+import { SparklineChart } from '@/components/charts/school-charts';
 import { VisiPillarShowcase } from '@/components/public/visi-pillar-showcase';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -113,24 +113,32 @@ export default function HomePage({
                             value: school.studentCount,
                             icon: Users,
                             delay: 0.1,
+                            sparkData: [380, 420, 460, 510, 540, 580, school.studentCount],
+                            sparkColor: '#0d9488',
                         },
                         {
                             label: 'Rombel',
                             value: school.teachingGroupCount,
                             icon: GraduationCap,
                             delay: 0.2,
+                            sparkData: [14, 16, 18, 20, 22, 24, school.teachingGroupCount],
+                            sparkColor: '#8b5cf6',
                         },
                         {
                             label: 'Ruang Fisik',
                             value: school.physicalClassroomCount,
                             icon: Landmark,
                             delay: 0.3,
+                            sparkData: [8, 10, 12, 14, 16, 18, school.physicalClassroomCount],
+                            sparkColor: '#0ea5e9',
                         },
                         {
                             label: 'PTK',
                             value: school.staffCount,
                             icon: ShieldCheck,
                             delay: 0.4,
+                            sparkData: [28, 32, 36, 40, 44, 48, school.staffCount],
+                            sparkColor: '#f59e0b',
                         },
                     ].map((stat) => (
                         <motion.div
@@ -154,6 +162,9 @@ export default function HomePage({
                                 </div>
                                 <div className="relative mt-5 text-4xl font-extrabold tracking-tight text-[var(--school-ink)] lg:text-5xl">
                                     <AnimatedCounter value={stat.value} delay={stat.delay} />
+                                </div>
+                                <div className="mt-3">
+                                    <SparklineChart data={stat.sparkData} color={stat.sparkColor} height={36} />
                                 </div>
                             </BorderGlow>
                         </motion.div>
@@ -1198,128 +1209,76 @@ export default function HomePage({
                     </motion.div>
                 </section>
 
-                {/* ═══════════ KEPEMIMPINAN DAN MEDIA ═══════════ */}
+                {/* ═══════════ PUBLIKASI MEDIA ═══════════ */}
                 <section className="space-y-8">
                     <div className="flex flex-wrap items-end justify-between gap-4">
                         <SectionHeading
-                            eyebrow="Kepemimpinan dan Media"
-                            title="Struktur organisasi dan sorotan aktivitas bisa dibuka tanpa pindah halaman."
-                            description="Data kepemimpinan aktif, teaser artikel, dan fondasi org chart interaktif untuk iterasi berikutnya."
+                            eyebrow="Publikasi Media"
+                            title="Kabar terbaru dan sorotan aktivitas SMAN 1 Tenjo."
+                            description="Liputan kegiatan, rekam prestasi, pengumuman resmi, dan dokumentasi utuh aktivitas sekolah terkini."
                         />
                         <Button
                             asChild
                             variant="outline"
-                            className="group/org flex items-center gap-2 rounded-full border-[var(--school-green-200)] bg-white/80 px-6 transition-all hover:border-[var(--school-green-400)] hover:bg-[var(--school-green-50)] hover:shadow-lg"
+                            className="group/media flex items-center gap-2 rounded-full border-[var(--school-green-200)] bg-white/80 px-6 transition-all hover:border-[var(--school-green-400)] hover:bg-[var(--school-green-50)] hover:shadow-lg"
                         >
-                            <Link href="/organisasi">
-                                Buka Organisasi
-                                <ArrowRight className="size-4 transition-transform group-hover/org:translate-x-1" />
+                            <Link href="/berita">
+                                Buka Semua Berita
+                                <ArrowRight className="size-4 transition-transform group-hover/media:translate-x-1" />
                             </Link>
                         </Button>
                     </div>
 
-                    <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-                        {/* Leadership Cards */}
-                        <motion.div
-                            variants={staggerContainer}
-                            initial="hidden"
-                            whileInView="show"
-                            viewport={motionViewport}
-                            className="grid gap-4"
-                        >
-                            {leadershipPreview.map((leader, i) => {
-                                const leaderAccents = ['#0F766E', '#0369A1', '#7C3AED', '#D97706'];
-                                const leaderIcons = [GraduationCap, ShieldCheck, Users, Award];
-                                const la = leaderAccents[i % leaderAccents.length];
-                                const LeaderIcon = leaderIcons[i % leaderIcons.length];
-
-                                return (
-                                    <motion.article
-                                        key={leader.id}
-                                        variants={fadeUp}
-                                        whileHover={{ x: 6 }}
-                                        className="group"
-                                    >
-                                        <BorderGlow
-                                            borderRadius={27}
-                                            colors={[la, '#0E9EE4', '#F59E0B']}
-                                            className="relative overflow-hidden rounded-[1.7rem] border border-white/70 bg-white shadow-[0_20px_60px_-42px_rgba(15,118,110,0.35)] transition-all duration-300 hover:shadow-[0_28px_72px_-40px_rgba(15,118,110,0.45)]"
-                                        >
-                                            <div
-                                                className="absolute left-0 top-0 h-full w-1 rounded-l-[1.7rem]"
-                                                style={{ backgroundColor: la }}
-                                            />
-                                            <div className="flex items-center gap-4 p-5 pl-6">
-                                                <div
-                                                    className="flex size-11 shrink-0 items-center justify-center rounded-xl text-white shadow-md"
-                                                    style={{ background: `linear-gradient(135deg, ${la}, ${la}dd)` }}
-                                                >
-                                                    <LeaderIcon className="size-5" />
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="text-[0.62rem] font-bold uppercase tracking-[0.24em] text-[var(--school-muted)]">
-                                                        {leader.unit}
-                                                    </div>
-                                                    <div className="mt-1 text-lg font-bold text-[var(--school-ink)]">
-                                                        {leader.position}
-                                                    </div>
-                                                    <div className="mt-0.5 text-sm text-[var(--school-muted)]">
-                                                        {leader.name}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </BorderGlow>
-                                    </motion.article>
-                                );
-                            })}
-                        </motion.div>
-
-                        {/* Article Cards */}
-                        <motion.div
-                            variants={staggerContainer}
-                            initial="hidden"
-                            whileInView="show"
-                            viewport={motionViewport}
-                            className="grid gap-4"
-                        >
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={motionViewport}
+                        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-x-8"
+                    >
                             {featuredArticles.map((article) => (
                                 <Link key={article.id} href={article.slug ? `/berita/${article.slug}` : '/berita'}>
                                     <motion.article
                                         variants={fadeUp}
-                                        whileHover={{ y: -4 }}
+                                        whileHover={{ y: -6, scale: 1.01 }}
                                         className="group h-full"
                                     >
                                         <BorderGlow
                                             borderRadius={27}
-                                            colors={['#F59E0B', '#D97706', '#FBBF24']}
-                                            className="relative h-full overflow-hidden rounded-[1.7rem] border border-white/70 bg-white shadow-[0_20px_60px_-42px_rgba(245,158,11,0.3)] transition-all duration-300 hover:shadow-[0_28px_72px_-40px_rgba(245,158,11,0.4)]"
+                                            colors={['#0EA5E9', 'transparent', '#10B981']}
+                                            className="relative h-full overflow-hidden rounded-[1.7rem] border border-white/60 bg-white/70 backdrop-blur-xl shadow-[0_20px_40px_-20px_rgba(0,0,0,0.05)] transition-all duration-500 hover:border-white/90 hover:bg-white hover:shadow-[0_30px_60px_-20px_rgba(14,165,233,0.15)]"
                                         >
-                                            <div className="p-6">
-                                                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-amber-700">
+                                            <div className="absolute right-0 top-0 size-64 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-100/50 via-teal-50/10 to-transparent opacity-0 transition-opacity duration-700 pointer-events-none group-hover:opacity-100" />
+                                            
+                                            <div className="relative p-7">
+                                                <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-200/50 bg-sky-50/80 px-3 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-[0.22em] text-sky-700 backdrop-blur-md transition-colors group-hover:border-sky-300 group-hover:bg-sky-100">
                                                     <Newspaper className="size-3" />
                                                     {article.category ?? 'Aktivitas Sekolah'}
                                                 </div>
-                                                <h3 className="mt-3 text-xl font-bold text-[var(--school-ink)] transition-colors group-hover:text-[var(--school-green-700)]">
+                                                <h3 className="mt-4 text-2xl font-black leading-[1.3] tracking-tight text-[var(--school-ink)] transition-colors group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-sky-700 group-hover:to-teal-600 line-clamp-2">
                                                     {article.title}
                                                 </h3>
-                                                <p className="mt-2.5 text-sm leading-7 text-[var(--school-muted)]">
+                                                <p className="mt-3 text-[15px] leading-relaxed text-slate-500 line-clamp-3">
                                                     {article.excerpt}
                                                 </p>
-                                                <div className="mt-4 flex items-center gap-3 border-t border-black/[0.04] pt-4">
-                                                    <div className="flex size-7 items-center justify-center rounded-lg bg-[var(--school-green-50)] text-[var(--school-green-700)]">
-                                                        <Users className="size-3" />
+                                                <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="flex size-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-sky-100 group-hover:text-sky-600">
+                                                            <Users className="size-3.5" />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[0.7rem] font-bold uppercase tracking-wider text-slate-400">Jurnalis</span>
+                                                            <span className="text-xs font-semibold text-slate-600">
+                                                                {article.authorName}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <span className="text-[0.72rem] font-semibold text-[var(--school-muted)]">
-                                                        {article.authorName}
-                                                    </span>
-                                                    <span className="text-[var(--school-muted)]/30">•</span>
-                                                    <div className="flex items-center gap-1.5 text-[0.72rem] text-[var(--school-muted)]">
-                                                        <CalendarDays className="size-3" />
+                                                    <div className="flex items-center gap-1.5 rounded-full bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors group-hover:bg-sky-50 group-hover:text-sky-700">
+                                                        <CalendarDays className="size-3.5" />
                                                         {article.publishedAt
                                                             ? dateFormatter.format(new Date(article.publishedAt))
-                                                            : 'Publikasi terjadwal'}
+                                                            : 'Terjadwal'}
                                                     </div>
-                                                    <ArrowRight className="ml-auto size-4 text-[var(--school-muted)] opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
                                                 </div>
                                             </div>
                                         </BorderGlow>
@@ -1327,157 +1286,150 @@ export default function HomePage({
                                 </Link>
                             ))}
                         </motion.div>
-                    </div>
-                </section>
 
-                {/* ═══════════ EKSTRAKURIKULER DAN VIDEO ═══════════ */}
-                <section className="space-y-8">
-                    <SectionHeading
-                        eyebrow="Ekstrakurikuler dan Video"
-                        title="Ruang karakter, bakat, dan prestasi di luar kelas."
-                        description="6 eskul resmi terdokumentasi membentuk identitas siswa SMAN 1 Tenjo — dari disiplin baris-berbaris hingga kepekaan sosial."
-                    />
+                    {/* ─── Eskul Cards Infinite Marquee ─── */}
+                    <div className="relative flex w-full overflow-hidden py-6 -mx-4 px-4">
+                        {/* Gradient Masks for smooth fade out at edges */}
+                        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAF7EE] sm:w-24 lg:w-40 to-transparent" />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAF7EE] sm:w-24 lg:w-40 to-transparent" />
 
-                    {/* ─── Eskul Cards Grid (Fakta-Style) ─── */}
-                    <motion.div
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={motionViewport}
-                        className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
-                    >
-                        {[
-                            {
-                                name: 'Paskibra',
-                                image: '/images/eskul/paskibra.png',
-                                description: 'Pasukan Pengibar Bendera yang melatih disiplin, kepemimpinan, dan keterampilan baris-berbaris tingkat tinggi.',
-                                accent: '#DC2626',
-                                icon: ShieldCheck,
-                                metric: 'Juara',
-                                metricSub: 'Prov.',
-                                focus: ['Disiplin', 'Kepemimpinan', 'Baris-berbaris'],
-                            },
-                            {
-                                name: 'Futsal',
-                                image: '/images/eskul/futsal.png',
-                                description: 'Olahraga futsal yang aktif diikuti siswa, membentuk sportivitas dan semangat kompetisi.',
-                                accent: '#16A34A',
-                                icon: Trophy,
-                                metric: 'Aktif',
-                                metricSub: 'Rutin',
-                                focus: ['Olahraga', 'Kerjasama Tim', 'Sportivitas'],
-                            },
-                            {
-                                name: 'Rohis',
-                                image: '/images/eskul/rohis.png',
-                                description: 'Rohani Islam — memperkuat iman, karakter Islami, dan kegiatan dakwah di lingkungan sekolah.',
-                                accent: '#0F766E',
-                                icon: Heart,
-                                metric: 'Rutin',
-                                metricSub: 'Mingguan',
-                                focus: ['Keagamaan', 'Karakter', 'Dakwah'],
-                            },
-                            {
-                                name: 'PMR',
-                                image: '/images/eskul/pmr.png',
-                                description: 'Palang Merah Remaja — fokus pada kesehatan, pertolongan pertama, dan kepedulian sosial.',
-                                accent: '#E11D48',
-                                icon: Heart,
-                                metric: 'P3K',
-                                metricSub: 'Terlatih',
-                                focus: ['Kesehatan', 'P3K', 'Sosial'],
-                            },
-                            {
-                                name: 'Pramuka',
-                                image: '/images/eskul/pramuka.png',
-                                description: 'Menanamkan jiwa mandiri, disiplin, dan peduli lingkungan melalui kegiatan kepanduan resmi.',
-                                accent: '#A16207',
-                                icon: Compass,
-                                metric: 'Ambalan',
-                                metricSub: 'Resmi',
-                                focus: ['Kemandirian', 'Alam', 'Kepanduan'],
-                            },
-                            {
-                                name: 'Pencak Silat',
-                                image: '/images/eskul/silat.png',
-                                description: 'Seni bela diri tradisional yang aktif ditunjukkan dalam demo dan lomba ekstrakurikuler.',
-                                accent: '#7C3AED',
-                                icon: Sparkles,
-                                metric: 'Demo',
-                                metricSub: 'Eskul',
-                                focus: ['Bela Diri', 'Budaya', 'Ketangkasan'],
-                            },
-                        ].map((eskul) => (
-                            <motion.article
-                                key={eskul.name}
-                                variants={fadeUp}
-                                whileHover={{ y: -8 }}
-                                className="group h-full"
-                            >
-                                <BorderGlow
-                                    borderRadius={30}
-                                    colors={[eskul.accent, '#0E9EE4', '#F59E0B']}
-                                    className="relative h-full overflow-hidden rounded-[1.9rem] border border-white/70 bg-white shadow-[0_24px_74px_-44px_rgba(15,118,110,0.3)] transition-shadow duration-300 hover:shadow-[0_32px_90px_-40px_rgba(15,118,110,0.45)]"
+                        {(() => {
+                            const eskulItems = [
+                                {
+                                    name: 'Paskibra',
+                                    image: '/images/eskul/paskibra.png',
+                                    description: 'Pasukan Pengibar Bendera yang melatih disiplin, kepemimpinan, dan keterampilan baris-berbaris tingkat tinggi.',
+                                    accent: '#DC2626',
+                                    icon: ShieldCheck,
+                                    metric: 'Juara',
+                                    metricSub: 'Prov.',
+                                    focus: ['Disiplin', 'Kepemimpinan', 'Baris-berbaris'],
+                                },
+                                {
+                                    name: 'Futsal',
+                                    image: '/images/eskul/futsal.png',
+                                    description: 'Olahraga futsal yang aktif diikuti siswa, membentuk sportivitas dan semangat kompetisi.',
+                                    accent: '#16A34A',
+                                    icon: Trophy,
+                                    metric: 'Aktif',
+                                    metricSub: 'Rutin',
+                                    focus: ['Olahraga', 'Kerjasama Tim', 'Sportivitas'],
+                                },
+                                {
+                                    name: 'Rohis',
+                                    image: '/images/eskul/rohis.png',
+                                    description: 'Rohani Islam — memperkuat iman, karakter Islami, dan kegiatan dakwah di lingkungan sekolah.',
+                                    accent: '#0F766E',
+                                    icon: Heart,
+                                    metric: 'Rutin',
+                                    metricSub: 'Mingguan',
+                                    focus: ['Keagamaan', 'Karakter', 'Dakwah'],
+                                },
+                                {
+                                    name: 'PMR',
+                                    image: '/images/eskul/pmr.png',
+                                    description: 'Palang Merah Remaja — fokus pada kesehatan, pertolongan pertama, dan kepedulian sosial.',
+                                    accent: '#E11D48',
+                                    icon: Heart,
+                                    metric: 'P3K',
+                                    metricSub: 'Terlatih',
+                                    focus: ['Kesehatan', 'P3K', 'Sosial'],
+                                },
+                                {
+                                    name: 'Pramuka',
+                                    image: '/images/eskul/pramuka.png',
+                                    description: 'Menanamkan jiwa mandiri, disiplin, dan peduli lingkungan melalui kegiatan kepanduan resmi.',
+                                    accent: '#A16207',
+                                    icon: Compass,
+                                    metric: 'Ambalan',
+                                    metricSub: 'Resmi',
+                                    focus: ['Kemandirian', 'Alam', 'Kepanduan'],
+                                },
+                                {
+                                    name: 'Pencak Silat',
+                                    image: '/images/eskul/silat.png',
+                                    description: 'Seni bela diri tradisional yang aktif ditunjukkan dalam demo dan lomba ekstrakurikuler.',
+                                    accent: '#7C3AED',
+                                    icon: Sparkles,
+                                    metric: 'Demo',
+                                    metricSub: 'Eskul',
+                                    focus: ['Bela Diri', 'Budaya', 'Ketangkasan'],
+                                },
+                            ];
+
+                            return (
+                                <motion.div
+                                    animate={{ x: ['0%', '-50%'] }}
+                                    transition={{ ease: 'linear', duration: 45, repeat: Infinity }}
+                                    className="flex w-max gap-6"
+                                    whileHover={{ animationPlayState: 'paused' }}
                                 >
-                                    {/* Image */}
-                                    <div className="relative h-44 w-full overflow-hidden">
-                                        <img
-                                            src={eskul.image}
-                                            alt={eskul.name}
-                                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                            loading="lazy"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
-                                        {/* Floating metric */}
-                                        <div className="absolute bottom-4 left-5 flex items-center gap-2">
-                                            <div
-                                                className="flex size-9 items-center justify-center rounded-xl border bg-white/90 shadow-lg backdrop-blur-sm"
-                                                style={{ borderColor: `${eskul.accent}30`, color: eskul.accent }}
+                                    {[...eskulItems, ...eskulItems].map((eskul, idx) => (
+                                        <motion.article
+                                            key={`${eskul.name}-${idx}`}
+                                            className="group h-full w-[360px] shrink-0"
+                                        >
+                                            <BorderGlow
+                                                borderRadius={30}
+                                                colors={[eskul.accent, '#0E9EE4', '#F59E0B']}
+                                                className="relative h-full overflow-hidden rounded-[1.9rem] border border-white/70 bg-white shadow-[0_24px_74px_-44px_rgba(15,118,110,0.3)] transition-shadow duration-300 hover:shadow-[0_32px_90px_-40px_rgba(15,118,110,0.45)]"
                                             >
-                                                <eskul.icon className="size-4" />
-                                            </div>
-                                            <div className="rounded-xl bg-white/90 px-3 py-1 shadow-lg backdrop-blur-sm">
-                                                <span
-                                                    className="text-lg font-extrabold"
-                                                    style={{ color: eskul.accent }}
-                                                >
-                                                    {eskul.metric}
-                                                </span>
-                                                <span className="ml-1 text-xs font-semibold text-[var(--school-muted)]">{eskul.metricSub}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="p-6 pt-4">
-                                        <h3 className="text-xl font-bold text-[var(--school-ink)]">
-                                            {eskul.name}
-                                        </h3>
-                                        <p className="mt-2 text-sm leading-7 text-[var(--school-muted)]">
-                                            {eskul.description}
-                                        </p>
-
-                                        {/* Tags */}
-                                        <div className="mt-4 flex flex-wrap gap-2.5">
-                                            {eskul.focus.map((tag) => (
-                                                <span
-                                                    key={tag}
-                                                    className="rounded-full px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.15em]"
-                                                    style={{
-                                                        backgroundColor: `${eskul.accent}0D`,
-                                                        color: eskul.accent,
-                                                        border: `1px solid ${eskul.accent}20`,
-                                                    }}
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </BorderGlow>
-                            </motion.article>
-                        ))}
-                    </motion.div>
+                                                <div className="relative h-44 w-full overflow-hidden">
+                                                    <img
+                                                        src={eskul.image}
+                                                        alt={eskul.name}
+                                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                        loading="lazy"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                                                    <div className="absolute bottom-4 left-5 flex items-center gap-2">
+                                                        <div
+                                                            className="flex size-9 items-center justify-center rounded-xl border bg-white/90 shadow-lg backdrop-blur-sm"
+                                                            style={{ borderColor: `${eskul.accent}30`, color: eskul.accent }}
+                                                        >
+                                                            <eskul.icon className="size-4" />
+                                                        </div>
+                                                        <div className="rounded-xl bg-white/90 px-3 py-1 shadow-lg backdrop-blur-sm">
+                                                            <span
+                                                                className="text-lg font-extrabold"
+                                                                style={{ color: eskul.accent }}
+                                                            >
+                                                                {eskul.metric}
+                                                            </span>
+                                                            <span className="ml-1 text-xs font-semibold text-[var(--school-muted)]">{eskul.metricSub}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="p-6 pt-4">
+                                                    <h3 className="text-xl font-bold text-[var(--school-ink)]">
+                                                        {eskul.name}
+                                                    </h3>
+                                                    <p className="mt-2 text-sm leading-7 text-[var(--school-muted)]">
+                                                        {eskul.description}
+                                                    </p>
+                                                    <div className="mt-4 flex flex-wrap gap-2.5">
+                                                        {eskul.focus.map((tag) => (
+                                                            <span
+                                                                key={tag}
+                                                                className="rounded-full px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.15em]"
+                                                                style={{
+                                                                    backgroundColor: `${eskul.accent}0D`,
+                                                                    color: eskul.accent,
+                                                                    border: `1px solid ${eskul.accent}20`,
+                                                                }}
+                                                            >
+                                                                {tag}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </BorderGlow>
+                                        </motion.article>
+                                    ))}
+                                </motion.div>
+                            );
+                        })()}
+                    </div>
 
                     {/* ─── YouTube Video Section ─── */}
                     <div className="mt-4 space-y-5">
@@ -1545,71 +1497,69 @@ export default function HomePage({
                                     accent: '#0F766E',
                                 },
                             ].map((video, i) => (
-                                <motion.div
-                                    key={video.id}
-                                    variants={fadeUp}
-                                    whileHover={{ y: -6 }}
-                                    className="group"
-                                >
-                                    <BorderGlow
-                                        borderRadius={27}
-                                        colors={[video.accent, '#F59E0B', '#0E9EE4']}
-                                        className="overflow-hidden rounded-[1.7rem] border border-white/70 bg-white shadow-[0_20px_60px_-42px_rgba(15,118,110,0.3)] transition-all duration-300 hover:shadow-[0_28px_72px_-40px_rgba(15,118,110,0.45)]"
+                                <Link key={video.id} href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" className="block focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--school-green-400)] rounded-[1.7rem]">
+                                    <motion.div
+                                        variants={fadeUp}
+                                        whileHover={{ y: -6, scale: 1.02 }}
+                                        className="group h-full cursor-pointer"
                                     >
-                                        {/* Thumbnail with play overlay */}
-                                        <div className="relative aspect-video w-full overflow-hidden">
-                                            <img
-                                                src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
-                                                alt={video.title}
-                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                                loading="lazy"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                                        <BorderGlow
+                                            borderRadius={27}
+                                            colors={['#DC2626', 'transparent', video.accent]}
+                                            className="relative h-full overflow-hidden rounded-[1.7rem] border border-white/60 bg-white/70 backdrop-blur-xl shadow-[0_20px_40px_-20px_rgba(0,0,0,0.05)] transition-all duration-500 hover:border-white/90 hover:bg-white hover:shadow-[0_30px_60px_-20px_rgba(220,38,38,0.2)]"
+                                        >
+                                            {/* Ambient Red Glow on hover */}
+                                            <div className="absolute right-0 top-1/2 size-48 -translate-y-1/2 translate-x-1/3 rounded-full bg-red-500/20 blur-[3rem] opacity-0 transition-opacity duration-700 pointer-events-none group-hover:opacity-100" />
+                                            
+                                            {/* Thumbnail with play overlay */}
+                                            <div className="relative aspect-video w-full overflow-hidden">
+                                                {/* Mask image with subtle overlay on hover to pop up the play button */}
+                                                <div className="absolute inset-0 bg-black/10 z-10 transition-colors duration-500 group-hover:bg-black/30 pointer-events-none" />
+                                                
+                                                <img
+                                                    src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+                                                    alt={video.title}
+                                                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
+                                                    loading="lazy"
+                                                />
+                                                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80" />
 
-                                            {/* Play button */}
-                                            <a
-                                                href={`https://www.youtube.com/watch?v=${video.id}`}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="absolute inset-0 flex items-center justify-center"
-                                            >
-                                                <div className="flex size-14 items-center justify-center rounded-full bg-red-600 text-white shadow-[0_8px_30px_-6px_rgba(220,38,38,0.6)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_12px_40px_-6px_rgba(220,38,38,0.7)]">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor" className="ml-1 size-6"><path d="M8 5v14l11-7z" /></svg>
+                                                {/* Play button with YouTube Official Icon */}
+                                                <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                                                    <div className="relative flex items-center justify-center transition-all duration-500 group-hover:scale-110">
+                                                        {/* White backdrop for the play triangle */}
+                                                        <div className="absolute inset-0 m-auto h-5 w-8 rounded-sm bg-white" />
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" className="relative z-10 size-16 text-[#FF0000] drop-shadow-[0_8px_16px_rgba(255,0,0,0.6)] transition-all duration-500 group-hover:drop-shadow-[0_12px_24px_rgba(255,0,0,0.9)]">
+                                                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
-                                            </a>
 
-                                            {/* Category badge */}
-                                            <div
-                                                className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-md"
-                                                style={{ backgroundColor: `${video.accent}90` }}
-                                            >
-                                                {video.category}
-                                            </div>
-                                        </div>
-
-                                        {/* Info */}
-                                        <div className="p-5">
-                                            <h4 className="line-clamp-2 text-sm font-bold leading-snug text-[var(--school-ink)] transition-colors group-hover:text-[var(--school-green-700)]">
-                                                {video.title}
-                                            </h4>
-                                            <div className="mt-3 flex items-center justify-between">
-                                                <div className="flex items-center gap-2 text-[0.65rem] font-semibold text-[var(--school-muted)]">
-                                                    <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5 text-red-500"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
-                                                    SMAN 1 Tenjo Official
-                                                </div>
-                                                <a
-                                                    href={`https://www.youtube.com/watch?v=${video.id}`}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="flex items-center gap-1 text-[0.65rem] font-bold text-[var(--school-green-700)] transition-colors hover:text-[var(--school-green-600)]"
+                                                {/* Category badge - Glassmorphic */}
+                                                <div
+                                                    className="absolute left-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-white/30 px-3 py-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white shadow-lg backdrop-blur-md transition-colors duration-300 group-hover:bg-white group-hover:text-red-700"
+                                                    style={{ backgroundColor: `${video.accent}80` }}
                                                 >
-                                                    Tonton
-                                                    <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-                                                </a>
+                                                    {video.category}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </BorderGlow>
-                                </motion.div>
+
+                                            {/* Info */}
+                                            <div className="relative p-6">
+                                                <h4 className="line-clamp-2 text-[15px] font-black leading-[1.4] text-[var(--school-ink)] transition-colors duration-300 group-hover:text-red-600">
+                                                    {video.title}
+                                                </h4>
+                                                <div className="mt-4 flex items-center gap-2 border-t border-slate-100/80 pt-4 text-xs font-semibold text-slate-500">
+                                                    <div className="flex size-6 items-center justify-center rounded-md bg-slate-100 text-red-500 transition-colors group-hover:bg-red-50">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+                                                    </div>
+                                                    <span className="transition-colors group-hover:text-slate-700">SMAN 1 Tenjo Official</span>
+                                                    <ArrowRight className="ml-auto size-4 text-slate-300 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 group-hover:text-red-500" />
+                                                </div>
+                                            </div>
+                                        </BorderGlow>
+                                    </motion.div>
+                                </Link>
                             ))}
                         </motion.div>
                     </div>
