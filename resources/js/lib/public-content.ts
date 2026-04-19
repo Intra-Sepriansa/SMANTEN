@@ -58,6 +58,27 @@ export const publicNavigation: NavItem[] = [
     { href: '/ppdb', label: 'PPDB' },
     { href: '/berita', label: 'Berita' },
     {
+        href: '/dokumen',
+        label: 'Dokumen',
+        children: [
+            {
+                href: '/dokumen#unduhan',
+                label: 'Unduhan',
+                description: 'File publik sekolah',
+            },
+            {
+                href: '/dokumen#formulir',
+                label: 'Formulir',
+                description: 'Format umum sekolah',
+            },
+            {
+                href: '/dokumen#panduan',
+                label: 'Panduan',
+                description: 'Rujukan singkat layanan',
+            },
+        ],
+    },
+    {
         href: '/organisasi',
         label: 'Sekolah',
         children: [

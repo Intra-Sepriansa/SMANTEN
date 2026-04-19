@@ -29,6 +29,7 @@ import {
 import { AnimatedCounter } from '@/components/public/animated-counter';
 import { BorderGlow } from '@/components/public/border-glow';
 import { HeroCarousel } from '@/components/public/hero-carousel';
+import { PartnerLogoLoopSection } from '@/components/public/partner-logo-loop-section';
 import { SectionHeading } from '@/components/public/section-heading';
 import { SparklineChart } from '@/components/charts/school-charts';
 import { VisiPillarShowcase } from '@/components/public/visi-pillar-showcase';
@@ -99,6 +100,7 @@ export default function HomePage({
 
             <div className="space-y-8 md:space-y-10">
                 <HeroCarousel />
+                <PartnerLogoLoopSection />
 
                 <motion.section
                     variants={staggerContainer}

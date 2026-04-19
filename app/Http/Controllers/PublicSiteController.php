@@ -50,6 +50,13 @@ class PublicSiteController extends Controller
         ]);
     }
 
+    public function documents(): Response
+    {
+        return Inertia::render('public/documents', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
     public function organization(): Response
     {
         return Inertia::render('public/organization', [
@@ -86,6 +93,7 @@ class PublicSiteController extends Controller
             ['route' => 'profile', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['route' => 'akademik', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['route' => 'ppdb', 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['route' => 'documents', 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['route' => 'berita.index', 'priority' => '0.8', 'changefreq' => 'daily'],
             ['route' => 'organization', 'priority' => '0.7', 'changefreq' => 'weekly'],
             ['route' => 'guru', 'priority' => '0.7', 'changefreq' => 'monthly'],

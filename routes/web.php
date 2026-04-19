@@ -19,6 +19,7 @@ Route::controller(PublicSiteController::class)->group(function () {
     Route::get('/profil', 'profile')->name('profile');
     Route::get('/akademik', 'akademik')->name('akademik');
     Route::get('/ppdb', 'ppdb')->name('ppdb');
+    Route::get('/dokumen', 'documents')->name('documents');
     Route::get('/berita', 'beritaIndex')->name('berita.index');
     Route::get('/berita/{slug}', 'beritaShow')->name('berita.show');
     Route::get('/organisasi', 'organization')->name('organization');
