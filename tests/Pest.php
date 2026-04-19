@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Pest\Expectation;
 use Tests\TestCase;
+
+use function Pest\Laravel\withoutVite;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +22,7 @@ pest()->extend(TestCase::class)
     ->in('Feature');
 
 beforeEach(function (): void {
-    $this->withoutVite();
+    withoutVite();
 });
 
 /*
@@ -33,7 +36,8 @@ beforeEach(function (): void {
 |
 */
 
-expect()->extend('toBeOne', function () {
+expect()->extend('toBeOne', function (): Expectation {
+    /** @var Expectation $this */
     return $this->toBe(1);
 });
 
@@ -48,7 +52,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function something(): void
 {
     // ..
 }

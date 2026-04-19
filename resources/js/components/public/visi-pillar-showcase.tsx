@@ -1,13 +1,7 @@
+import { AnimatePresence, motion } from 'framer-motion';
+import { Award, Cpu, Leaf, ShieldCheck, Trophy } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-    Trophy,
-    ShieldCheck,
-    Leaf,
-    Cpu,
-    Award,
-    type LucideIcon,
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Pillar {
@@ -102,7 +96,7 @@ const pillars: Pillar[] = [
         metric: '85%',
         metricLabel: 'Alumni Melanjutkan',
         description:
-            'Mempersiapkan lulusan yang siap bersaing di perguruan tinggi negeri dan dunia kerja.',
+            'Mempersiapkan lulusan untuk melanjutkan pendidikan dan memasuki dunia kerja.',
         points: [
             'Bimbingan masuk PTN dan karier',
             'Pengembangan public speaking & leadership',
@@ -122,6 +116,7 @@ export function VisiPillarShowcase() {
                 {pillars.map((pillar) => {
                     const isActive = pillar.id === activeId;
                     const PillarIcon = pillar.icon;
+
                     return (
                         <button
                             key={pillar.id}
@@ -137,12 +132,20 @@ export function VisiPillarShowcase() {
                                 <motion.div
                                     layoutId="visi-pill-bg"
                                     className="absolute inset-0 rounded-full"
-                                    style={{ backgroundColor: `${pillar.accent}CC` }}
-                                    transition={{ type: 'spring', bounce: 0.15, duration: 0.5 }}
+                                    style={{
+                                        backgroundColor: `${pillar.accent}CC`,
+                                    }}
+                                    transition={{
+                                        type: 'spring',
+                                        bounce: 0.15,
+                                        duration: 0.5,
+                                    }}
                                 />
                             )}
                             <PillarIcon className="relative z-10 size-3.5" />
-                            <span className="relative z-10">{pillar.label}</span>
+                            <span className="relative z-10">
+                                {pillar.label}
+                            </span>
                         </button>
                     );
                 })}
@@ -161,11 +164,11 @@ export function VisiPillarShowcase() {
                     >
                         {/* Ambient glow */}
                         <div
-                            className="pointer-events-none absolute -right-20 -top-20 size-56 rounded-full blur-[80px] opacity-15"
+                            className="pointer-events-none absolute -top-20 -right-20 size-56 rounded-full opacity-15 blur-[80px]"
                             style={{ backgroundColor: active.accent }}
                         />
                         <div
-                            className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full blur-[60px] opacity-10"
+                            className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full opacity-10 blur-[60px]"
                             style={{ backgroundColor: active.accent }}
                         />
 
@@ -174,12 +177,16 @@ export function VisiPillarShowcase() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.1, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                transition={{
+                                    delay: 0.1,
+                                    duration: 0.45,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
                                 className="relative flex shrink-0 items-center justify-center p-6 md:w-52 md:p-8"
                             >
                                 {/* Glow ring behind image */}
                                 <div
-                                    className="absolute inset-0 m-auto size-36 rounded-full blur-[40px] opacity-20"
+                                    className="absolute inset-0 m-auto size-36 rounded-full opacity-20 blur-[40px]"
                                     style={{ backgroundColor: active.accent }}
                                 />
                                 <img
@@ -193,8 +200,12 @@ export function VisiPillarShowcase() {
                             <motion.div
                                 initial={{ opacity: 0, x: 16 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.15, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                                className="flex flex-1 flex-col justify-center gap-4 border-t border-white/[0.06] p-6 md:border-l md:border-t-0 md:py-7 md:pl-7 md:pr-8"
+                                transition={{
+                                    delay: 0.15,
+                                    duration: 0.4,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
+                                className="flex flex-1 flex-col justify-center gap-4 border-t border-white/[0.06] p-6 md:border-t-0 md:border-l md:py-7 md:pr-8 md:pl-7"
                             >
                                 {/* Headline + Metric badge */}
                                 <div className="flex flex-wrap items-center gap-3">
@@ -203,7 +214,9 @@ export function VisiPillarShowcase() {
                                     </h4>
                                     <div
                                         className="inline-flex items-baseline gap-1 rounded-lg px-2.5 py-1"
-                                        style={{ backgroundColor: `${active.accent}20` }}
+                                        style={{
+                                            backgroundColor: `${active.accent}20`,
+                                        }}
                                     >
                                         <span
                                             className="text-base font-extrabold"
@@ -211,7 +224,7 @@ export function VisiPillarShowcase() {
                                         >
                                             {active.metric}
                                         </span>
-                                        <span className="text-[0.6rem] font-medium uppercase tracking-wider text-white/45">
+                                        <span className="text-[0.6rem] font-medium tracking-wider text-white/45 uppercase">
                                             {active.metricLabel}
                                         </span>
                                     </div>
@@ -237,7 +250,9 @@ export function VisiPillarShowcase() {
                                         >
                                             <span
                                                 className="flex size-5 shrink-0 items-center justify-center rounded-md text-[0.55rem] font-bold text-white"
-                                                style={{ backgroundColor: `${active.accent}90` }}
+                                                style={{
+                                                    backgroundColor: `${active.accent}90`,
+                                                }}
                                             >
                                                 {i + 1}
                                             </span>

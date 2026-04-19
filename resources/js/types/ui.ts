@@ -18,4 +18,7 @@ export type AuthLayoutProps = {
     name?: string;
     title?: string;
     description?: string;
+    eyebrow?: string;
+    variant?: 'simple' | 'portal';
+    backgroundImage?: string;
 };

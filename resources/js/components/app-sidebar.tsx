@@ -1,15 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {
-    BookOpen,
-    CalendarDays,
-    ClipboardList,
-    Compass,
-    FileText,
-    GraduationCap,
-    LayoutGrid,
-    Settings,
-    Users,
-} from 'lucide-react';
+import { Settings } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -23,101 +13,36 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { getAdminSidebarGroups } from '@/lib/admin-navigation';
 import { dashboard } from '@/routes';
+import { edit as editProfile } from '@/routes/profile';
 import type { NavItem } from '@/types';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
-const adminNavItems: NavItem[] = [
-    {
-        title: 'Admin Dashboard',
-        href: '/dashboard/admin',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'PPDB',
-        href: '/ppdb',
-        icon: ClipboardList,
-    },
-    {
-        title: 'Organisasi',
-        href: '/organisasi',
-        icon: Users,
-    },
-    {
-        title: 'Artikel & Berita',
-        href: '/berita',
-        icon: FileText,
-    },
-    {
-        title: 'Karya Portfolio',
-        href: '/karya',
-        icon: Compass,
-    },
-];
-
-const akademikNavItems: NavItem[] = [
-    {
-        title: 'Guru Dashboard',
-        href: '/dashboard/guru',
-        icon: GraduationCap,
-    },
-    {
-        title: 'Jadwal',
-        href: '/akademik',
-        icon: CalendarDays,
-    },
-    {
-        title: 'Portfolio Review',
-        href: '/karya',
-        icon: Compass,
-    },
-];
-
-const siswaNavItems: NavItem[] = [
-    {
-        title: 'Siswa Dashboard',
-        href: '/dashboard/siswa',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Jadwal Belajar',
-        href: '/akademik',
-        icon: CalendarDays,
-    },
-    {
-        title: 'Karya Saya',
-        href: '/karya',
-        icon: Compass,
-    },
-];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Website Publik',
-        href: '/',
-        icon: BookOpen,
-    },
-    {
-        title: 'Pengaturan',
-        href: '/settings',
+        title: 'Pengaturan Akun',
+        href: editProfile(),
         icon: Settings,
     },
 ];
 
 export function AppSidebar() {
+    const adminSidebarGroups = getAdminSidebarGroups();
+
     return (
-        <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+        <Sidebar
+            collapsible="icon"
+            variant="inset"
+            className="admin-sidebar-shell"
+        >
+            <SidebarHeader className="p-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="h-14 rounded-lg border border-violet-200/70 bg-white/80 shadow-lg shadow-violet-950/5 transition hover:bg-white dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15"
+                        >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
                             </Link>
@@ -127,10 +52,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
-                <NavMain items={adminNavItems} label="Kelola Sekolah" />
-                <NavMain items={akademikNavItems} label="Akademik" />
-                <NavMain items={siswaNavItems} label="Siswa" />
+                {adminSidebarGroups.map((group) => (
+                    <NavMain
+                        key={group.label}
+                        items={group.items}
+                        label={group.label}
+                    />
+                ))}
             </SidebarContent>
 
             <SidebarFooter>

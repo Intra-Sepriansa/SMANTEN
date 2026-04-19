@@ -12,14 +12,14 @@ type DocumentsPageProps = {
 const documentGroups = [
     {
         title: 'Unduhan',
-        label: 'File publik',
+        label: 'File resmi',
         color: '#0F766E',
         href: '#unduhan',
         items: ['Formulir', 'Panduan', 'Surat'],
     },
     {
         title: 'PPDB',
-        label: 'Info masuk',
+        label: 'Penerimaan',
         color: '#D97706',
         href: '/ppdb',
         items: ['Alur', 'Zonasi', 'Kuota'],
@@ -65,7 +65,7 @@ const downloadItems = [
 
 function FolderPaper({ text }: { text: string }) {
     return (
-        <div className="grid size-full place-items-center px-2 text-center text-[0.5rem] font-black uppercase tracking-[0.18em] text-[var(--school-ink)]">
+        <div className="grid size-full place-items-center px-2 text-center text-[0.5rem] font-black tracking-[0.18em] text-[var(--school-ink)] uppercase">
             {text}
         </div>
     );
@@ -88,34 +88,40 @@ export default function DocumentsPage({ school }: DocumentsPageProps) {
                     animate="show"
                     className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(237,247,245,0.72),rgba(255,248,231,0.82))] p-6 shadow-[0_28px_80px_-54px_rgba(15,118,110,0.58)] backdrop-blur-xl md:p-8"
                 >
-                    <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-[var(--school-green-100)]/60 blur-3xl" />
+                    <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-[var(--school-green-100)]/60 blur-3xl" />
                     <div className="pointer-events-none absolute -bottom-24 -left-16 size-72 rounded-full bg-[var(--school-gold-400)]/18 blur-3xl" />
 
                     <div className="relative grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
                         <motion.div variants={fadeUp}>
-                            <div className="inline-flex rounded-full border border-[var(--school-green-200)] bg-white/75 px-4 py-1 text-xs font-black uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                            <div className="inline-flex rounded-full border border-[var(--school-green-200)] bg-white/75 px-4 py-1 text-xs font-black tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                 Dokumen
                             </div>
                             <h1 className="mt-5 text-4xl font-black tracking-tight text-[var(--school-ink)] md:text-6xl">
                                 Unduhan sekolah.
                             </h1>
-                            <p className="mt-4 max-w-xl text-base font-medium leading-7 text-[var(--school-muted)]">
+                            <p className="mt-4 max-w-xl text-base leading-7 font-medium text-[var(--school-muted)]">
                                 File penting, ringkas, dan mudah ditemukan.
                             </p>
                         </motion.div>
 
                         <motion.div
                             variants={fadeUp}
-                            className="relative min-h-[260px] overflow-hidden rounded-[2rem] border border-white/70 bg-white/55 shadow-inner shadow-white/60"
+                            className="relative min-h-[320px] overflow-visible rounded-[2rem] border border-white/70 bg-white/55 shadow-inner shadow-white/60 lg:min-h-[340px]"
                         >
-                            <div className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2">
+                            <div className="absolute top-[63%] left-1/2 -translate-x-1/2 -translate-y-1/2">
                                 <Folder
                                     color="#0F766E"
                                     size={2.25}
                                     items={[
-                                        <FolderPaper key="paper-1" text="PDF" />,
+                                        <FolderPaper
+                                            key="paper-1"
+                                            text="PDF"
+                                        />,
                                         <FolderPaper key="paper-2" text="SK" />,
-                                        <FolderPaper key="paper-3" text="DOC" />,
+                                        <FolderPaper
+                                            key="paper-3"
+                                            text="DOC"
+                                        />,
                                     ]}
                                 />
                             </div>
@@ -142,23 +148,25 @@ export default function DocumentsPage({ school }: DocumentsPageProps) {
                                 className="relative flex h-full min-h-[260px] flex-col overflow-hidden rounded-[1.8rem] border border-white/70 bg-white/78 p-5 shadow-[0_24px_60px_-38px_rgba(15,118,110,0.42)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:bg-white"
                             >
                                 <div className="flex items-center justify-between">
-                                    <span className="text-xs font-black uppercase tracking-[0.24em] text-[var(--school-muted)]">
+                                    <span className="text-xs font-black tracking-[0.24em] text-[var(--school-muted)] uppercase">
                                         {group.label}
                                     </span>
                                     <ArrowRight className="size-4 text-[var(--school-green-700)] transition group-hover:translate-x-1" />
                                 </div>
 
                                 <div className="grid flex-1 place-items-center">
-                                    <Folder
-                                        color={group.color}
-                                        size={1.25}
-                                        items={group.items.map((item) => (
-                                            <FolderPaper
-                                                key={item}
-                                                text={item}
-                                            />
-                                        ))}
-                                    />
+                                    <div className="translate-y-2">
+                                        <Folder
+                                            color={group.color}
+                                            size={1.25}
+                                            items={group.items.map((item) => (
+                                                <FolderPaper
+                                                    key={item}
+                                                    text={item}
+                                                />
+                                            ))}
+                                        />
+                                    </div>
                                 </div>
 
                                 <h2 className="text-2xl font-black tracking-tight text-[var(--school-ink)]">
@@ -185,7 +193,7 @@ export default function DocumentsPage({ school }: DocumentsPageProps) {
                                         <span className="block font-black text-[var(--school-ink)]">
                                             {item.title}
                                         </span>
-                                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--school-muted)]">
+                                        <span className="text-xs font-bold tracking-[0.2em] text-[var(--school-muted)] uppercase">
                                             {item.type}
                                         </span>
                                     </span>

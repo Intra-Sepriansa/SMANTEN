@@ -144,12 +144,313 @@
     body {
         @apply bg-background text-foreground antialiased;
         background-image:
-            radial-gradient(circle at top, rgba(15, 118, 110, 0.08), transparent 28%),
+            radial-gradient(
+                circle at top,
+                rgba(15, 118, 110, 0.08),
+                transparent 28%
+            ),
             linear-gradient(180deg, #f8f5ed 0%, #f3efe5 100%);
     }
 
     ::selection {
         background: rgba(15, 118, 110, 0.18);
         color: var(--school-ink);
+    }
+}
+
+@layer components {
+    .admin-workspace-page {
+        animation: admin-page-enter 560ms cubic-bezier(0.18, 0.86, 0.28, 1) both;
+        transform-origin: 50% 18%;
+    }
+
+    .admin-command-surface {
+        position: relative;
+        isolation: isolate;
+        background-size: 180% 180%;
+        animation: admin-dock-in 680ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+    }
+
+    .admin-command-surface::before {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        content: '';
+        background:
+            linear-gradient(110deg, rgba(255, 255, 255, 0.22), transparent 28%),
+            repeating-linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.08) 0,
+                rgba(255, 255, 255, 0.08) 1px,
+                transparent 1px,
+                transparent 18px
+            );
+        opacity: 0.55;
+    }
+
+    .admin-command-surface::after {
+        position: absolute;
+        inset: -40% auto -40% -12%;
+        z-index: -1;
+        width: 22%;
+        content: '';
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.28),
+            transparent
+        );
+        filter: blur(8px);
+        opacity: 0;
+    }
+
+    .admin-command-icon,
+    .admin-card-icon,
+    .admin-sidebar-icon {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+    }
+
+    .admin-command-icon::after,
+    .admin-card-icon::after,
+    .admin-sidebar-icon::after {
+        position: absolute;
+        inset: 0;
+        content: '';
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.5),
+            transparent 42%
+        );
+        opacity: 0.4;
+        transition:
+            opacity 240ms ease,
+            transform 240ms ease;
+    }
+
+    .admin-command-icon {
+        animation: admin-icon-breathe 3.8s ease-in-out infinite;
+    }
+
+    .admin-section-intro {
+        animation: admin-rise-in 520ms cubic-bezier(0.2, 0.85, 0.22, 1) both;
+    }
+
+    .admin-metric-card,
+    .admin-action-card,
+    .admin-dock-panel {
+        position: relative;
+        transform: translate3d(0, 0, 0) scale(1);
+        transition:
+            transform 280ms cubic-bezier(0.2, 0.9, 0.2, 1),
+            border-color 280ms ease,
+            box-shadow 280ms ease,
+            background-color 280ms ease;
+        will-change: transform;
+    }
+
+    .admin-metric-card:hover,
+    .admin-metric-card:focus-within,
+    .admin-action-card:hover,
+    .admin-action-card:focus-within,
+    .admin-dock-panel:hover,
+    .admin-dock-panel:focus-within {
+        transform: translate3d(0, -5px, 0) scale(1.008);
+        box-shadow:
+            0 24px 60px -38px rgba(168, 85, 247, 0.52),
+            0 0 0 1px rgba(236, 72, 153, 0.14);
+    }
+
+    .admin-metric-card::before,
+    .admin-action-card::before,
+    .admin-dock-panel::before {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        content: '';
+        border-radius: inherit;
+        background:
+            linear-gradient(135deg, rgba(168, 85, 247, 0.14), transparent 34%),
+            linear-gradient(315deg, rgba(236, 72, 153, 0.12), transparent 36%);
+        opacity: 0;
+        transition: opacity 280ms ease;
+    }
+
+    .admin-metric-card:hover::before,
+    .admin-metric-card:focus-within::before,
+    .admin-action-card:hover::before,
+    .admin-action-card:focus-within::before,
+    .admin-dock-panel:hover::before,
+    .admin-dock-panel:focus-within::before {
+        opacity: 1;
+    }
+
+    .admin-sidebar-shell [data-sidebar='sidebar'] {
+        border: 1px solid rgba(255, 255, 255, 0.62);
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.92),
+                rgba(248, 250, 252, 0.86)
+            ),
+            repeating-linear-gradient(
+                135deg,
+                rgba(168, 85, 247, 0.06) 0,
+                rgba(168, 85, 247, 0.06) 1px,
+                transparent 1px,
+                transparent 16px
+            );
+        box-shadow: 0 24px 70px -54px rgba(88, 28, 135, 0.8);
+        backdrop-filter: blur(18px);
+    }
+
+    .dark .admin-sidebar-shell [data-sidebar='sidebar'] {
+        border-color: rgba(255, 255, 255, 0.09);
+        background:
+            linear-gradient(
+                180deg,
+                rgba(23, 23, 23, 0.94),
+                rgba(10, 10, 10, 0.9)
+            ),
+            repeating-linear-gradient(
+                135deg,
+                rgba(168, 85, 247, 0.12) 0,
+                rgba(168, 85, 247, 0.12) 1px,
+                transparent 1px,
+                transparent 16px
+            );
+    }
+
+    .admin-page-transition {
+        animation: admin-page-enter 420ms cubic-bezier(0.2, 0.85, 0.22, 1) both;
+    }
+}
+
+.public-typography {
+    font-feature-settings:
+        'kern' 1,
+        'liga' 1,
+        'calt' 1;
+    text-rendering: optimizeLegibility;
+}
+
+.public-typography :where(h1, h2, h3, h4) {
+    max-width: 22ch;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+}
+
+.public-typography :where(h1) {
+    line-height: 1.06;
+}
+
+.public-typography :where(h2) {
+    line-height: 1.14;
+}
+
+.public-typography :where(h3, h4) {
+    line-height: 1.22;
+}
+
+.public-typography :where(p, li) {
+    max-width: 68ch;
+    line-height: 1.72;
+    letter-spacing: 0.002em;
+    text-wrap: pretty;
+}
+
+.public-typography :where(a) {
+    text-underline-offset: 0.18em;
+}
+
+.public-typography :where([class*='tracking-']) {
+    letter-spacing: min(var(--tw-tracking, 0.12em), 0.18em);
+}
+
+@media (max-width: 640px) {
+    .public-typography :where(h1, h2, h3, h4) {
+        max-width: 18ch;
+        letter-spacing: -0.02em;
+    }
+
+    .public-typography :where(p, li) {
+        line-height: 1.68;
+    }
+}
+
+@keyframes admin-page-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+        filter: blur(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes admin-dock-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes admin-rise-in {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes admin-icon-breathe {
+    0%,
+    100% {
+        box-shadow:
+            0 18px 34px -22px rgba(0, 0, 0, 0.72),
+            0 0 0 0 rgba(255, 255, 255, 0.16);
+    }
+
+    50% {
+        box-shadow:
+            0 22px 42px -24px rgba(0, 0, 0, 0.78),
+            0 0 0 10px rgba(255, 255, 255, 0.06);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-workspace-page,
+    .admin-command-surface,
+    .admin-command-icon,
+    .admin-section-intro,
+    .admin-page-transition {
+        animation: none;
+    }
+
+    .admin-metric-card,
+    .admin-metric-card:hover,
+    .admin-metric-card:focus-within,
+    .admin-action-card,
+    .admin-action-card:hover,
+    .admin-action-card:focus-within,
+    .admin-dock-panel,
+    .admin-dock-panel:hover,
+    .admin-dock-panel:focus-within {
+        transform: none;
+        transition: none;
     }
 }

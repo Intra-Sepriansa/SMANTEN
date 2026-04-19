@@ -1,6 +1,11 @@
 import { Head } from '@inertiajs/react';
-import { lazy, startTransition, Suspense, useDeferredValue, useEffect, useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import {
+    motion,
+    useInView,
+    useScroll,
+    useTransform,
+    AnimatePresence,
+} from 'framer-motion';
 import {
     AlertCircle,
     Award,
@@ -12,7 +17,6 @@ import {
     Crosshair,
     FileText,
     GraduationCap,
-    HelpCircle,
     LoaderCircle,
     MapPin,
     Megaphone,
@@ -23,21 +27,33 @@ import {
     Users,
     Zap,
 } from 'lucide-react';
+import {
+    lazy,
+    startTransition,
+    Suspense,
+    useDeferredValue,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
+import CardSwap, { Card } from '@/components/CardSwap';
+import { PpdbQuotaChart } from '@/components/charts/school-charts';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
-import { PpdbQuotaChart } from '@/components/charts/school-charts';
-import { ppdbFaqs } from '@/lib/public-content';
 import { calculateHaversineKm } from '@/lib/geo';
+import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
+import { ppdbFaqs } from '@/lib/public-content';
 import type {
     GeocodeCandidate,
     PpdbPayload,
     SchoolProfilePayload,
 } from '@/types';
 
-const PpdbDistanceMap = lazy(() => import('@/components/maps/ppdb-distance-map'));
+const PpdbDistanceMap = lazy(
+    () => import('@/components/maps/ppdb-distance-map'),
+);
 
 type PpdbPageProps = {
     school: SchoolProfilePayload;
@@ -62,7 +78,10 @@ function AnimatedCounter({ value }: { value: number }) {
     const [display, setDisplay] = useState(0);
 
     useEffect(() => {
-        if (!inView) return;
+        if (!inView) {
+            return;
+        }
+
         let frame: number;
         const duration = 1200;
         const start = performance.now();
@@ -70,17 +89,25 @@ function AnimatedCounter({ value }: { value: number }) {
             const progress = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
             setDisplay(Math.round(eased * value));
-            if (progress < 1) frame = requestAnimationFrame(tick);
+
+            if (progress < 1) {
+                frame = requestAnimationFrame(tick);
+            }
         }
         frame = requestAnimationFrame(tick);
+
         return () => cancelAnimationFrame(frame);
     }, [inView, value]);
 
-    return <span ref={ref}>{new Intl.NumberFormat('id-ID').format(display)}</span>;
+    return (
+        <span ref={ref}>{new Intl.NumberFormat('id-ID').format(display)}</span>
+    );
 }
 
 /* ─── Formatters ─── */
-const numberFormatter = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
+const numberFormatter = new Intl.NumberFormat('id-ID', {
+    maximumFractionDigits: 2,
+});
 
 const dateFormatter = new Intl.DateTimeFormat('id-ID', {
     day: '2-digit',
@@ -89,18 +116,26 @@ const dateFormatter = new Intl.DateTimeFormat('id-ID', {
 });
 
 /* ─── Track Type Config ─── */
-const trackConfig: Record<string, { icon: typeof Shield; accent: string; gradient: string; description: string }> = {
+const trackConfig: Record<
+    string,
+    {
+        icon: typeof Shield;
+        accent: string;
+        gradient: string;
+        description: string;
+    }
+> = {
     zonasi: {
         icon: MapPin,
         accent: '#10B981',
         gradient: 'from-emerald-500/20 to-emerald-600/5',
-        description: 'Penerimaan berdasarkan jarak domisili ke sekolah',
+        description: 'Berdasarkan jarak domisili ke sekolah',
     },
     afirmasi: {
         icon: Shield,
         accent: '#38BDF8',
         gradient: 'from-sky-500/20 to-sky-600/5',
-        description: 'Untuk siswa dari keluarga ekonomi tidak mampu',
+        description: 'Untuk calon siswa dari keluarga ekonomi tidak mampu',
     },
     perpindahan: {
         icon: Users,
@@ -117,27 +152,35 @@ const trackConfig: Record<string, { icon: typeof Shield; accent: string; gradien
 };
 
 /* ─── FAQ Accordion Item ─── */
-function FaqItem({ question, answer, index }: { question: string; answer: string; index: number }) {
+function FaqItem({
+    question,
+    answer,
+    index,
+}: {
+    question: string;
+    answer: string;
+    index: number;
+}) {
     const [open, setOpen] = useState(false);
+
     return (
-        <motion.div
-            variants={fadeUp}
-            className="group"
-        >
+        <motion.div variants={fadeUp} className="group">
             <BorderGlow
                 borderRadius={24}
                 colors={['#0F766E', '#0EA5E9', '#A855F7']}
-                className="overflow-hidden rounded-3xl border border-white/70 bg-white/88 backdrop-blur-md shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)] hover:shadow-[0_24px_70px_-20px_rgba(15,118,110,0.3)] transition-all"
+                className="overflow-hidden rounded-3xl border border-white/70 bg-white/88 shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)] backdrop-blur-md transition-all hover:shadow-[0_24px_70px_-20px_rgba(15,118,110,0.3)]"
             >
                 <button
                     type="button"
                     onClick={() => setOpen(!open)}
                     className="flex w-full items-center gap-4 p-6 text-left transition-colors hover:bg-[rgba(240,253,244,0.4)]"
                 >
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white border border-emerald-100 text-[var(--school-green-700)] font-heading text-sm shadow-sm">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white font-heading text-sm text-[var(--school-green-700)] shadow-sm">
                         {String(index + 1).padStart(2, '0')}
                     </div>
-                    <h3 className="flex-1 font-heading text-base text-[var(--school-ink)] md:text-lg">{question}</h3>
+                    <h3 className="flex-1 font-heading text-base text-[var(--school-ink)] md:text-lg">
+                        {question}
+                    </h3>
                     <motion.div
                         animate={{ rotate: open ? 180 : 0 }}
                         transition={{ duration: 0.3 }}
@@ -155,8 +198,10 @@ function FaqItem({ question, answer, index }: { question: string; answer: string
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="overflow-hidden"
                         >
-                            <div className="px-6 pb-6 pl-20 bg-gradient-to-b from-transparent to-white/30">
-                                <p className="text-sm leading-relaxed text-[var(--school-muted)]">{answer}</p>
+                            <div className="bg-gradient-to-b from-transparent to-white/30 px-6 pb-6 pl-20">
+                                <p className="text-sm leading-relaxed text-[var(--school-muted)]">
+                                    {answer}
+                                </p>
                             </div>
                         </motion.div>
                     )}
@@ -168,7 +213,9 @@ function FaqItem({ question, answer, index }: { question: string; answer: string
 
 export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
     const [fullName, setFullName] = useState('');
-    const [trackType, setTrackType] = useState(ppdb?.trackQuotas[0]?.trackType ?? 'zonasi');
+    const [trackType, setTrackType] = useState(
+        ppdb?.trackQuotas[0]?.trackType ?? 'zonasi',
+    );
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [previousSchoolName, setPreviousSchoolName] = useState('');
@@ -180,11 +227,14 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
     const [achievementsSummary, setAchievementsSummary] = useState('');
     const [preview, setPreview] = useState<DistancePreview | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submissionResult, setSubmissionResult] = useState<SubmissionResult | null>(null);
+    const [submissionResult, setSubmissionResult] =
+        useState<SubmissionResult | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLocating, setIsLocating] = useState(false);
     const [isGeocoding, setIsGeocoding] = useState(false);
-    const [geocodeResults, setGeocodeResults] = useState<GeocodeCandidate[]>([]);
+    const [geocodeResults, setGeocodeResults] = useState<GeocodeCandidate[]>(
+        [],
+    );
 
     const deferredLatitude = useDeferredValue(latitude);
     const deferredLongitude = useDeferredValue(longitude);
@@ -192,10 +242,15 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
     const schoolLatitude = ppdb?.schoolLatitude ?? school.location.latitude;
     const schoolLongitude = ppdb?.schoolLongitude ?? school.location.longitude;
     const schoolPosition: [number, number] = [schoolLatitude, schoolLongitude];
-    const selectedQuota = ppdb?.trackQuotas.find((quota) => quota.trackType === trackType) ?? null;
+    const selectedQuota =
+        ppdb?.trackQuotas.find((quota) => quota.trackType === trackType) ??
+        null;
 
     const heroRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ['start start', 'end start'],
+    });
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
@@ -226,6 +281,99 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
         },
     ];
 
+    const quotaPreviewRows =
+        ppdb && ppdb.trackQuotas.length > 0
+            ? ppdb.trackQuotas.slice(0, 3).map((quota) => ({
+                  label: quota.trackType,
+                  value: `${numberFormatter.format(quota.quotaSeats)} kursi`,
+              }))
+            : [
+                  {
+                      label: 'Jalur',
+                      value: 'Menunggu konfigurasi',
+                  },
+              ];
+
+    const heroSwapCards = [
+        {
+            eyebrow: 'Jadwal',
+            title: 'Mulai Siapkan Berkas',
+            icon: Calendar,
+            accentColor: '#10B981',
+            stat: ppdb?.applicationOpensAt
+                ? dateFormatter.format(new Date(ppdb.applicationOpensAt))
+                : 'Segera diumumkan',
+            caption: 'pendaftaran dibuka',
+            meter: '82%',
+            rows: [
+                {
+                    label: 'Tutup',
+                    value: ppdb?.applicationClosesAt
+                        ? dateFormatter.format(
+                              new Date(ppdb.applicationClosesAt),
+                          )
+                        : 'Menunggu jadwal',
+                },
+                {
+                    label: 'Hasil',
+                    value: ppdb?.announcementAt
+                        ? dateFormatter.format(new Date(ppdb.announcementAt))
+                        : 'Mengikuti panitia',
+                },
+            ],
+        },
+        {
+            eyebrow: 'Kuota',
+            title: 'Kursi Penerimaan',
+            icon: Users,
+            accentColor: '#0EA5E9',
+            stat: ppdb ? numberFormatter.format(ppdb.capacity) : 'Belum ada',
+            caption: 'total kapasitas',
+            meter: '68%',
+            rows: quotaPreviewRows,
+        },
+        {
+            eyebrow: 'Zonasi',
+            title: 'Cek Jarak Domisili',
+            icon: MapPin,
+            accentColor: '#F59E0B',
+            stat: ppdb
+                ? `${numberFormatter.format(ppdb.zoneRadiusKm)} km`
+                : 'Belum ada',
+            caption: 'radius sekolah',
+            meter: '74%',
+            rows: [
+                {
+                    label: 'Titik sekolah',
+                    value: school.name,
+                },
+                {
+                    label: 'Simulasi',
+                    value: 'Klik peta atau pakai GPS',
+                },
+            ],
+        },
+        {
+            eyebrow: 'Dokumen',
+            title: 'Berkas Inti',
+            icon: FileText,
+            accentColor: '#EC4899',
+            stat: '4 Berkas',
+            caption: 'siapkan sebelum daftar',
+            meter: '58%',
+            rows: [
+                {
+                    label: 'Identitas',
+                    value: 'KK dan akta lahir',
+                },
+                {
+                    label: 'Sekolah asal',
+                    value: 'Rapor atau surat lulus',
+                },
+            ],
+        },
+    ];
+
     function applyHomePosition(nextLatitude: number, nextLongitude: number) {
         setLatitude(nextLatitude.toFixed(6));
         setLongitude(nextLongitude.toFixed(6));
@@ -237,6 +385,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
             setErrorMessage(
                 'Masukkan alamat rumah yang cukup spesifik sebelum menjalankan geocoding.',
             );
+
             return;
         }
 
@@ -255,10 +404,12 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     payload?.message ??
                         'Alamat belum dapat diterjemahkan ke koordinat. Coba perjelas detail wilayah.',
                 );
+
                 return;
             }
 
-            const results = (payload?.data?.results ?? []) as GeocodeCandidate[];
+            const results = (payload?.data?.results ??
+                []) as GeocodeCandidate[];
             setGeocodeResults(results);
 
             if (results.length === 0) {
@@ -286,6 +437,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
             !Number.isFinite(parsedLongitude)
         ) {
             startTransition(() => setPreview(null));
+
             return;
         }
 
@@ -316,6 +468,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
 
         if (!ppdb) {
             setErrorMessage('Siklus PPDB aktif belum tersedia.');
+
             return;
         }
 
@@ -323,6 +476,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
             setErrorMessage(
                 'Masukkan latitude dan longitude rumah yang valid untuk memeriksa jarak.',
             );
+
             return;
         }
 
@@ -352,7 +506,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     achievements_summary: achievementsSummary,
                     submission_payload: {
                         preview_distance_km: preview.distanceKm,
-                        preview_zone_status: preview.insideZone ? 'inside' : 'outside',
+                        preview_zone_status: preview.insideZone
+                            ? 'inside'
+                            : 'outside',
                     },
                 }),
             });
@@ -364,6 +520,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     payload?.message ??
                         'Pengiriman formulir gagal. Periksa kembali data yang diisi.',
                 );
+
                 return;
             }
 
@@ -385,6 +542,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
             setErrorMessage(
                 'Browser ini tidak mendukung geolocation. Gunakan klik peta atau input manual koordinat.',
             );
+
             return;
         }
 
@@ -431,10 +589,13 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                     id="hero"
-                    className="relative w-[100vw] h-[85vh] lg:h-[100dvh] left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-8 md:-mt-10 overflow-hidden bg-neutral-900"
+                    className="relative right-1/2 left-1/2 -mt-8 -mr-[50vw] -ml-[50vw] h-[85vh] w-[100vw] overflow-hidden bg-neutral-900 md:-mt-10 lg:h-[100dvh]"
                 >
                     {/* Background Image with Parallax */}
-                    <motion.div className="absolute inset-0 z-0" style={{ y: heroY }}>
+                    <motion.div
+                        className="absolute inset-0 z-0"
+                        style={{ y: heroY }}
+                    >
                         <img
                             src="/images/profil/hero-banner.png"
                             alt="Kampus SMAN 1 Tenjo"
@@ -445,83 +606,231 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     </motion.div>
 
                     {/* Ambient Effects */}
-                    <div className="absolute inset-0 z-[1] pointer-events-none">
-                        <div className="absolute -left-40 top-1/3 size-[500px] rounded-full bg-emerald-500/[0.07] blur-[150px]" />
+                    <div className="pointer-events-none absolute inset-0 z-[1]">
+                        <div className="absolute top-1/3 -left-40 size-[500px] rounded-full bg-emerald-500/[0.07] blur-[150px]" />
                         <div className="absolute -right-32 bottom-1/4 size-[400px] rounded-full bg-violet-500/[0.06] blur-[130px]" />
                     </div>
 
                     {/* Content Overlay */}
-                    <motion.div className="absolute inset-0 z-10 flex flex-col justify-end" style={{ opacity: heroOpacity }}>
-                        <div className="mx-auto w-full max-w-[84rem] p-5 pb-12 md:p-8 md:pb-20">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2 backdrop-blur-md"
-                            >
-                                <div className="relative">
-                                    <GraduationCap className="size-4 text-emerald-400" />
-                                    <div className="absolute inset-0 animate-ping text-emerald-400 opacity-30">
-                                        <GraduationCap className="size-4" />
+                    <motion.div
+                        className="absolute inset-0 z-10 flex flex-col justify-end"
+                        style={{ opacity: heroOpacity }}
+                    >
+                        <div className="mx-auto grid w-full max-w-[84rem] items-end gap-10 p-5 pb-14 md:p-8 md:pb-20 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)]">
+                            <div className="relative z-10 max-w-4xl">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: 0.2 }}
+                                    className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2 backdrop-blur-md"
+                                >
+                                    <div className="relative">
+                                        <GraduationCap className="size-4 text-emerald-400" />
+                                        <div className="absolute inset-0 animate-ping text-emerald-400 opacity-30">
+                                            <GraduationCap className="size-4" />
+                                        </div>
                                     </div>
-                                </div>
-                                <span className="text-[0.68rem] font-bold uppercase tracking-[0.28em] text-emerald-300">
-                                    PPDB {ppdb?.name ?? new Date().getFullYear()}
-                                </span>
-                            </motion.div>
+                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-emerald-300 uppercase">
+                                        PPDB{' '}
+                                        {ppdb?.name ?? new Date().getFullYear()}
+                                    </span>
+                                </motion.div>
 
-                            <motion.h1
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.35 }}
-                                className="mt-5 max-w-4xl font-heading text-4xl leading-[1.1] text-white md:text-5xl lg:text-7xl"
-                            >
-                                Penerimaan Peserta Didik Baru
-                            </motion.h1>
+                                <motion.h1
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.35 }}
+                                    className="mt-5 max-w-4xl font-heading text-4xl leading-[1.1] text-white md:text-5xl lg:text-7xl"
+                                >
+                                    Penerimaan Peserta Didik Baru
+                                </motion.h1>
 
-                            <motion.p
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.45 }}
-                                className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg"
-                            >
-                                Simulasi zonasi interaktif dengan peta, verifikasi jarak domisili otomatis, dan pendaftaran langsung. Semua dalam satu pengalaman.
-                            </motion.p>
+                                <motion.p
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.45 }}
+                                    className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg"
+                                >
+                                    Informasi jadwal, kuota jalur, simulasi
+                                    jarak domisili, dan formulir pendaftaran.
+                                </motion.p>
 
-                            {/* Hero Stats Row */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.55 }}
-                                className="mt-10 flex flex-wrap items-center gap-4"
-                            >
-                                {[
-                                    { label: 'Kapasitas', value: ppdb ? numberFormatter.format(ppdb.capacity) : '—', icon: Users, accentColor: '#10B981' },
-                                    { label: 'Radius Zona', value: ppdb ? `${numberFormatter.format(ppdb.zoneRadiusKm)} km` : '—', icon: MapPin, accentColor: '#38BDF8' },
-                                    { label: 'Jalur', value: ppdb ? `${ppdb.trackQuotas.length} Jalur` : '—', icon: FileText, accentColor: '#C084FC' },
-                                ].map((s) => (
-                                    <motion.div
-                                        key={s.label}
-                                        whileHover={{ y: -4, scale: 1.03 }}
-                                        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 backdrop-blur-lg shadow-2xl transition-all hover:border-white/20 hover:bg-white/[0.08]"
-                                    >
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle at center, ${s.accentColor}08, transparent 70%)` }} />
-                                        <div className="relative flex items-center gap-3.5">
+                                {/* Hero Stats Row */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.55 }}
+                                    className="mt-10 flex flex-wrap items-center gap-4"
+                                >
+                                    {[
+                                        {
+                                            label: 'Kapasitas',
+                                            value: ppdb
+                                                ? numberFormatter.format(
+                                                      ppdb.capacity,
+                                                  )
+                                                : '—',
+                                            icon: Users,
+                                            accentColor: '#10B981',
+                                        },
+                                        {
+                                            label: 'Radius Zona',
+                                            value: ppdb
+                                                ? `${numberFormatter.format(ppdb.zoneRadiusKm)} km`
+                                                : '—',
+                                            icon: MapPin,
+                                            accentColor: '#38BDF8',
+                                        },
+                                        {
+                                            label: 'Jalur',
+                                            value: ppdb
+                                                ? `${ppdb.trackQuotas.length} Jalur`
+                                                : '—',
+                                            icon: FileText,
+                                            accentColor: '#C084FC',
+                                        },
+                                    ].map((s) => (
+                                        <motion.div
+                                            key={s.label}
+                                            whileHover={{ y: -4, scale: 1.03 }}
+                                            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 shadow-2xl backdrop-blur-lg transition-all hover:border-white/20 hover:bg-white/[0.08]"
+                                        >
                                             <div
-                                                className="flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] shadow-inner transition-all group-hover:border-opacity-30"
-                                                style={{ borderColor: `${s.accentColor}20` }}
-                                            >
-                                                <s.icon className="size-4 transition-colors" style={{ color: s.accentColor }} />
-                                            </div>
-                                            <div>
-                                                <div className="text-xl font-heading text-white">{s.value}</div>
-                                                <div className="mt-0.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-slate-300">
-                                                    {s.label}
+                                                className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                                                style={{
+                                                    background: `radial-gradient(circle at center, ${s.accentColor}08, transparent 70%)`,
+                                                }}
+                                            />
+                                            <div className="relative flex items-center gap-3.5">
+                                                <div
+                                                    className="group-hover:border-opacity-30 flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] shadow-inner transition-all"
+                                                    style={{
+                                                        borderColor: `${s.accentColor}20`,
+                                                    }}
+                                                >
+                                                    <s.icon
+                                                        className="size-4 transition-colors"
+                                                        style={{
+                                                            color: s.accentColor,
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <div className="font-heading text-xl text-white">
+                                                        {s.value}
+                                                    </div>
+                                                    <div className="mt-0.5 text-[0.6rem] font-bold tracking-[0.2em] text-slate-400 uppercase group-hover:text-slate-300">
+                                                        {s.label}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                            </div>
+
+                            <motion.div
+                                initial={{ opacity: 0, x: 36, rotate: 1 }}
+                                animate={{ opacity: 1, x: 0, rotate: 0 }}
+                                transition={{ duration: 0.7, delay: 0.7 }}
+                                className="relative hidden h-[460px] lg:block"
+                                aria-hidden="true"
+                            >
+                                <CardSwap
+                                    width={420}
+                                    height={285}
+                                    cardDistance={46}
+                                    verticalDistance={58}
+                                    delay={4600}
+                                    pauseOnHover
+                                    skewAmount={4}
+                                >
+                                    {heroSwapCards.map((card) => {
+                                        const HeroCardIcon = card.icon;
+
+                                        return (
+                                            <Card
+                                                key={card.title}
+                                                customClass="overflow-hidden border-white/80 bg-white/92 p-6 text-[var(--school-ink)] shadow-[0_30px_90px_-35px_rgba(15,23,42,0.55)] backdrop-blur-xl"
+                                            >
+                                                <div className="flex h-full flex-col justify-between">
+                                                    <div>
+                                                        <div className="flex items-start justify-between gap-4">
+                                                            <div className="min-w-0">
+                                                                <div
+                                                                    className="text-[0.64rem] font-bold tracking-[0.24em] uppercase"
+                                                                    style={{
+                                                                        color: card.accentColor,
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        card.eyebrow
+                                                                    }
+                                                                </div>
+                                                                <h2 className="mt-2 truncate font-heading text-2xl text-[var(--school-ink)]">
+                                                                    {card.title}
+                                                                </h2>
+                                                            </div>
+                                                            <div
+                                                                className="flex size-12 shrink-0 items-center justify-center rounded-lg border bg-white shadow-sm"
+                                                                style={{
+                                                                    borderColor: `${card.accentColor}30`,
+                                                                    color: card.accentColor,
+                                                                }}
+                                                            >
+                                                                <HeroCardIcon className="size-5" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="mt-7">
+                                                            <div className="font-heading text-4xl leading-none text-[var(--school-ink)]">
+                                                                {card.stat}
+                                                            </div>
+                                                            <div className="mt-2 text-[0.68rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
+                                                                {card.caption}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-3">
+                                                        <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                                                            <div
+                                                                className="h-full rounded-full"
+                                                                style={{
+                                                                    width: card.meter,
+                                                                    backgroundColor:
+                                                                        card.accentColor,
+                                                                }}
+                                                            />
+                                                        </div>
+
+                                                        <div className="space-y-2.5">
+                                                            {card.rows.map(
+                                                                (row) => (
+                                                                    <div
+                                                                        key={`${card.title}-${row.label}`}
+                                                                        className="flex min-w-0 items-center justify-between gap-4 border-t border-slate-200/70 pt-2.5 first:border-t-0 first:pt-0"
+                                                                    >
+                                                                        <span className="shrink-0 text-[0.65rem] font-bold tracking-[0.18em] text-slate-500 uppercase">
+                                                                            {
+                                                                                row.label
+                                                                            }
+                                                                        </span>
+                                                                        <span className="min-w-0 truncate text-right text-sm font-semibold text-slate-700">
+                                                                            {
+                                                                                row.value
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                ),
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Card>
+                                        );
+                                    })}
+                                </CardSwap>
                             </motion.div>
                         </div>
                     </motion.div>
@@ -535,10 +844,16 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     >
                         <motion.div
                             animate={{ y: [0, 8, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                            transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                            }}
                             className="flex flex-col items-center gap-2"
                         >
-                            <span className="text-[0.55rem] font-bold uppercase tracking-[0.3em] text-white/40">Scroll</span>
+                            <span className="text-[0.55rem] font-bold tracking-[0.3em] text-white/40 uppercase">
+                                Scroll
+                            </span>
                             <div className="h-8 w-[1.5px] bg-gradient-to-b from-white/40 to-transparent" />
                         </motion.div>
                     </motion.div>
@@ -548,8 +863,8 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                 <section id="timeline" className="scroll-mt-24 space-y-10">
                     <SectionHeading
                         eyebrow="Jadwal PPDB"
-                        title="Ritme penting yang tidak boleh terlewat."
-                        description="Tiga titik waktu yang menentukan perjalanan Anda menjadi bagian dari keluarga besar SMAN 1 Tenjo."
+                        title="Tanggal penting penerimaan siswa baru."
+                        description="Perhatikan jadwal buka pendaftaran, tutup pendaftaran, dan pengumuman hasil."
                     />
 
                     <motion.div
@@ -560,30 +875,44 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         className="grid gap-5 md:grid-cols-3"
                     >
                         {ppdbTimeline.map((item, i) => (
-                            <motion.div key={item.label} variants={fadeUp} whileHover={{ y: -6 }}>
+                            <motion.div
+                                key={item.label}
+                                variants={fadeUp}
+                                whileHover={{ y: -6 }}
+                            >
                                 <BorderGlow
                                     borderRadius={28}
                                     colors={[item.accent, '#6366F1', '#0EA5E9']}
-                                    className="relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/88 shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)] hover:shadow-[0_28px_80px_-20px_rgba(15,118,110,0.3)] transition-all"
+                                    className="relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/88 shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)] transition-all hover:shadow-[0_28px_80px_-20px_rgba(15,118,110,0.3)]"
                                 >
-                                    <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top left, ${item.accent}08, transparent 60%)` }} />
+                                    <div
+                                        className="pointer-events-none absolute inset-0"
+                                        style={{
+                                            background: `radial-gradient(circle at top left, ${item.accent}08, transparent 60%)`,
+                                        }}
+                                    />
                                     <div className="relative z-10 p-7">
                                         <div className="flex items-center gap-4">
                                             <div
                                                 className="flex size-14 items-center justify-center rounded-2xl border bg-white shadow-sm"
-                                                style={{ 
+                                                style={{
                                                     borderColor: `${item.accent}30`,
                                                     color: item.accent,
                                                 }}
                                             >
                                                 <item.icon className="size-6" />
                                             </div>
-                                            <div className="text-[0.6rem] font-bold uppercase tracking-[0.25em] text-slate-500">
-                                                Tahap {String(i + 1).padStart(2, '0')}
+                                            <div className="text-[0.6rem] font-bold tracking-[0.25em] text-slate-500 uppercase">
+                                                Tahap{' '}
+                                                {String(i + 1).padStart(2, '0')}
                                             </div>
                                         </div>
-                                        <h3 className="mt-5 font-heading text-xl text-[var(--school-ink)]">{item.label}</h3>
-                                        <div className="mt-3 text-2xl font-heading text-[var(--school-ink)]">{item.value}</div>
+                                        <h3 className="mt-5 font-heading text-xl text-[var(--school-ink)]">
+                                            {item.label}
+                                        </h3>
+                                        <div className="mt-3 font-heading text-2xl text-[var(--school-ink)]">
+                                            {item.value}
+                                        </div>
                                     </div>
                                 </BorderGlow>
                             </motion.div>
@@ -597,7 +926,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
                             <PpdbQuotaChart
                                 data={ppdb.trackQuotas.map((q) => ({
-                                    track: q.trackType.charAt(0).toUpperCase() + q.trackType.slice(1),
+                                    track:
+                                        q.trackType.charAt(0).toUpperCase() +
+                                        q.trackType.slice(1),
                                     percentage: q.quotaPercentage,
                                     seats: q.quotaSeats,
                                 }))}
@@ -607,22 +938,38 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={motionViewport}
-                                className="rounded-[2rem] border border-white/70 bg-white/90 p-6 md:p-8 shadow-[0_20px_60px_-30px_rgba(15,118,110,0.15)] backdrop-blur-xl flex flex-col justify-center"
+                                className="flex flex-col justify-center rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_-30px_rgba(15,118,110,0.15)] backdrop-blur-xl md:p-8"
                             >
                                 <div className="space-y-5">
-                                    <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">Ringkasan Kapasitas</h3>
-                                    <div className="grid gap-4 grid-cols-2">
+                                    <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">
+                                        Ringkasan Kapasitas
+                                    </h3>
+                                    <div className="grid grid-cols-2 gap-4">
                                         {ppdb.trackQuotas.map((q) => (
-                                            <div key={q.trackType} className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
-                                                <div className="text-2xl font-bold text-[var(--school-ink)]">{q.quotaSeats}</div>
-                                                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{q.trackType}</div>
-                                                <div className="text-xs text-[var(--school-muted)]">{q.quotaPercentage}% kapasitas</div>
+                                            <div
+                                                key={q.trackType}
+                                                className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4"
+                                            >
+                                                <div className="text-2xl font-bold text-[var(--school-ink)]">
+                                                    {q.quotaSeats}
+                                                </div>
+                                                <div className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    {q.trackType}
+                                                </div>
+                                                <div className="text-xs text-[var(--school-muted)]">
+                                                    {q.quotaPercentage}%
+                                                    kapasitas
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 p-4">
-                                        <div className="text-3xl font-bold text-emerald-700">{ppdb.capacity}</div>
-                                        <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Total Kapasitas</div>
+                                    <div className="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-teal-50 p-4">
+                                        <div className="text-3xl font-bold text-emerald-700">
+                                            {ppdb.capacity}
+                                        </div>
+                                        <div className="text-xs font-semibold tracking-wider text-emerald-600 uppercase">
+                                            Total Kapasitas
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -634,8 +981,8 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                 <section id="kuota" className="scroll-mt-24 space-y-10">
                     <SectionHeading
                         eyebrow="Kuota Jalur"
-                        title="Empat jalur, satu tujuan."
-                        description="Informasi lengkap alokasi kursi per jalur penerimaan. Pilih jalur untuk melihat detail kuota."
+                        title="Alokasi kursi per jalur penerimaan."
+                        description="Pilih jalur untuk melihat jumlah kursi dan persentase kuota."
                     />
 
                     <motion.div
@@ -647,7 +994,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     >
                         {(ppdb?.trackQuotas ?? []).map((quota) => {
                             const active = quota.trackType === trackType;
-                            const config = trackConfig[quota.trackType] ?? trackConfig.zonasi;
+                            const config =
+                                trackConfig[quota.trackType] ??
+                                trackConfig.zonasi;
                             const TrackIcon = config.icon;
 
                             return (
@@ -657,45 +1006,84 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     whileHover={{ y: -6, scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     type="button"
-                                    onClick={() => setTrackType(quota.trackType)}
+                                    onClick={() =>
+                                        setTrackType(quota.trackType)
+                                    }
                                     className="text-left"
                                 >
                                     <BorderGlow
                                         borderRadius={28}
-                                        colors={active ? [config.accent, '#10B981', config.accent] : ['#CBD5E1', '#E2E8F0']}
+                                        colors={
+                                            active
+                                                ? [
+                                                      config.accent,
+                                                      '#10B981',
+                                                      config.accent,
+                                                  ]
+                                                : ['#CBD5E1', '#E2E8F0']
+                                        }
                                         className={`relative overflow-hidden rounded-[1.75rem] border transition-all duration-300 ${
                                             active
                                                 ? 'border-white/90 bg-white shadow-[0_28px_80px_-40px_rgba(15,118,110,0.35)]'
-                                                : 'border-white/50 bg-white/50 hover:border-white/80 hover:bg-white/80 hover:shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)] shadow-sm'
+                                                : 'border-white/50 bg-white/50 shadow-sm hover:border-white/80 hover:bg-white/80 hover:shadow-[0_24px_50px_-20px_rgba(15,118,110,0.15)]'
                                         }`}
                                     >
                                         {active && (
-                                            <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top right, ${config.accent}08, transparent 60%)` }} />
+                                            <div
+                                                className="pointer-events-none absolute inset-0"
+                                                style={{
+                                                    background: `radial-gradient(circle at top right, ${config.accent}08, transparent 60%)`,
+                                                }}
+                                            />
                                         )}
                                         <div className="relative z-10 p-6">
                                             <div
-                                                className="flex size-12 items-center justify-center rounded-xl border backdrop-blur-md shadow-sm transition-all"
+                                                className="flex size-12 items-center justify-center rounded-xl border shadow-sm backdrop-blur-md transition-all"
                                                 style={{
-                                                    backgroundColor: active ? 'white' : 'rgba(255,255,255,0.7)',
-                                                    borderColor: active ? `${config.accent}40` : 'rgba(0,0,0,0.05)',
-                                                    color: active ? config.accent : '#64748B',
+                                                    backgroundColor: active
+                                                        ? 'white'
+                                                        : 'rgba(255,255,255,0.7)',
+                                                    borderColor: active
+                                                        ? `${config.accent}40`
+                                                        : 'rgba(0,0,0,0.05)',
+                                                    color: active
+                                                        ? config.accent
+                                                        : '#64748B',
                                                 }}
                                             >
                                                 <TrackIcon className="size-5" />
                                             </div>
-                                            <div className="mt-4 text-[0.68rem] font-bold uppercase tracking-[0.24em]" style={{ color: active ? config.accent : '#64748B' }}>
+                                            <div
+                                                className="mt-4 text-[0.68rem] font-bold tracking-[0.24em] uppercase"
+                                                style={{
+                                                    color: active
+                                                        ? config.accent
+                                                        : '#64748B',
+                                                }}
+                                            >
                                                 {quota.trackType}
                                             </div>
-                                            <div className="mt-2 text-3xl font-heading text-[var(--school-ink)]">
-                                                <AnimatedCounter value={quota.quotaSeats} />
+                                            <div className="mt-2 font-heading text-3xl text-[var(--school-ink)]">
+                                                <AnimatedCounter
+                                                    value={quota.quotaSeats}
+                                                />
                                             </div>
                                             <div className="mt-1 text-xs text-slate-500">
-                                                {numberFormatter.format(quota.quotaPercentage)}% dari kapasitas
+                                                {numberFormatter.format(
+                                                    quota.quotaPercentage,
+                                                )}
+                                                % dari kapasitas
                                             </div>
                                             {active && (
                                                 <motion.div
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    initial={{
+                                                        opacity: 0,
+                                                        height: 0,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        height: 'auto',
+                                                    }}
                                                     className="mt-4 rounded-xl border border-emerald-50 bg-[rgba(240,253,244,0.6)] px-3 py-2.5"
                                                 >
                                                     <p className="text-[0.72rem] leading-relaxed text-[var(--school-muted)]">
@@ -716,93 +1104,157 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     <SectionHeading
                         eyebrow="Simulasi Zonasi"
                         title="Peta interaktif untuk mengukur peluang."
-                        description="Klik peta, masukkan adres, atau gunakan GPS untuk mengukur jarak domisili ke sekolah secara real-time."
+                        description="Klik peta, masukkan alamat, atau gunakan GPS untuk menghitung jarak domisili ke sekolah."
                     />
 
                     <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
                         {/* ── FORM PANEL ── */}
-                        <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={motionViewport}>
+                        <motion.div
+                            variants={fadeUp}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={motionViewport}
+                        >
                             <form onSubmit={handleSubmit}>
                                 <BorderGlow
                                     borderRadius={30}
                                     colors={['#10B981', '#0EA5E9', '#8B5CF6']}
                                     className="relative overflow-hidden rounded-[1.9rem] border border-white/70 bg-white/88 shadow-[0_28px_80px_-50px_rgba(15,118,110,0.45)]"
                                 >
-                                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-emerald-500/[0.02] via-transparent to-violet-500/[0.02]" />
+                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/[0.02] via-transparent to-violet-500/[0.02]" />
                                     <div className="relative z-10 space-y-5 p-7 md:p-8">
                                         <div className="flex items-center gap-3">
-                                            <div className="flex size-10 items-center justify-center rounded-xl bg-[rgba(236,253,245,0.7)] border border-emerald-100 text-emerald-600 shadow-sm">
+                                            <div className="flex size-10 items-center justify-center rounded-xl border border-emerald-100 bg-[rgba(236,253,245,0.7)] text-emerald-600 shadow-sm">
                                                 <FileText className="size-4" />
                                             </div>
                                             <div>
-                                                <h3 className="font-heading text-lg text-[var(--school-ink)]">Formulir Pendaftaran</h3>
-                                                <p className="text-[0.65rem] uppercase tracking-[0.2em] text-slate-500">Simulasi & Submit</p>
+                                                <h3 className="font-heading text-lg text-[var(--school-ink)]">
+                                                    Formulir Pendaftaran
+                                                </h3>
+                                                <p className="text-[0.65rem] tracking-[0.2em] text-slate-500 uppercase">
+                                                    Simulasi & Submit
+                                                </p>
                                             </div>
                                         </div>
 
                                         <div className="grid gap-4 md:grid-cols-2">
                                             {[
-                                                { val: fullName, set: setFullName, ph: 'Nama lengkap calon siswa', icon: Users },
-                                                { val: phone, set: setPhone, ph: 'Nomor telepon', icon: Zap },
-                                                { val: email, set: setEmail, ph: 'Email', icon: Sparkles, type: 'email' },
-                                                { val: previousSchoolName, set: setPreviousSchoolName, ph: 'Sekolah asal', icon: BookOpen },
+                                                {
+                                                    val: fullName,
+                                                    set: setFullName,
+                                                    ph: 'Nama lengkap calon siswa',
+                                                    icon: Users,
+                                                },
+                                                {
+                                                    val: phone,
+                                                    set: setPhone,
+                                                    ph: 'Nomor telepon',
+                                                    icon: Zap,
+                                                },
+                                                {
+                                                    val: email,
+                                                    set: setEmail,
+                                                    ph: 'Email',
+                                                    icon: Sparkles,
+                                                    type: 'email',
+                                                },
+                                                {
+                                                    val: previousSchoolName,
+                                                    set: setPreviousSchoolName,
+                                                    ph: 'Sekolah asal',
+                                                    icon: BookOpen,
+                                                },
                                             ].map((field) => (
-                                                <div key={field.ph} className="relative group">
-                                                    <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                                                <div
+                                                    key={field.ph}
+                                                    className="group relative"
+                                                >
+                                                    <field.icon className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
                                                     <Input
                                                         value={field.val}
-                                                        onChange={(e) => field.set(e.target.value)}
+                                                        onChange={(e) =>
+                                                            field.set(
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                         placeholder={field.ph}
-                                                        type={field.type ?? 'text'}
-                                                        className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] placeholder:text-slate-400 focus:border-emerald-500/40 focus:ring-emerald-500/20 shadow-sm transition-all"
+                                                        type={
+                                                            field.type ?? 'text'
+                                                        }
+                                                        className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40 focus:ring-emerald-500/20"
                                                     />
                                                 </div>
                                             ))}
                                         </div>
 
                                         {/* Track Select */}
-                                        <div className="relative group">
-                                            <Shield className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 transition-colors group-focus-within:text-emerald-500 z-10" />
+                                        <div className="group relative">
+                                            <Shield className="absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
                                             <select
                                                 value={trackType}
-                                                onChange={(event) => setTrackType(event.target.value)}
-                                                className="h-12 w-full rounded-xl border border-slate-200 bg-white/60 pl-11 pr-4 text-sm text-[var(--school-ink)] outline-none focus:border-emerald-500/40 transition-all appearance-none shadow-sm"
+                                                onChange={(event) =>
+                                                    setTrackType(
+                                                        event.target.value,
+                                                    )
+                                                }
+                                                className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white/60 pr-4 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all outline-none focus:border-emerald-500/40"
                                             >
-                                                {(ppdb?.trackQuotas ?? []).map((quota) => (
-                                                    <option key={quota.trackType} value={quota.trackType} className="bg-white">
-                                                        Jalur {quota.trackType}
-                                                    </option>
-                                                ))}
+                                                {(ppdb?.trackQuotas ?? []).map(
+                                                    (quota) => (
+                                                        <option
+                                                            key={
+                                                                quota.trackType
+                                                            }
+                                                            value={
+                                                                quota.trackType
+                                                            }
+                                                            className="bg-white"
+                                                        >
+                                                            Jalur{' '}
+                                                            {quota.trackType}
+                                                        </option>
+                                                    ),
+                                                )}
                                             </select>
                                         </div>
 
                                         {/* Address + Geocode */}
                                         <div className="space-y-3">
-                                            <div className="relative group">
-                                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
+                                            <div className="group relative">
+                                                <MapPin className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-emerald-500" />
                                                 <Input
                                                     value={addressLine}
                                                     onChange={(e) => {
-                                                        setAddressLine(e.target.value);
+                                                        setAddressLine(
+                                                            e.target.value,
+                                                        );
                                                         setGeocodeResults([]);
                                                     }}
                                                     placeholder="Alamat lengkap rumah"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] placeholder:text-slate-400 focus:border-emerald-500/40 shadow-sm transition-all"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                             </div>
 
                                             <div className="grid gap-3 md:grid-cols-2">
                                                 <Input
                                                     value={latitude}
-                                                    onChange={(event) => setLatitude(event.target.value)}
+                                                    onChange={(event) =>
+                                                        setLatitude(
+                                                            event.target.value,
+                                                        )
+                                                    }
                                                     placeholder="Latitude"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] placeholder:text-slate-400 focus:border-emerald-500/40 shadow-sm transition-all"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                                 <Input
                                                     value={longitude}
-                                                    onChange={(event) => setLongitude(event.target.value)}
+                                                    onChange={(event) =>
+                                                        setLongitude(
+                                                            event.target.value,
+                                                        )
+                                                    }
                                                     placeholder="Longitude"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] placeholder:text-slate-400 focus:border-emerald-500/40 shadow-sm transition-all"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                             </div>
                                         </div>
@@ -812,8 +1264,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                className="rounded-full border-[var(--school-green-200)] bg-white/80 text-[var(--school-green-700)] hover:bg-[var(--school-green-50)] hover:text-[var(--school-green-800)] text-xs"
-                                                onClick={handleUseCurrentLocation}
+                                                className="rounded-full border-[var(--school-green-200)] bg-white/80 text-xs text-[var(--school-green-700)] hover:bg-[var(--school-green-50)] hover:text-[var(--school-green-800)]"
+                                                onClick={
+                                                    handleUseCurrentLocation
+                                                }
                                                 disabled={isLocating}
                                             >
                                                 {isLocating ? (
@@ -831,7 +1285,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                className="rounded-full border-sky-200 bg-white/80 text-sky-700 hover:bg-sky-50 hover:text-sky-800 text-xs"
+                                                className="rounded-full border-sky-200 bg-white/80 text-xs text-sky-700 hover:bg-sky-50 hover:text-sky-800"
                                                 onClick={handleGeocodeAddress}
                                                 disabled={isGeocoding}
                                             >
@@ -850,7 +1304,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                className="rounded-full border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800 text-xs"
+                                                className="rounded-full border-amber-200 bg-white/80 text-xs text-amber-700 hover:bg-amber-50 hover:text-amber-800"
                                                 onClick={() => {
                                                     setLatitude('');
                                                     setLongitude('');
@@ -866,51 +1320,86 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         {/* Geocode Results */}
                                         {geocodeResults.length > 0 && (
                                             <div className="grid gap-2">
-                                                {geocodeResults.map((result) => (
-                                                    <button
-                                                        key={`${result.latitude}-${result.longitude}`}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setAddressLine(result.displayName);
-                                                            applyHomePosition(result.latitude, result.longitude);
-                                                            setGeocodeResults([]);
-                                                        }}
-                                                        className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-left transition-all hover:bg-emerald-50 hover:border-emerald-200"
-                                                    >
-                                                        <div className="text-sm font-medium text-[var(--school-ink)]">{result.displayName}</div>
-                                                        <div className="mt-1.5 text-xs text-emerald-600 font-mono">
-                                                            {result.latitude.toFixed(5)}, {result.longitude.toFixed(5)}
-                                                        </div>
-                                                    </button>
-                                                ))}
+                                                {geocodeResults.map(
+                                                    (result) => (
+                                                        <button
+                                                            key={`${result.latitude}-${result.longitude}`}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setAddressLine(
+                                                                    result.displayName,
+                                                                );
+                                                                applyHomePosition(
+                                                                    result.latitude,
+                                                                    result.longitude,
+                                                                );
+                                                                setGeocodeResults(
+                                                                    [],
+                                                                );
+                                                            }}
+                                                            className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-left transition-all hover:border-emerald-200 hover:bg-emerald-50"
+                                                        >
+                                                            <div className="text-sm font-medium text-[var(--school-ink)]">
+                                                                {
+                                                                    result.displayName
+                                                                }
+                                                            </div>
+                                                            <div className="mt-1.5 font-mono text-xs text-emerald-600">
+                                                                {result.latitude.toFixed(
+                                                                    5,
+                                                                )}
+                                                                ,{' '}
+                                                                {result.longitude.toFixed(
+                                                                    5,
+                                                                )}
+                                                            </div>
+                                                        </button>
+                                                    ),
+                                                )}
                                             </div>
                                         )}
 
                                         {/* Achievements */}
                                         <textarea
                                             value={achievementsSummary}
-                                            onChange={(event) => setAchievementsSummary(event.target.value)}
+                                            onChange={(event) =>
+                                                setAchievementsSummary(
+                                                    event.target.value,
+                                                )
+                                            }
                                             rows={3}
                                             placeholder="Ringkasan prestasi (opsional)"
-                                            className="w-full rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-[var(--school-ink)] placeholder:text-slate-400 outline-none focus:border-emerald-500/40 transition-all resize-none shadow-sm"
+                                            className="w-full resize-none rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-[var(--school-ink)] shadow-sm transition-all outline-none placeholder:text-slate-400 focus:border-emerald-500/40"
                                         />
 
                                         {/* Checkbox Flags */}
                                         <div className="grid gap-3 md:grid-cols-2">
-                                            <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] cursor-pointer hover:bg-white/90 transition-all shadow-sm">
+                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] shadow-sm transition-all hover:bg-white/90">
                                                 <input
                                                     type="checkbox"
                                                     checked={ketmFlag}
-                                                    onChange={(event) => setKetmFlag(event.target.checked)}
+                                                    onChange={(event) =>
+                                                        setKetmFlag(
+                                                            event.target
+                                                                .checked,
+                                                        )
+                                                    }
                                                     className="size-4 rounded border-slate-300 accent-[#0F766E]"
                                                 />
                                                 Afirmasi KETM
                                             </label>
-                                            <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] cursor-pointer hover:bg-white/90 transition-all shadow-sm">
+                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] shadow-sm transition-all hover:bg-white/90">
                                                 <input
                                                     type="checkbox"
-                                                    checked={specialConditionFlag}
-                                                    onChange={(event) => setSpecialConditionFlag(event.target.checked)}
+                                                    checked={
+                                                        specialConditionFlag
+                                                    }
+                                                    onChange={(event) =>
+                                                        setSpecialConditionFlag(
+                                                            event.target
+                                                                .checked,
+                                                        )
+                                                    }
                                                     className="size-4 rounded border-slate-300 accent-[#0F766E]"
                                                 />
                                                 Kondisi Khusus
@@ -921,10 +1410,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         <div className="rounded-2xl border border-emerald-100 bg-[rgba(240,253,244,0.6)] p-5 backdrop-blur-sm">
                                             <div className="flex items-center justify-between gap-4">
                                                 <div>
-                                                    <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--school-green-700)]">
+                                                    <div className="text-[0.65rem] font-bold tracking-[0.2em] text-[var(--school-green-700)] uppercase">
                                                         Status Zona
                                                     </div>
-                                                    <div className="mt-2 text-2xl font-heading text-[var(--school-ink)]">
+                                                    <div className="mt-2 font-heading text-2xl text-[var(--school-ink)]">
                                                         {preview ? (
                                                             preview.insideZone ? (
                                                                 <span className="inline-flex items-center gap-2 text-emerald-600">
@@ -938,16 +1427,21 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                                 </span>
                                                             )
                                                         ) : (
-                                                            <span className="text-slate-400">Menunggu koordinat</span>
+                                                            <span className="text-slate-400">
+                                                                Menunggu
+                                                                koordinat
+                                                            </span>
                                                         )}
                                                     </div>
                                                 </div>
                                                 {preview && (
                                                     <div className="text-right">
-                                                        <div className="text-3xl font-heading text-[var(--school-ink)]">
-                                                            {numberFormatter.format(preview.distanceKm)}
+                                                        <div className="font-heading text-3xl text-[var(--school-ink)]">
+                                                            {numberFormatter.format(
+                                                                preview.distanceKm,
+                                                            )}
                                                         </div>
-                                                        <div className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+                                                        <div className="text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
                                                             Kilometer
                                                         </div>
                                                     </div>
@@ -958,17 +1452,22 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         {/* Error / Success Messages */}
                                         {errorMessage && (
                                             <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                                <AlertCircle className="size-4 mt-0.5 shrink-0" />
+                                                <AlertCircle className="mt-0.5 size-4 shrink-0" />
                                                 {errorMessage}
                                             </div>
                                         )}
 
                                         {submissionResult && (
                                             <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                                                <CheckCircle2 className="size-4 mt-0.5 shrink-0" />
+                                                <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
                                                 <div>
-                                                    Formulir terkirim. Nomor pendaftaran:{' '}
-                                                    <strong className="text-emerald-900">{submissionResult.registrationNumber}</strong>
+                                                    Formulir terkirim. Nomor
+                                                    pendaftaran:{' '}
+                                                    <strong className="text-emerald-900">
+                                                        {
+                                                            submissionResult.registrationNumber
+                                                        }
+                                                    </strong>
                                                 </div>
                                             </div>
                                         )}
@@ -977,16 +1476,18 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         <button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="relative w-full overflow-hidden rounded-2xl border border-[var(--school-green-600)] bg-[var(--school-green-700)] px-8 py-4 font-heading text-base text-white shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl hover:shadow-emerald-500/30 hover:bg-[var(--school-green-600)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="relative w-full overflow-hidden rounded-2xl border border-[var(--school-green-600)] bg-[var(--school-green-700)] px-8 py-4 font-heading text-base text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-[var(--school-green-600)] hover:shadow-xl hover:shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full hover:translate-x-full transition-transform duration-700" />
+                                            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 transition-transform duration-700 hover:translate-x-full" />
                                             {isSubmitting ? (
                                                 <span className="relative flex items-center justify-center gap-2">
                                                     <LoaderCircle className="size-5 animate-spin" />
                                                     Mengirim pendaftaran...
                                                 </span>
                                             ) : (
-                                                <span className="relative">Kirim Simulasi PPDB</span>
+                                                <span className="relative">
+                                                    Kirim Simulasi PPDB
+                                                </span>
                                             )}
                                         </button>
                                     </div>
@@ -996,7 +1497,12 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
 
                         {/* ── MAP PANEL ── */}
                         <div className="space-y-5">
-                            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={motionViewport}>
+                            <motion.div
+                                variants={fadeUp}
+                                initial="hidden"
+                                whileInView="show"
+                                viewport={motionViewport}
+                            >
                                 <BorderGlow
                                     borderRadius={30}
                                     colors={['#0EA5E9', '#10B981', '#8B5CF6']}
@@ -1005,17 +1511,27 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     <div className="p-3">
                                         <Suspense
                                             fallback={
-                                                <div className="flex h-[480px] items-center justify-center rounded-[1.6rem] bg-slate-50 text-slate-400 border border-slate-100">
+                                                <div className="flex h-[480px] items-center justify-center rounded-[1.6rem] border border-slate-100 bg-slate-50 text-slate-400">
                                                     <LoaderCircle className="size-8 animate-spin" />
                                                 </div>
                                             }
                                         >
                                             <PpdbDistanceMap
                                                 schoolPosition={schoolPosition}
-                                                homePosition={preview?.homePosition ?? null}
-                                                zoneRadiusKm={ppdb?.zoneRadiusKm ?? 5}
-                                                onSelectPosition={(position) => {
-                                                    applyHomePosition(position[0], position[1]);
+                                                homePosition={
+                                                    preview?.homePosition ??
+                                                    null
+                                                }
+                                                zoneRadiusKm={
+                                                    ppdb?.zoneRadiusKm ?? 5
+                                                }
+                                                onSelectPosition={(
+                                                    position,
+                                                ) => {
+                                                    applyHomePosition(
+                                                        position[0],
+                                                        position[1],
+                                                    );
                                                 }}
                                             />
                                         </Suspense>
@@ -1024,13 +1540,31 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     {/* Map Stats Row */}
                                     <div className="grid grid-cols-3 border-t border-slate-100">
                                         {[
-                                            { label: 'Sekolah', value: `${schoolLatitude.toFixed(4)}, ${schoolLongitude.toFixed(4)}` },
-                                            { label: 'Rumah', value: preview ? `${preview.homePosition[0].toFixed(4)}, ${preview.homePosition[1].toFixed(4)}` : 'Klik peta' },
-                                            { label: 'Radius', value: `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km` },
+                                            {
+                                                label: 'Sekolah',
+                                                value: `${schoolLatitude.toFixed(4)}, ${schoolLongitude.toFixed(4)}`,
+                                            },
+                                            {
+                                                label: 'Rumah',
+                                                value: preview
+                                                    ? `${preview.homePosition[0].toFixed(4)}, ${preview.homePosition[1].toFixed(4)}`
+                                                    : 'Klik peta',
+                                            },
+                                            {
+                                                label: 'Radius',
+                                                value: `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km`,
+                                            },
                                         ].map((stat) => (
-                                            <div key={stat.label} className="p-4 text-center border-r border-slate-100 last:border-r-0 bg-white/50">
-                                                <div className="text-[0.55rem] font-bold uppercase tracking-[0.25em] text-[var(--school-green-700)]">{stat.label}</div>
-                                                <div className="mt-1.5 text-xs font-mono text-slate-600 truncate">{stat.value}</div>
+                                            <div
+                                                key={stat.label}
+                                                className="border-r border-slate-100 bg-white/50 p-4 text-center last:border-r-0"
+                                            >
+                                                <div className="text-[0.55rem] font-bold tracking-[0.25em] text-[var(--school-green-700)] uppercase">
+                                                    {stat.label}
+                                                </div>
+                                                <div className="mt-1.5 truncate font-mono text-xs text-slate-600">
+                                                    {stat.value}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -1038,26 +1572,35 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                             </motion.div>
 
                             {/* Simulation Result Card */}
-                            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={motionViewport}>
+                            <motion.div
+                                variants={fadeUp}
+                                initial="hidden"
+                                whileInView="show"
+                                viewport={motionViewport}
+                            >
                                 <BorderGlow
                                     borderRadius={28}
-                                    colors={preview?.insideZone ? ['#10B981', '#34D399', '#059669'] : ['#F59E0B', '#FBBF24', '#D97706']}
+                                    colors={
+                                        preview?.insideZone
+                                            ? ['#10B981', '#34D399', '#059669']
+                                            : ['#F59E0B', '#FBBF24', '#D97706']
+                                    }
                                     className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/88 shadow-[0_28px_80px_-50px_rgba(15,118,110,0.45)]"
                                 >
                                     <div className="p-7">
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
-                                                <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[var(--school-green-700)]">
+                                                <div className="text-[0.65rem] font-bold tracking-[0.2em] text-[var(--school-green-700)] uppercase">
                                                     Panel Hasil Simulasi
                                                 </div>
-                                                <div className="mt-3 text-4xl font-heading text-[var(--school-ink)]">
+                                                <div className="mt-3 font-heading text-4xl text-[var(--school-ink)]">
                                                     {preview
                                                         ? `${numberFormatter.format(preview.distanceKm)} km`
                                                         : 'Belum ada data'}
                                                 </div>
                                             </div>
                                             <div
-                                                className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-[0.2em] border backdrop-blur-md ${
+                                                className={`rounded-full border px-5 py-2.5 text-xs font-bold tracking-[0.2em] uppercase backdrop-blur-md ${
                                                     preview?.insideZone
                                                         ? 'border-emerald-200 bg-[rgba(220,252,231,0.68)] text-[var(--school-green-800)]'
                                                         : 'border-amber-200 bg-[rgba(255,251,235,0.94)] text-[var(--school-gold-700)]'
@@ -1073,10 +1616,19 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
 
                                         <div className="mt-6 grid gap-4 md:grid-cols-2">
                                             <div className="rounded-xl border border-slate-200 bg-white/60 p-4 shadow-sm">
-                                                <div className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-slate-500">Jalur Aktif</div>
+                                                <div className="text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
+                                                    Jalur Aktif
+                                                </div>
                                                 <div className="mt-2 flex items-center gap-2">
-                                                    <currentTrackConfig.icon className="size-4" style={{ color: currentTrackConfig.accent }} />
-                                                    <span className="font-heading text-lg text-[var(--school-ink)] capitalize">{trackType}</span>
+                                                    <currentTrackConfig.icon
+                                                        className="size-4"
+                                                        style={{
+                                                            color: currentTrackConfig.accent,
+                                                        }}
+                                                    />
+                                                    <span className="font-heading text-lg text-[var(--school-ink)] capitalize">
+                                                        {trackType}
+                                                    </span>
                                                 </div>
                                                 <p className="mt-1.5 text-xs text-[var(--school-muted)]">
                                                     {selectedQuota
@@ -1085,7 +1637,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 </p>
                                             </div>
                                             <div className="rounded-xl border border-slate-200 bg-white/60 p-4 shadow-sm">
-                                                <div className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-slate-500">Langkah Berikutnya</div>
+                                                <div className="text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
+                                                    Langkah Berikutnya
+                                                </div>
                                                 <div className="mt-2 font-heading text-lg text-[var(--school-ink)]">
                                                     {submissionResult
                                                         ? submissionResult.registrationNumber
@@ -1110,7 +1664,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     <SectionHeading
                         eyebrow="FAQ"
                         title="Pertanyaan yang sering diajukan."
-                        description="Jawaban atas kekhawatiran umum calon peserta didik dan orang tua terkait PPDB SMAN 1 Tenjo."
+                        description="Jawaban singkat untuk pertanyaan umum calon siswa dan orang tua."
                     />
 
                     <motion.div
@@ -1121,7 +1675,12 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         className="grid gap-4 md:grid-cols-1 lg:max-w-3xl"
                     >
                         {ppdbFaqs.map((faq, i) => (
-                            <FaqItem key={faq.question} question={faq.question} answer={faq.answer} index={i} />
+                            <FaqItem
+                                key={faq.question}
+                                question={faq.question}
+                                answer={faq.answer}
+                                index={i}
+                            />
                         ))}
                     </motion.div>
                 </section>

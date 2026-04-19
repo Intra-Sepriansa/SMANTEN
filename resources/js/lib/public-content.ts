@@ -13,24 +13,60 @@ export const publicNavigation: NavItem[] = [
         label: 'Profil',
         children: [
             {
+                href: '/profil',
+                label: 'Profil',
+                description: 'Identitas sekolah',
+            },
+            {
                 href: '/profil#sejarah',
                 label: 'Sejarah Singkat',
-                description: 'Latar belakang dan perjalanan sekolah',
+                description: 'Riwayat sekolah',
             },
             {
                 href: '/profil#visi-misi',
                 label: 'Visi & Misi',
-                description: 'Arah dan nilai-nilai sekolah',
+                description: 'Arah dan nilai sekolah',
             },
             {
                 href: '/profil#sarana-prasarana',
                 label: 'Sarana Prasarana',
-                description: 'Fasilitas dan infrastruktur',
+                description: 'Fasilitas sekolah',
             },
             {
                 href: '/profil#prestasi',
                 label: 'Prestasi Sekolah',
-                description: 'Capaian akademik dan non-akademik',
+                description: 'Capaian sekolah',
+            },
+        ],
+    },
+    {
+        href: '/organisasi',
+        label: 'Komunitas',
+        children: [
+            {
+                href: '/organisasi',
+                label: 'Struktur Organisasi',
+                description: 'Struktur sekolah',
+            },
+            {
+                href: '/guru',
+                label: 'Tenaga Pendidik',
+                description: 'Profil guru',
+            },
+            {
+                href: '/alumni',
+                label: 'Forum Alumni',
+                description: 'Jejak lulusan',
+            },
+            {
+                href: '/alumni/tulis-cerita',
+                label: 'Tulis Cerita',
+                description: 'Kirim cerita alumni',
+            },
+            {
+                href: '/virtual-tour',
+                label: 'Virtual Tour',
+                description: 'Jelajah sekolah',
             },
         ],
     },
@@ -39,68 +75,82 @@ export const publicNavigation: NavItem[] = [
         label: 'Akademik',
         children: [
             {
+                href: '/akademik',
+                label: 'Akademik',
+                description: 'Kurikulum dan pembelajaran',
+            },
+            {
                 href: '/akademik#kurikulum',
                 label: 'Kurikulum Merdeka',
-                description: 'Implementasi kurikulum terbaru',
+                description: 'Kurikulum sekolah',
             },
             {
                 href: '/akademik#p5',
                 label: 'Projek P5',
-                description: 'Penguatan Profil Pelajar Pancasila',
+                description: 'Projek penguatan karakter',
+            },
+        ],
+    },
+    {
+        href: '/kesiswaan',
+        label: 'Kesiswaan',
+        children: [
+            {
+                href: '/ekstrakurikuler',
+                label: 'Ekstrakurikuler',
+                description: 'Kegiatan minat bakat',
             },
             {
-                href: '/akademik#eskul',
-                label: 'Ekstrakurikuler',
-                description: '6 eskul resmi terdokumentasi',
+                href: '/kesiswaan',
+                label: 'Kesiswaan',
+                description: 'Pembinaan siswa',
+            },
+            {
+                href: '/kesiswaan#osis-mpk',
+                label: 'OSIS & MPK',
+                description: 'Organisasi siswa',
+            },
+            {
+                href: '/kesiswaan#prestasi-siswa',
+                label: 'Prestasi Siswa',
+                description: 'Capaian siswa',
+            },
+            {
+                href: '/kesiswaan#beasiswa',
+                label: 'Beasiswa',
+                description: 'Informasi bantuan',
+            },
+            {
+                href: '/kesiswaan#bimbingan-konseling',
+                label: 'Bimbingan Konseling',
+                description: 'Pendampingan siswa',
             },
         ],
     },
     { href: '/ppdb', label: 'PPDB' },
-    { href: '/berita', label: 'Berita' },
     {
-        href: '/dokumen',
-        label: 'Dokumen',
+        href: '/media',
+        label: 'Informasi',
         children: [
             {
-                href: '/dokumen#unduhan',
-                label: 'Unduhan',
-                description: 'File publik sekolah',
+                href: '/berita',
+                label: 'Berita & Artikel',
+                description: 'Rilis dan artikel sekolah',
             },
             {
-                href: '/dokumen#formulir',
-                label: 'Formulir',
-                description: 'Format umum sekolah',
+                href: '/media',
+                label: 'Dokumentasi',
+                description: 'Galeri foto dan video sekolah',
             },
             {
-                href: '/dokumen#panduan',
-                label: 'Panduan',
-                description: 'Rujukan singkat layanan',
-            },
-        ],
-    },
-    {
-        href: '/organisasi',
-        label: 'Sekolah',
-        children: [
-            {
-                href: '/organisasi',
-                label: 'Struktur Organisasi',
-                description: 'Hierarki kepemimpinan dan manajemen',
+                href: '/layanan',
+                label: 'Layanan',
+                description: 'FAQ dan kontak sekolah',
             },
             {
-                href: '/guru',
-                label: 'Tenaga Pendidik',
-                description: 'Profil guru dan staf pengajar',
-            },
-            {
-                href: '/alumni',
-                label: 'Forum Alumni',
-                description: 'Cerita, diskusi, dan jejak lulusan',
-            },
-            {
-                href: '/alumni/tulis-cerita',
-                label: 'Tulis Cerita',
-                description: 'Halaman khusus untuk mengirim cerita alumni',
+                href: '/dokumen',
+                label: 'Dokumen',
+                description: 'Unduhan resmi',
             },
         ],
     },
@@ -122,19 +172,19 @@ export const schoolHighlights = [
     {
         title: 'Lahan Sekolah 11.396 m²',
         description:
-            'Skala lahan yang luas memberi ruang untuk pembelajaran, eksplorasi proyek, dan aktivitas organisasi yang lebih hidup.',
+            'Lahan sekolah mendukung ruang belajar, kegiatan siswa, dan aktivitas luar kelas.',
         metric: '11.396 m²',
     },
     {
         title: 'Moving Class Nyata',
         description:
-            '30 rombel dihadapkan pada 21 ruang kelas fisik, sehingga sistem belajar harus adaptif, tertata, dan antarbentrok.',
+            '30 rombel dan 21 ruang kelas dikelola dengan jadwal belajar yang tertata.',
         metric: '30 : 21',
     },
     {
         title: 'Fasilitas Akademik Kunci',
         description:
-            'Laboratorium dan perpustakaan menjadi simpul penting untuk pembelajaran Kurikulum Merdeka dan eksplorasi P5.',
+            'Laboratorium dan perpustakaan mendukung pembelajaran, literasi, dan projek siswa.',
         metric: '3 Lab + 2 Perpus',
     },
 ] as const;
@@ -147,7 +197,7 @@ export const signaturePrograms = [
         description:
             'Beriman, Bertaqwa, Berkarakter, dan Bebas Narkoba diterjemahkan ke dalam cara belajar, bersikap, dan berorganisasi.',
         longDescription:
-            'Bukan sekadar slogan dinding. BATARA KRESNA menjadi parameter penilaian sikap, dasar pembinaan, dan narasi identitas yang melekat di setiap program sekolah.',
+            'BATARA KRESNA menjadi dasar pembinaan sikap, budaya sekolah, dan kegiatan siswa.',
         stats: [
             { label: 'Pilar Nilai', value: '4' },
             { label: 'Integrasi Mapel', value: '100%' },
@@ -160,9 +210,9 @@ export const signaturePrograms = [
         title: 'P5 dan Panen Karya',
         icon: 'book-open',
         description:
-            'Karya siswa bukan lampiran akhir semester, tetapi wajah nyata pembelajaran lintas tema dan lintas disiplin.',
+            'Karya siswa menunjukkan hasil pembelajaran lintas tema dan lintas disiplin.',
         longDescription:
-            'Proyek Penguatan Profil Pelajar Pancasila menghasilkan artefak nyata: produk, presentasi, dan dokumentasi yang dipamerkan secara publik tiap semester.',
+            'Proyek Penguatan Profil Pelajar Pancasila menghasilkan produk, presentasi, dan dokumentasi belajar.',
         stats: [
             { label: 'Tema P5', value: '7' },
             { label: 'Karya / Semester', value: '60+' },
@@ -175,9 +225,9 @@ export const signaturePrograms = [
         title: 'MUSTIKARASA',
         icon: 'chef-hat',
         description:
-            'Produk gastronomi menjadi medium kreativitas, kewirausahaan, dan dokumentasi capaian siswa yang bisa dipamerkan publik.',
+            'Produk gastronomi melatih kreativitas, kewirausahaan, dan kerja tim siswa.',
         longDescription:
-            'Program kuliner khas yang menghubungkan seni memasak dengan kewirausahaan. Setiap produk didokumentasikan sebagai portofolio publik dan pengalaman belajar autentik.',
+            'Program kuliner menghubungkan praktik memasak, perencanaan produk, dan kewirausahaan.',
         stats: [
             { label: 'Produk Aktif', value: '12' },
             { label: 'Siswa Terlibat', value: '150+' },
@@ -190,9 +240,9 @@ export const signaturePrograms = [
         title: 'Jurnalistik, Tari, Paskibra',
         icon: 'users',
         description:
-            'Ekstrakurikuler diposisikan sebagai panggung reputasi sekolah, bukan sekadar daftar kegiatan tambahan.',
+            'Ekstrakurikuler menjadi ruang pengembangan minat, disiplin, dan kepemimpinan siswa.',
         longDescription:
-            'Tiga pilar komunitas yang membentuk wajah publik sekolah: narasi media oleh jurnalistik, ekspresi budaya oleh tari, dan kedisiplinan oleh paskibra.',
+            'Jurnalistik, tari, dan paskibra memperkuat publikasi, budaya, dan kedisiplinan siswa.',
         stats: [
             { label: 'Ekskul Aktif', value: '18' },
             { label: 'Partisipasi', value: '85%' },
@@ -208,7 +258,7 @@ export const extracurricularVideoShowcase = [
         title: 'Tari Tradisional',
         category: 'Budaya',
         description:
-            'Highlight panggung budaya sekolah dengan fokus pada koreografi, kostum, dan disiplin penampilan.',
+            'Dokumentasi tari tradisional dengan fokus pada koreografi, kostum, dan disiplin latihan.',
         state: 'Fallback Feed',
     },
     {
@@ -302,7 +352,7 @@ export const organizationBlueprint = {
             title: 'Ketua OSIS',
             tier: 1,
             description:
-                'Wajah kepemimpinan siswa yang memimpin arah kerja organisasi secara publik.',
+                'Koordinator utama program OSIS dan representasi kepemimpinan siswa.',
         },
         {
             id: 'wakil-ketua-osis',
@@ -337,14 +387,14 @@ export const organizationBlueprint = {
             title: 'Sekbid Media',
             tier: 3,
             description:
-                'Menjadi simpul publikasi, dokumentasi, dan komunikasi kegiatan siswa.',
+                'Mengelola publikasi, dokumentasi, dan komunikasi kegiatan siswa.',
         },
         {
             id: 'sekbid-budaya',
             title: 'Sekbid Budaya',
             tier: 3,
             description:
-                'Menghidupkan kegiatan seni, tradisi, dan ekspresi kolektif sekolah.',
+                'Menguatkan kegiatan seni, tradisi, dan ekspresi kolektif sekolah.',
         },
         {
             id: 'sekbid-lingkungan',
@@ -367,8 +417,8 @@ export const virtualTourScenes: VirtualTourScene[] = [
         accentColor: '#0f766e',
         initialYaw: 0,
         facts: [
-            'Gerbang utama menjadi orientasi pertama pengunjung terhadap skala lingkungan sekolah.',
-            'Arah visual dibuat terbuka agar transisi dari jalan raya ke area sekolah terasa jelas.',
+            'Gerbang utama menjadi titik orientasi pertama pengunjung.',
+            'Area ini menunjukkan akses masuk dari jalan raya ke lingkungan sekolah.',
             'Hotspot berikutnya mengarah ke laboratorium dan lapangan pusat.',
         ],
         hotspots: [
@@ -393,14 +443,14 @@ export const virtualTourScenes: VirtualTourScene[] = [
         title: 'Koridor Laboratorium',
         eyebrow: 'Eksperimen dan Praktik',
         description:
-            'Area yang menunjukkan bagaimana pembelajaran praktikum diposisikan sebagai pengalaman, bukan sekadar prosedur.',
+            'Area praktik untuk mendukung pembelajaran sains, teknologi, dan observasi.',
         imageUrl: '/virtual-tour/panoramas/laboratorium.svg',
         accentColor: '#0369a1',
         initialYaw: 18,
         facts: [
             'Koridor laboratorium dibuat sebagai jalur transisi dari teori ke praktik.',
-            'Viewer ini dapat diperluas ke hotspot spesifik per-lab pada iterasi berikutnya.',
-            'Ruang ini menekankan ritme belajar berbasis eksplorasi dan observasi.',
+            'Hotspot dapat diperluas ke ruang laboratorium yang lebih spesifik.',
+            'Ruang ini mendukung eksplorasi dan observasi siswa.',
         ],
         hotspots: [
             {
@@ -424,13 +474,13 @@ export const virtualTourScenes: VirtualTourScene[] = [
         title: 'Perpustakaan',
         eyebrow: 'Ruang Baca dan Temu',
         description:
-            'Zona yang akan menonjolkan perpustakaan sebagai simpul literasi, riset kecil, dan ekosistem belajar mandiri.',
+            'Ruang literasi untuk membaca, diskusi, dan belajar mandiri.',
         imageUrl: '/virtual-tour/panoramas/perpustakaan.svg',
         accentColor: '#a16207',
         initialYaw: -12,
         facts: [
-            'Perpustakaan diposisikan sebagai ruang temu antara literasi, riset kecil, dan refleksi.',
-            'Panorama memungkinkan pembacaan ruang tanpa memutus konteks keseluruhan area sekolah.',
+            'Perpustakaan mendukung literasi, riset sederhana, dan refleksi belajar.',
+            'Panorama membantu pengunjung melihat konteks ruang secara utuh.',
             'Hotspot dapat diperluas ke rak koleksi, area diskusi, dan meja baca.',
         ],
         hotspots: [
@@ -455,13 +505,13 @@ export const virtualTourScenes: VirtualTourScene[] = [
         title: 'Lapangan Pusat',
         eyebrow: 'Aktivitas Kolektif',
         description:
-            'Ruang transisi antara akademik, upacara, ekstrakurikuler, dan dinamika komunitas siswa setiap harinya.',
+            'Area terbuka untuk upacara, olahraga, latihan, dan kegiatan siswa.',
         imageUrl: '/virtual-tour/panoramas/lapangan-pusat.svg',
         accentColor: '#15803d',
         initialYaw: 8,
         facts: [
-            'Lapangan menjadi simpul ritme kolektif: upacara, latihan, dan kegiatan terbuka.',
-            'Panorama ini menutup pengalaman tur dengan gambaran ruang komunal sekolah.',
+            'Lapangan digunakan untuk upacara, latihan, dan kegiatan terbuka.',
+            'Panorama ini memberi gambaran ruang komunal sekolah.',
             'Scene dapat diperluas ke jalur kegiatan ekstrakurikuler dan area upacara.',
         ],
         hotspots: [

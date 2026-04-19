@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Events\Login as LoginEvent;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -27,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureAuthEvents();
     }
 
     /**
@@ -70,5 +74,22 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Register authentication event listeners.
+     */
+    protected function configureAuthEvents(): void
+    {
+        Event::listen(LoginEvent::class, function (LoginEvent $event): void {
+            if (! $event->user instanceof User) {
+                return;
+            }
+
+            $event->user->forceFill([
+                'last_login_at' => now(),
+                'last_seen_at' => now(),
+            ])->saveQuietly();
+        });
     }
 }

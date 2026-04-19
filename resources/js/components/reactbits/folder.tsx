@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 type FolderProps = {
     color?: string;
@@ -50,23 +50,45 @@ export default function Folder({
         papers.push(null);
     }
 
-    const [open, setOpen] = useState(false);
+    const [pinnedOpen, setPinnedOpen] = useState(false);
+    const [hovered, setHovered] = useState(false);
     const [paperOffsets, setPaperOffsets] = useState(
         Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })),
     );
+    const isOpen = pinnedOpen || hovered;
 
     const folderBackColor = darkenColor(color, 0.08);
     const paper1 = darkenColor('#ffffff', 0.1);
     const paper2 = darkenColor('#ffffff', 0.05);
     const paper3 = '#ffffff';
 
-    const handleClick = () => {
-        setOpen((currentOpen) => !currentOpen);
+    const resetPaperOffsets = useCallback(() => {
+        setPaperOffsets(
+            Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })),
+        );
+    }, []);
 
-        if (open) {
-            setPaperOffsets(
-                Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })),
-            );
+    const handleClick = () => {
+        setPinnedOpen((currentPinnedOpen) => {
+            const nextPinnedOpen = !currentPinnedOpen;
+
+            if (!nextPinnedOpen && !hovered) {
+                resetPaperOffsets();
+            }
+
+            return nextPinnedOpen;
+        });
+    };
+
+    const handleMouseEnter = () => {
+        setHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setHovered(false);
+
+        if (!pinnedOpen) {
+            resetPaperOffsets();
         }
     };
 
@@ -74,7 +96,7 @@ export default function Folder({
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
         index: number,
     ) => {
-        if (!open) {
+        if (!isOpen) {
             return;
         }
 
@@ -103,14 +125,14 @@ export default function Folder({
 
     const getOpenTransform = (index: number) => {
         if (index === 0) {
-            return 'translate(-120%, -70%) rotate(-15deg)';
+            return 'translate(-130%, -92%) rotate(-17deg)';
         }
 
         if (index === 1) {
-            return 'translate(10%, -70%) rotate(15deg)';
+            return 'translate(30%, -92%) rotate(17deg)';
         }
 
-        return 'translate(-50%, -100%) rotate(5deg)';
+        return 'translate(-50%, -120%) rotate(4deg)';
     };
 
     return (
@@ -120,14 +142,16 @@ export default function Folder({
             aria-hidden="true"
         >
             <div
-                className={`group relative cursor-pointer transition-all duration-200 ease-in ${
-                    !open ? 'hover:-translate-y-2' : ''
+                className={`group relative cursor-pointer transition-all duration-300 ease-out ${
+                    !isOpen ? 'hover:-translate-y-2' : ''
                 }`}
-                style={{ transform: open ? 'translateY(-8px)' : undefined }}
+                style={{ transform: isOpen ? 'translateY(-12px)' : undefined }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 onClick={handleClick}
             >
                 <div
-                    className="relative h-[80px] w-[100px] rounded-bl-[10px] rounded-br-[10px] rounded-tr-[10px]"
+                    className="relative h-[80px] w-[100px] rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
                     style={{ backgroundColor: folderBackColor }}
                 >
                     <span
@@ -138,10 +162,10 @@ export default function Folder({
                     {papers.map((item, index) => {
                         const sizeClasses = [
                             'h-[80%] w-[70%]',
-                            open ? 'h-[80%] w-[80%]' : 'h-[70%] w-[80%]',
-                            open ? 'h-[80%] w-[90%]' : 'h-[60%] w-[90%]',
+                            isOpen ? 'h-[80%] w-[80%]' : 'h-[70%] w-[80%]',
+                            isOpen ? 'h-[80%] w-[90%]' : 'h-[60%] w-[90%]',
                         ][index];
-                        const transformStyle = open
+                        const transformStyle = isOpen
                             ? `${getOpenTransform(index)} translate(${paperOffsets[index].x}px, ${paperOffsets[index].y}px)`
                             : undefined;
 
@@ -155,12 +179,12 @@ export default function Folder({
                                     handlePaperMouseLeave(index)
                                 }
                                 className={`absolute bottom-[10%] left-1/2 z-20 transition-all duration-300 ease-in-out ${
-                                    !open
-                                        ? 'transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0'
+                                    !isOpen
+                                        ? '-translate-x-1/2 translate-y-[16%] transform group-hover:-translate-y-[6%]'
                                         : 'hover:scale-110'
                                 } ${sizeClasses}`}
                                 style={{
-                                    ...(!open
+                                    ...(!isOpen
                                         ? {}
                                         : { transform: transformStyle }),
                                     backgroundColor:
@@ -179,28 +203,28 @@ export default function Folder({
 
                     <div
                         className={`absolute z-30 h-full w-full origin-bottom transition-all duration-300 ease-in-out ${
-                            !open
+                            !isOpen
                                 ? 'group-hover:[transform:skew(15deg)_scaleY(0.6)]'
                                 : ''
                         }`}
                         style={{
                             backgroundColor: color,
                             borderRadius: '5px 10px 10px 10px',
-                            ...(open && {
+                            ...(isOpen && {
                                 transform: 'skew(15deg) scaleY(0.6)',
                             }),
                         }}
                     />
                     <div
                         className={`absolute z-30 h-full w-full origin-bottom transition-all duration-300 ease-in-out ${
-                            !open
+                            !isOpen
                                 ? 'group-hover:[transform:skew(-15deg)_scaleY(0.6)]'
                                 : ''
                         }`}
                         style={{
                             backgroundColor: color,
                             borderRadius: '5px 10px 10px 10px',
-                            ...(open && {
+                            ...(isOpen && {
                                 transform: 'skew(-15deg) scaleY(0.6)',
                             }),
                         }}

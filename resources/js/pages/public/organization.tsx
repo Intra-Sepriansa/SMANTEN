@@ -1,5 +1,10 @@
 import { Head } from '@inertiajs/react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import {
+    motion,
+    useScroll,
+    useTransform,
+    AnimatePresence,
+} from 'framer-motion';
 import {
     Building2,
     ChevronDown,
@@ -20,8 +25,8 @@ import { InteractiveOrgChart } from '@/components/org/interactive-org-chart';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useHistoricalOrganizationQuery } from '@/lib/query/public-site';
 import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
+import { useHistoricalOrganizationQuery } from '@/lib/query/public-site';
 import { useSiteUiStore } from '@/stores/site-ui-store';
 import type { OrganizationNode, SchoolProfilePayload } from '@/types';
 
@@ -100,18 +105,18 @@ export default function OrganizationPage({
             <Head title="Organisasi">
                 <meta
                     name="description"
-                    content={`Struktur Organisasi ${school.name} — Kepemimpinan aktif manajemen sekolah dan kepengurusan OSIS.`}
+                    content={`Struktur organisasi ${school.name}: manajemen sekolah dan organisasi siswa.`}
                 />
             </Head>
 
-            <div className="space-y-16 lg:space-y-24 pb-20">
+            <div className="space-y-16 pb-20 lg:space-y-24">
                 {/* ═══════════════════ HERO SECTION ═══════════════════ */}
                 <motion.section
                     ref={heroRef}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
-                    className="relative w-[100vw] h-[75vh] lg:h-[80dvh] left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-8 md:-mt-10 overflow-hidden bg-slate-900"
+                    className="relative right-1/2 left-1/2 -mt-8 -mr-[50vw] -ml-[50vw] h-[75vh] w-[100vw] overflow-hidden bg-slate-900 md:-mt-10 lg:h-[80dvh]"
                 >
                     <motion.div
                         className="absolute inset-0 z-0"
@@ -128,8 +133,8 @@ export default function OrganizationPage({
                         </div>
 
                         {/* Ambient glow */}
-                        <div className="absolute -left-20 top-1/4 size-[400px] rounded-full bg-emerald-500/10 blur-[120px]" />
-                        <div className="absolute right-0 top-1/3 size-[350px] rounded-full bg-sky-500/8 blur-[100px]" />
+                        <div className="absolute top-1/4 -left-20 size-[400px] rounded-full bg-emerald-500/10 blur-[120px]" />
+                        <div className="absolute top-1/3 right-0 size-[350px] rounded-full bg-sky-500/8 blur-[100px]" />
                         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.04] mix-blend-overlay" />
                     </motion.div>
 
@@ -143,18 +148,18 @@ export default function OrganizationPage({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
-                                className="flex flex-wrap items-center gap-3 mb-6"
+                                className="mb-6 flex flex-wrap items-center gap-3"
                             >
                                 <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 backdrop-blur-md">
                                     <Network className="size-4 text-emerald-400" />
-                                    <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-emerald-300">
+                                    <span className="text-[0.65rem] font-bold tracking-[0.2em] text-emerald-300 uppercase">
                                         Struktur Organisasi
                                     </span>
                                 </div>
                                 <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 backdrop-blur-md">
                                     <Crown className="size-4 text-sky-400" />
-                                    <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-sky-300">
-                                        {activeCount} Node Aktif
+                                    <span className="text-[0.65rem] font-bold tracking-[0.2em] text-sky-300 uppercase">
+                                        {activeCount} Posisi Aktif
                                     </span>
                                 </div>
                             </motion.div>
@@ -163,7 +168,7 @@ export default function OrganizationPage({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.3 }}
-                                className="font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl max-w-4xl"
+                                className="max-w-4xl font-heading text-4xl leading-tight text-white md:text-5xl lg:text-6xl"
                             >
                                 Kepemimpinan &{' '}
                                 <span className="bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent">
@@ -177,22 +182,22 @@ export default function OrganizationPage({
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300"
                             >
-                                Menampilkan arsitektur kepemimpinan dan kepengurusan aktif{' '}
-                                {school.name}. Data dipisahkan secara tegas antara struktur
-                                berjalan dengan arsip historis.
+                                Menampilkan struktur manajemen sekolah dan
+                                organisasi siswa {school.name}. Arsip lama
+                                dipisahkan dari struktur aktif.
                             </motion.p>
                         </div>
                     </motion.div>
                 </motion.section>
 
                 {/* ═══════════════════ SCOPE TABS + STATS ═══════════════════ */}
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 relative z-20 -mt-20 lg:-mt-32 space-y-10">
+                <div className="relative z-20 mx-auto -mt-20 max-w-7xl space-y-10 px-4 sm:px-6 lg:-mt-32">
                     {/* Scope Tabs */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.5 }}
-                        className="flex flex-wrap gap-3 justify-center"
+                        className="flex flex-wrap justify-center gap-3"
                     >
                         {(
                             Object.keys(scopeConfig) as Array<
@@ -202,15 +207,16 @@ export default function OrganizationPage({
                             const cfg = scopeConfig[key];
                             const Icon = cfg.icon;
                             const isActive = scope === key;
+
                             return (
                                 <button
                                     key={key}
                                     type="button"
                                     onClick={() => setScope(key)}
-                                    className={`group flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300 shadow-lg ${
+                                    className={`group flex items-center gap-3 rounded-full px-6 py-3.5 text-sm font-semibold shadow-lg transition-all duration-300 ${
                                         isActive
-                                            ? `${cfg.activeTabBg} ${cfg.activeTabText} shadow-xl scale-105`
-                                            : 'border border-white/60 bg-white/80 text-[var(--school-muted)] hover:bg-white hover:shadow-xl backdrop-blur-xl'
+                                            ? `${cfg.activeTabBg} ${cfg.activeTabText} scale-105 shadow-xl`
+                                            : 'border border-white/60 bg-white/80 text-[var(--school-muted)] backdrop-blur-xl hover:bg-white hover:shadow-xl'
                                     }`}
                                 >
                                     <Icon
@@ -238,45 +244,43 @@ export default function OrganizationPage({
                                         ? ['#10B981', '#0EA5E9', '#6366F1']
                                         : ['#F59E0B', '#EF4444', '#EC4899']
                                 }
-                                className="rounded-[2rem] border border-white/80 bg-white/90 p-8 md:p-12 shadow-[0_32px_90px_-50px_rgba(15,118,110,0.3)] backdrop-blur-xl"
+                                className="rounded-[2rem] border border-white/80 bg-white/90 p-8 shadow-[0_32px_90px_-50px_rgba(15,118,110,0.3)] backdrop-blur-xl md:p-12"
                             >
                                 <div className="grid gap-8 lg:grid-cols-[1fr_auto]">
                                     <div className="space-y-5">
-                                        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500">
+                                        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
                                             <ScopeIcon className="size-4" />
                                             {config.label}
                                         </div>
                                         <h2 className="font-heading text-3xl leading-tight text-[var(--school-ink)] md:text-4xl">
                                             {scope === 'school_management'
-                                                ? 'Arsitektur kepemimpinan sekolah dibangun sebagai sistem posisi,'
-                                                : 'Kepengurusan siswa disusun agar aspirasi terwadahi dengan jelas,'}
+                                                ? 'Struktur kepemimpinan sekolah disusun berdasarkan peran,'
+                                                : 'Kepengurusan siswa disusun untuk menampung aspirasi,'}
                                             <span className="text-slate-400">
                                                 {' '}
-                                                bukan daftar nama lepas.
+                                                tanggung jawab, dan koordinasi.
                                             </span>
                                         </h2>
                                         <p className="max-w-2xl text-base leading-8 text-[var(--school-muted)]">
-                                            {config.description} Setiap node
-                                            yang belum terisi tetap ditampilkan
-                                            sebagai slot adaptif agar bagan
-                                            menjaga bentuknya sambil memberi
-                                            ruang untuk pembaruan data.
+                                            {config.description} Posisi yang
+                                            belum terisi tetap ditandai agar
+                                            pembaruan data mudah dilakukan.
                                         </p>
                                     </div>
 
                                     {/* Stats */}
                                     <div className="grid grid-cols-3 gap-4 lg:grid-cols-1">
-                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center lg:text-left shadow-sm">
-                                            <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">
-                                                Node Aktif
+                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center shadow-sm lg:text-left">
+                                            <div className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
+                                                Posisi Aktif
                                             </div>
                                             <div className="mt-2 text-3xl font-bold text-[var(--school-ink)]">
                                                 {activeCount}
                                             </div>
                                         </div>
-                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center lg:text-left shadow-sm">
-                                            <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">
-                                                Slot Adaptif
+                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center shadow-sm lg:text-left">
+                                            <div className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
+                                                Posisi Kosong
                                             </div>
                                             <div className="mt-2 text-3xl font-bold text-slate-300">
                                                 {items.length > 0
@@ -287,9 +291,9 @@ export default function OrganizationPage({
                                                     : 8}
                                             </div>
                                         </div>
-                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center lg:text-left shadow-sm">
-                                            <div className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">
-                                                Scope
+                                        <div className="rounded-2xl border border-white/70 bg-white/60 p-5 text-center shadow-sm lg:text-left">
+                                            <div className="text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
+                                                Kategori
                                             </div>
                                             <div className="mt-2 text-3xl font-bold text-[var(--school-ink)]">
                                                 {config.shortLabel}
@@ -311,14 +315,14 @@ export default function OrganizationPage({
                         transition={{ duration: 0.6 }}
                         className="mb-12"
                     >
-                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+                        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                             <div>
-                                <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">
+                                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
                                     <Network className="size-4" />
                                     Visualisasi Hierarki
                                 </div>
-                                <h2 className="font-heading text-3xl leading-tight text-[var(--school-ink)] md:text-4xl max-w-2xl">
-                                    Setiap posisi memiliki peran, setiap tier menunjukan{' '}
+                                <h2 className="max-w-2xl font-heading text-3xl leading-tight text-[var(--school-ink)] md:text-4xl">
+                                    Setiap posisi memiliki peran dan{' '}
                                     <span className="text-slate-400">
                                         jenjang tanggung jawab.
                                     </span>
@@ -352,24 +356,30 @@ export default function OrganizationPage({
                                 },
                             ].map((item, i) => {
                                 const Icon = item.icon;
+
                                 return (
                                     <motion.div
                                         key={item.step}
                                         initial={{ opacity: 0, y: 20 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={motionViewport}
-                                        transition={{ delay: i * 0.1, duration: 0.5 }}
-                                        className="group relative rounded-2xl border border-white/70 bg-white/80 p-6 shadow-sm hover:shadow-lg transition-shadow"
+                                        transition={{
+                                            delay: i * 0.1,
+                                            duration: 0.5,
+                                        }}
+                                        className="group relative rounded-2xl border border-white/70 bg-white/80 p-6 shadow-sm transition-shadow hover:shadow-lg"
                                     >
                                         <div className="flex items-start gap-4">
-                                            <div className={`flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                                            <div
+                                                className={`flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                                            >
                                                 <Icon className="size-5" />
                                             </div>
                                             <div className="flex-1">
-                                                <div className="text-[0.6rem] font-bold uppercase tracking-[0.25em] text-slate-400">
+                                                <div className="text-[0.6rem] font-bold tracking-[0.25em] text-slate-400 uppercase">
                                                     Tier {item.step}
                                                 </div>
-                                                <h3 className="text-lg font-heading font-semibold text-[var(--school-ink)]">
+                                                <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">
                                                     {item.title}
                                                 </h3>
                                                 <p className="mt-1 text-sm leading-relaxed text-[var(--school-muted)]">
@@ -392,7 +402,7 @@ export default function OrganizationPage({
                 {/* ═══════════════════ HISTORICAL ARCHIVE ═══════════════════ */}
                 <div className="mx-auto max-w-7xl px-4 sm:px-6">
                     <section className="space-y-8">
-                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                             <SectionHeading
                                 eyebrow="Arsip Historis"
                                 title={
@@ -408,7 +418,9 @@ export default function OrganizationPage({
                                     <button
                                         type="button"
                                         onClick={() =>
-                                            setIsArchiveExpanded((prev) => !prev)
+                                            setIsArchiveExpanded(
+                                                (prev) => !prev,
+                                            )
                                         }
                                         className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-white hover:shadow-md"
                                     >
@@ -456,17 +468,17 @@ export default function OrganizationPage({
                                         whileHover={{ y: -5 }}
                                         className="group rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_22px_60px_-44px_rgba(15,118,110,0.3)] transition-shadow hover:shadow-[0_28px_70px_-40px_rgba(15,118,110,0.45)]"
                                     >
-                                        <div className="flex items-start justify-between mb-4">
-                                            <div className="flex size-12 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 text-slate-400 transition-colors group-hover:bg-emerald-50 group-hover:text-emerald-600 group-hover:border-emerald-100">
+                                        <div className="mb-4 flex items-start justify-between">
+                                            <div className="flex size-12 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 text-slate-400 transition-colors group-hover:border-emerald-100 group-hover:bg-emerald-50 group-hover:text-emerald-600">
                                                 <GraduationCap className="size-5" />
                                             </div>
-                                            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[0.6rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
                                                 <History className="size-3" />
                                                 Arsip
                                             </div>
                                         </div>
 
-                                        <div className="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-emerald-600">
+                                        <div className="text-[0.65rem] font-bold tracking-[0.24em] text-emerald-600 uppercase">
                                             {entry.periodLabel}
                                         </div>
                                         <h3 className="mt-2 font-heading text-xl font-semibold text-[var(--school-ink)]">
@@ -477,11 +489,11 @@ export default function OrganizationPage({
                                         </div>
                                         <p className="mt-3 text-sm leading-7 text-[var(--school-muted)]">
                                             {entry.biography ??
-                                                'Arsip ini menjaga memori kepemimpinan tanpa mengganggu pembacaan struktur aktif.'}
+                                                'Arsip ini menyimpan catatan kepemimpinan periode sebelumnya.'}
                                         </p>
                                         <div className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
                                             <Shield className="size-4 text-slate-300" />
-                                            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                            <span className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
                                                 {entry.startsAt
                                                     ? dateFormatter.format(
                                                           new Date(
@@ -504,7 +516,7 @@ export default function OrganizationPage({
                             </motion.div>
                         ) : (
                             <div className="rounded-[2rem] border border-dashed border-slate-200 bg-white/70 p-10 text-center">
-                                <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-slate-50 text-slate-300 mb-5">
+                                <div className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-slate-50 text-slate-300">
                                     <History className="size-7" />
                                 </div>
                                 <h3 className="text-lg font-semibold text-slate-500">
@@ -512,10 +524,9 @@ export default function OrganizationPage({
                                 </h3>
                                 <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[var(--school-muted)]">
                                     Arsip historis untuk scope ini belum
-                                    dipublikasikan. Kontrak backend sudah
-                                    dibuka, sehingga catatan kepemimpinan atau
-                                    kepengurusan lama dapat ditampilkan tanpa
-                                    mengubah struktur aktif.
+                                    dipublikasikan. Catatan kepemimpinan atau
+                                    kepengurusan lama akan tampil setelah data
+                                    tersedia.
                                 </p>
                             </div>
                         )}
@@ -531,15 +542,15 @@ export default function OrganizationPage({
                         transition={{ duration: 0.6 }}
                         className="space-y-10"
                     >
-                        <div className="text-center max-w-2xl mx-auto">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">
+                        <div className="mx-auto max-w-2xl text-center">
+                            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
                                 <Shield className="size-4" />
                                 Prinsip Tata Kelola
                             </div>
                             <h2 className="font-heading text-3xl leading-tight text-[var(--school-ink)] md:text-4xl">
-                                Fondasi yang membangun{' '}
+                                Prinsip yang mengarahkan{' '}
                                 <span className="text-slate-400">
-                                    setiap keputusan organisasi.
+                                    pengelolaan organisasi.
                                 </span>
                             </h2>
                         </div>
@@ -548,15 +559,18 @@ export default function OrganizationPage({
                             {[
                                 {
                                     title: 'Transparansi',
-                                    description: 'Setiap keputusan dibuat secara terbuka dan bisa dipertanggungjawabkan kepada seluruh warga sekolah.',
+                                    description:
+                                        'Setiap keputusan dibuat secara terbuka dan bisa dipertanggungjawabkan kepada seluruh warga sekolah.',
                                     icon: Eye,
-                                    iconGradient: 'from-emerald-500 to-emerald-700',
+                                    iconGradient:
+                                        'from-emerald-500 to-emerald-700',
                                     gradient: 'from-emerald-50 to-sky-50',
                                     border: 'border-emerald-100',
                                 },
                                 {
                                     title: 'Akuntabilitas',
-                                    description: 'Setiap peran memiliki batas wewenang yang jelas dan jangkauan tanggung jawab yang terukur.',
+                                    description:
+                                        'Setiap peran memiliki batas wewenang yang jelas dan jangkauan tanggung jawab yang terukur.',
                                     icon: Scale,
                                     iconGradient: 'from-sky-500 to-sky-700',
                                     gradient: 'from-sky-50 to-violet-50',
@@ -564,15 +578,18 @@ export default function OrganizationPage({
                                 },
                                 {
                                     title: 'Partisipasi',
-                                    description: 'Keputusan tidak terisolasi di satu titik. Aspirasi siswa, guru, dan masyarakat didengar dan dipertimbangkan.',
+                                    description:
+                                        'Keputusan tidak terisolasi di satu titik. Aspirasi siswa, guru, dan masyarakat didengar dan dipertimbangkan.',
                                     icon: UsersRound,
-                                    iconGradient: 'from-violet-500 to-violet-700',
+                                    iconGradient:
+                                        'from-violet-500 to-violet-700',
                                     gradient: 'from-violet-50 to-pink-50',
                                     border: 'border-violet-100',
                                 },
                                 {
                                     title: 'Keberlanjutan',
-                                    description: 'Struktur didesain agar estafet kepemimpinan berjalan mulus tanpa mengulang kesalahan dari masa lalu.',
+                                    description:
+                                        'Struktur disusun agar estafet kepemimpinan berjalan tertib dan berkelanjutan.',
                                     icon: RefreshCcw,
                                     iconGradient: 'from-amber-500 to-amber-700',
                                     gradient: 'from-amber-50 to-emerald-50',
@@ -580,26 +597,32 @@ export default function OrganizationPage({
                                 },
                             ].map((principle, i) => {
                                 const PrincipleIcon = principle.icon;
+
                                 return (
-                                <motion.div
-                                    key={principle.title}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={motionViewport}
-                                    transition={{ delay: i * 0.08, duration: 0.5 }}
-                                    whileHover={{ y: -5 }}
-                                    className={`group rounded-2xl border ${principle.border} bg-gradient-to-br ${principle.gradient} p-6 shadow-sm transition-shadow hover:shadow-lg`}
-                                >
-                                    <div className={`flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br ${principle.iconGradient} text-white shadow-lg mb-4 transition-transform duration-300 group-hover:scale-110`}>
-                                        <PrincipleIcon className="size-5" />
-                                    </div>
-                                    <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">
-                                        {principle.title}
-                                    </h3>
-                                    <p className="mt-2 text-sm leading-relaxed text-[var(--school-muted)]">
-                                        {principle.description}
-                                    </p>
-                                </motion.div>
+                                    <motion.div
+                                        key={principle.title}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={motionViewport}
+                                        transition={{
+                                            delay: i * 0.08,
+                                            duration: 0.5,
+                                        }}
+                                        whileHover={{ y: -5 }}
+                                        className={`group rounded-2xl border ${principle.border} bg-gradient-to-br ${principle.gradient} p-6 shadow-sm transition-shadow hover:shadow-lg`}
+                                    >
+                                        <div
+                                            className={`flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br ${principle.iconGradient} mb-4 text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                                        >
+                                            <PrincipleIcon className="size-5" />
+                                        </div>
+                                        <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">
+                                            {principle.title}
+                                        </h3>
+                                        <p className="mt-2 text-sm leading-relaxed text-[var(--school-muted)]">
+                                            {principle.description}
+                                        </p>
+                                    </motion.div>
                                 );
                             })}
                         </div>

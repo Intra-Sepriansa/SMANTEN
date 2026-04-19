@@ -1,8 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import {
+    AnimatePresence,
+    motion,
+    useScroll,
+    useTransform,
+} from 'framer-motion';
 import {
     ArrowLeft,
-    BadgeCheck,
     BookOpen,
     Briefcase,
     Building2,
@@ -14,7 +18,6 @@ import {
     MapPin,
     PenLine,
     Send,
-    Sparkles,
     Star,
     User,
     X,
@@ -92,7 +95,7 @@ const categoryCards: Array<{
         label: 'Jejak Kampus',
         shortLabel: 'Kampus',
         description:
-            'Adaptasi kuliah, organisasi, beasiswa, dan hidup perantauan.',
+            'Adaptasi kuliah, organisasi, beasiswa, dan kehidupan setelah lulus.',
         accent: 'border-violet-200 bg-violet-50/80 text-violet-700 shadow-[0_20px_50px_-32px_rgba(139,92,246,0.7)]',
         icon: GraduationCap,
     },
@@ -117,7 +120,7 @@ const storyBlueprints: Array<{
     {
         title: 'Momen Titik Balik',
         description:
-            'Cocok untuk cerita tentang satu keputusan penting yang mengubah arah hidup.',
+            'Cocok untuk cerita tentang keputusan penting setelah lulus.',
         category: 'cerita',
         headline: 'Keputusan kecil yang mengubah arah saya setelah lulus',
         starter:
@@ -130,12 +133,12 @@ const storyBlueprints: Array<{
         category: 'karir',
         headline: 'Dari bingung cari kerja sampai menemukan ritme profesional',
         starter:
-            'Transisi dari sekolah ke dunia kerja terasa jauh lebih rumit daripada yang saya bayangkan. Saya sempat mencoba beberapa jalur, menghadapi penolakan, lalu pelan-pelan belajar membaca peluang yang benar-benar cocok...',
+            'Transisi dari sekolah ke dunia kerja membutuhkan adaptasi, ketekunan, dan kemampuan membaca peluang yang sesuai...',
     },
     {
         title: 'Adaptasi Kampus',
         description:
-            'Untuk cerita kuliah, organisasi, beasiswa, atau hidup merantau.',
+            'Untuk cerita kuliah, organisasi, beasiswa, atau pengalaman merantau.',
         category: 'kampus',
         headline: 'Hal yang paling saya pelajari saat beradaptasi di kampus',
         starter:
@@ -156,6 +159,7 @@ function getInitials(name: string): string {
 export default function AlumniWriteStoryPage({
     school,
 }: AlumniWriteStoryPageProps) {
+    const heroRef = useRef<HTMLDivElement>(null);
     const visitorTokenRef = useRef('');
     const [formData, setFormData] = useState(initialAlumniStoryForm);
     const [formStep, setFormStep] = useState<1 | 2>(1);
@@ -171,6 +175,12 @@ export default function AlumniWriteStoryPage({
     const deferredPreviewBody = useDeferredValue(formData.body);
     const suppressLocationSearchRef = useRef<string | null>(null);
     const reverseGeocodeControllerRef = useRef<AbortController | null>(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ['start start', 'end start'],
+    });
+    const heroY = useTransform(scrollYProgress, [0, 1], [0, 140]);
+    const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
     useEffect(() => {
         const token = ensureAlumniForumVisitorToken();
@@ -482,7 +492,7 @@ export default function AlumniWriteStoryPage({
     const PreviewIcon = previewCategory.icon;
     const previewBody =
         deferredPreviewBody.trim() === ''
-            ? 'Cerita kamu akan tampil di sini sebagai preview. Tulis pengalaman yang spesifik, jujur, dan punya satu pesan utama agar lebih kuat dibaca.'
+            ? 'Cerita kamu akan tampil di sini sebagai pratinjau. Tulis pengalaman yang spesifik dan memiliki satu pesan utama.'
             : deferredPreviewBody;
     const previewExcerpt = previewBody.slice(0, 240);
     const previewReadMinutes = Math.max(
@@ -592,7 +602,7 @@ export default function AlumniWriteStoryPage({
             <Head title="Tulis Ceritamu">
                 <meta
                     name="description"
-                    content={`Halaman publik untuk alumni ${school.name} berbagi cerita, perjalanan kampus, dan pengalaman karir dengan pengalaman form yang lebih imersif.`}
+                    content={`Halaman alumni ${school.name} untuk mengirim cerita, pengalaman kampus, dan perjalanan karier.`}
                 />
                 <meta
                     property="og:title"
@@ -600,7 +610,7 @@ export default function AlumniWriteStoryPage({
                 />
                 <meta
                     property="og:description"
-                    content="Bagikan cerita alumni lewat halaman form yang lebih fokus, kaya preview, dan nyaman dipakai dari desktop maupun mobile."
+                    content="Bagikan cerita alumni dengan format yang singkat, jelas, dan mudah dibaca."
                 />
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link
@@ -609,102 +619,93 @@ export default function AlumniWriteStoryPage({
                 />
             </Head>
 
-            <div className="space-y-8 md:space-y-10">
-                <section className="relative overflow-hidden rounded-[2.5rem] border border-white/70 bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.2),transparent_36%),linear-gradient(135deg,#08121A_0%,#0F172A_54%,#111827_100%)] p-6 text-white shadow-[0_40px_120px_-52px_rgba(15,23,42,0.85)] md:p-10">
-                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:84px_84px] opacity-30" />
-                    <div className="absolute -top-20 right-0 size-72 rounded-full bg-violet-500/20 blur-[120px]" />
-                    <div className="absolute bottom-0 left-0 size-80 rounded-full bg-emerald-400/15 blur-[140px]" />
-
-                    <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-                        <div className="space-y-6">
-                            <Button
-                                asChild
-                                variant="outline"
-                                className="rounded-full border-white/15 bg-white/10 px-5 text-white hover:bg-white/15"
-                            >
-                                <Link href={alumni()}>
-                                    <ArrowLeft className="mr-2 size-4" />
-                                    Kembali ke Forum Alumni
-                                </Link>
-                            </Button>
-
-                            <div className="flex flex-wrap gap-3">
-                                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 backdrop-blur-md">
-                                    <Sparkles className="size-4 text-violet-300" />
-                                    <span className="text-[0.68rem] font-bold tracking-[0.22em] uppercase">
-                                        Halaman Baru
-                                    </span>
-                                </div>
-                                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-1.5 backdrop-blur-md">
-                                    <BadgeCheck className="size-4 text-emerald-300" />
-                                    <span className="text-[0.68rem] font-bold tracking-[0.22em] uppercase">
-                                        Form Imersif
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <h1 className="max-w-4xl font-heading text-4xl leading-tight md:text-5xl lg:text-6xl">
-                                    Tulis ceritamu dengan pengalaman yang lebih
-                                    fokus, rapi, dan terasa
-                                    <span className="bg-linear-to-r from-violet-300 via-white to-amber-300 bg-clip-text text-transparent">
-                                        {' '}
-                                        premium.
-                                    </span>
-                                </h1>
-                                <p className="max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
-                                    Halaman ini dibuat khusus untuk alumni yang
-                                    ingin berbagi cerita dengan ritme yang lebih
-                                    nyaman: ada draft cepat, progress meter,
-                                    live preview, dan panduan agar narasimu
-                                    terasa lebih hidup saat dibaca.
-                                </p>
-                            </div>
+            <div className="space-y-8 pb-20 md:space-y-10">
+                <motion.section
+                    ref={heroRef}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8 }}
+                    className="relative right-1/2 left-1/2 -mt-8 -mr-[50vw] -ml-[50vw] h-[72vh] w-screen overflow-hidden bg-slate-950 md:-mt-10 lg:h-[78dvh]"
+                >
+                    <motion.div
+                        className="absolute inset-0 z-0"
+                        style={{ y: heroY }}
+                    >
+                        <div className="absolute inset-0">
+                            <img
+                                src="/images/alumni/hero.png"
+                                alt="Cerita alumni SMAN 1 Tenjo"
+                                className="h-full w-full object-cover object-center opacity-35 mix-blend-luminosity"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/55 to-transparent" />
                         </div>
+                        <div className="absolute top-1/4 -left-20 size-[24rem] rounded-full bg-violet-500/12 blur-[120px]" />
+                        <div className="absolute right-0 bottom-1/4 size-[28rem] rounded-full bg-emerald-500/10 blur-[130px]" />
+                        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
+                    </motion.div>
 
-                        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
-                            {[
-                                {
-                                    icon: User,
-                                    title: 'Profil ringkas',
-                                    description:
-                                        'Isi identitas utama dulu agar cerita punya konteks yang kuat.',
-                                },
-                                {
-                                    icon: PenLine,
-                                    title: 'Live preview',
-                                    description:
-                                        'Lihat bagaimana ceritamu akan tampil bahkan sebelum dikirim.',
-                                },
-                                {
-                                    icon: Send,
-                                    title: 'Siap tayang',
-                                    description:
-                                        'Tetap terhubung ke endpoint forum alumni yang sudah ada dan dimoderasi.',
-                                },
-                            ].map((feature) => {
-                                const FeatureIcon = feature.icon;
+                    <motion.div
+                        className="absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-12 xl:px-24"
+                        style={{ opacity: heroOpacity }}
+                    >
+                        <div className="mx-auto flex w-full max-w-7xl pt-20">
+                            <div className="max-w-4xl">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.92 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.45, delay: 0.2 }}
+                                    className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-5 py-2 backdrop-blur-md"
+                                >
+                                    <PenLine className="size-4 text-violet-300" />
+                                    <span className="text-[0.68rem] font-bold tracking-[0.25em] text-violet-200 uppercase">
+                                        Cerita Alumni
+                                    </span>
+                                </motion.div>
 
-                                return (
-                                    <div
-                                        key={feature.title}
-                                        className="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-xl"
+                                <motion.h1
+                                    initial={{ opacity: 0, y: 28 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.3 }}
+                                    className="max-w-4xl font-heading text-5xl leading-[1.05] text-white md:text-7xl lg:text-[5.5rem]"
+                                >
+                                    Tulis Cerita{' '}
+                                    <span className="bg-gradient-to-r from-violet-300 to-emerald-300 bg-clip-text text-transparent">
+                                        Alumni.
+                                    </span>
+                                </motion.h1>
+
+                                <motion.p
+                                    initial={{ opacity: 0, y: 28 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.4 }}
+                                    className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg lg:text-xl"
+                                >
+                                    Bagikan pengalamanmu dengan singkat, jelas,
+                                    dan sesuai untuk forum alumni sekolah.
+                                </motion.p>
+
+                                <motion.div
+                                    initial={{ opacity: 0, y: 28 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.5 }}
+                                    className="mt-8"
+                                >
+                                    <Button
+                                        asChild
+                                        variant="outline"
+                                        className="rounded-full border-white/15 bg-white/10 px-6 text-white hover:bg-white/15"
                                     >
-                                        <div className="mb-3 flex size-11 items-center justify-center rounded-2xl bg-white/10 text-white shadow-[0_20px_50px_-36px_rgba(255,255,255,0.9)]">
-                                            <FeatureIcon className="size-5" />
-                                        </div>
-                                        <div className="text-sm font-semibold text-white">
-                                            {feature.title}
-                                        </div>
-                                        <p className="mt-1 text-sm leading-6 text-slate-300">
-                                            {feature.description}
-                                        </p>
-                                    </div>
-                                );
-                            })}
+                                        <Link href={alumni()}>
+                                            <ArrowLeft className="mr-2 size-4" />
+                                            Kembali ke Forum Alumni
+                                        </Link>
+                                    </Button>
+                                </motion.div>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </motion.div>
+                </motion.section>
 
                 {submitResult && (
                     <motion.section
@@ -797,16 +798,15 @@ export default function AlumniWriteStoryPage({
                                 <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                                     <div className="space-y-2">
                                         <p className="text-[0.72rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
-                                            Story Builder
+                                            Penyusun Cerita
                                         </p>
                                         <h2 className="font-heading text-2xl text-slate-950 md:text-3xl">
-                                            Bangun cerita yang berkesan dalam 2
-                                            langkah.
+                                            Tulis cerita dalam 2 langkah.
                                         </h2>
                                         <p className="max-w-2xl text-sm leading-7 text-slate-500 md:text-base">
                                             Langkah pertama mengunci konteks
-                                            penulis, lalu langkah kedua
-                                            menguatkan narasi dan pesan utama.
+                                            penulis, lalu langkah kedua menyusun
+                                            isi dan pesan utama.
                                         </p>
                                     </div>
 
@@ -838,7 +838,7 @@ export default function AlumniWriteStoryPage({
                                             step: 2,
                                             title: 'Narasi & Publikasi',
                                             description:
-                                                'Judul, isi cerita, preview akhir, lalu kirim ke forum.',
+                                                'Judul, isi cerita, pratinjau akhir, lalu kirim ke forum.',
                                         },
                                     ].map((item) => (
                                         <button
@@ -990,8 +990,7 @@ export default function AlumniWriteStoryPage({
                                                         Fokus Cerita
                                                     </label>
                                                     <span className="text-xs font-semibold text-slate-400">
-                                                        Pilih atmosfer narasi
-                                                        yang paling pas
+                                                        Pilih kategori cerita
                                                     </span>
                                                 </div>
                                                 <div className="grid gap-3 md:grid-cols-2">
@@ -1282,7 +1281,7 @@ export default function AlumniWriteStoryPage({
                                                     Langkah 2
                                                 </p>
                                                 <h3 className="font-heading text-2xl text-slate-950">
-                                                    Rangkai narasimu dengan satu
+                                                    Susun cerita dengan satu
                                                     sudut pandang yang jelas.
                                                 </h3>
                                                 <p className="max-w-3xl text-sm leading-7 text-slate-500 md:text-base">
@@ -1302,7 +1301,7 @@ export default function AlumniWriteStoryPage({
                                                     </label>
                                                     <span className="text-xs font-semibold text-slate-400">
                                                         Klik salah satu untuk
-                                                        memulai lebih cepat
+                                                        memulai draft
                                                     </span>
                                                 </div>
                                                 <div className="grid gap-3 lg:grid-cols-3">
@@ -1405,7 +1404,7 @@ export default function AlumniWriteStoryPage({
                                                             event.target.value,
                                                         )
                                                     }
-                                                    placeholder="Mulai dari satu kejadian, lalu ceritakan konteks, tantangan, keputusan, dan pelajaran yang kamu bawa. Cerita yang paling kuat biasanya konkret, jujur, dan punya pesan utama."
+                                                    placeholder="Mulai dari satu kejadian, lalu ceritakan konteks, tantangan, keputusan, dan pelajaran yang kamu bawa."
                                                     className="w-full resize-none rounded-[1.6rem] border border-slate-200 bg-slate-50/70 px-5 py-4 text-sm leading-8 text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100 focus:outline-none"
                                                 />
                                             </div>
@@ -1417,8 +1416,8 @@ export default function AlumniWriteStoryPage({
                                                     </div>
                                                     <div className="space-y-2">
                                                         <div className="font-semibold text-emerald-950">
-                                                            Formula narasi yang
-                                                            biasanya bekerja
+                                                            Struktur cerita yang
+                                                            disarankan
                                                         </div>
                                                         <p className="text-sm leading-7 text-emerald-900/85">
                                                             Mulai dari situasi
@@ -1625,9 +1624,9 @@ export default function AlumniWriteStoryPage({
                                 {[
                                     {
                                         icon: Lightbulb,
-                                        title: 'Spesifik lebih kuat',
+                                        title: 'Tulis secara spesifik',
                                         description:
-                                            'Sebutkan fase, situasi, atau momen nyata agar cerita terasa hidup.',
+                                            'Sebutkan fase, situasi, atau momen nyata agar cerita mudah dipahami.',
                                     },
                                     {
                                         icon: MapPin,

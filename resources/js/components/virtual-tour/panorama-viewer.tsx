@@ -1,7 +1,7 @@
 import { Html, OrbitControls, useTexture } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import { BackSide, SRGBColorSpace } from 'three';
 import type { VirtualTourScene } from '@/types';
 
@@ -9,6 +9,10 @@ type PanoramaViewerProps = {
     scene: VirtualTourScene;
     onSelectScene: (sceneId: string) => void;
 };
+
+const subscribeToClientRender = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 function toSpherePosition(yaw: number, pitch: number, radius = 9.4) {
     const yawRadians = (yaw * Math.PI) / 180;
@@ -21,14 +25,17 @@ function toSpherePosition(yaw: number, pitch: number, radius = 9.4) {
     return [x, y, z] as const;
 }
 
-function PanoramaSphere({
-    scene,
-    onSelectScene,
-}: PanoramaViewerProps) {
+function PanoramaSphere({ scene, onSelectScene }: PanoramaViewerProps) {
     const reduceMotion = useReducedMotion();
     const texture = useTexture(scene.imageUrl);
 
-    texture.colorSpace = SRGBColorSpace;
+    const panoramaTexture = useMemo(() => {
+        const nextTexture = texture.clone();
+        nextTexture.colorSpace = SRGBColorSpace;
+        nextTexture.needsUpdate = true;
+
+        return nextTexture;
+    }, [texture]);
 
     const hotspots = useMemo(
         () =>
@@ -43,7 +50,7 @@ function PanoramaSphere({
         <>
             <mesh rotation={[0, (scene.initialYaw * Math.PI) / 180, 0]}>
                 <sphereGeometry args={[10, 64, 48]} />
-                <meshBasicMaterial map={texture} side={BackSide} />
+                <meshBasicMaterial map={panoramaTexture} side={BackSide} />
             </mesh>
 
             {hotspots.map((hotspot) => (
@@ -87,29 +94,29 @@ function FallbackPanel() {
 }
 
 export function PanoramaViewer({ scene, onSelectScene }: PanoramaViewerProps) {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const isClient = useSyncExternalStore(
+        subscribeToClientRender,
+        getClientSnapshot,
+        getServerSnapshot,
+    );
 
     if (!isClient) {
         return <FallbackPanel />;
     }
 
     return (
-        <div className="relative h-full w-full overflow-hidden bg-[var(--school-ink)]">
-            <div className="absolute left-5 top-5 z-10 rounded-full border border-white/18 bg-black/24 px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-white backdrop-blur">
+        <div className="relative h-full w-full overflow-hidden bg-(--school-ink)">
+            <div className="absolute top-5 left-5 z-10 rounded-full border border-white/18 bg-black/24 px-4 py-2 text-[0.72rem] font-semibold tracking-[0.28em] text-white uppercase backdrop-blur">
                 {scene.eyebrow}
             </div>
-            <div className="absolute bottom-5 left-5 z-10 max-w-sm rounded-[1.5rem] border border-white/18 bg-black/24 p-4 text-white backdrop-blur">
+            <div className="absolute bottom-5 left-5 z-10 max-w-sm rounded-3xl border border-white/18 bg-black/24 p-4 text-white backdrop-blur">
                 <div className="font-heading text-2xl">{scene.title}</div>
                 <p className="mt-2 text-sm leading-7 text-white/75">
                     {scene.description}
                 </p>
             </div>
-            <div className="absolute right-5 top-5 z-10 rounded-[1.4rem] border border-white/18 bg-black/24 px-4 py-3 text-right text-white backdrop-blur">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/70">
+            <div className="absolute top-5 right-5 z-10 rounded-[1.4rem] border border-white/18 bg-black/24 px-4 py-3 text-right text-white backdrop-blur">
+                <div className="text-[0.68rem] font-semibold tracking-[0.24em] text-white/70 uppercase">
                     Navigasi
                 </div>
                 <div className="mt-2 text-sm leading-6 text-white/80">

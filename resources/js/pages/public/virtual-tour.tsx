@@ -1,6 +1,12 @@
 import { Head } from '@inertiajs/react';
+import {
+    ArrowLeft,
+    ArrowRight,
+    ArrowRightCircle,
+    Move3d,
+    Route,
+} from 'lucide-react';
 import { lazy, Suspense, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, ArrowRightCircle, Move3d, Route } from 'lucide-react';
 import { PageIntro } from '@/components/public/page-intro';
 import { virtualTourScenes } from '@/lib/public-content';
 import { useSiteUiStore } from '@/stores/site-ui-store';
@@ -17,7 +23,9 @@ type VirtualTourPageProps = {
 };
 
 export default function VirtualTourPage({ school }: VirtualTourPageProps) {
-    const selectedTourSceneId = useSiteUiStore((state) => state.selectedTourSceneId);
+    const selectedTourSceneId = useSiteUiStore(
+        (state) => state.selectedTourSceneId,
+    );
     const setSelectedTourSceneId = useSiteUiStore(
         (state) => state.setSelectedTourSceneId,
     );
@@ -57,14 +65,14 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
             <div className="space-y-8">
                 <PageIntro
                     eyebrow="Virtual Tour 360"
-                    title="Tur virtual dibangun sebagai jalur orientasi sekolah yang bisa diputar dan dipindai per lokasi."
-                    description={`${school.name} mengeksplorasi gerbang utama, laboratorium, perpustakaan, dan area lapangan melalui panorama client-side, hotspot lintas lokasi, dan rail navigasi yang bisa tumbuh seiring koleksi scene sekolah.`}
+                    title="Tur virtual area sekolah."
+                    description={`${school.name} menampilkan gerbang utama, laboratorium, perpustakaan, dan lapangan melalui panorama interaktif.`}
                 />
 
                 <div className="grid gap-5 xl:grid-cols-[0.34fr_0.66fr]">
                     <div className="space-y-3">
                         <div className="rounded-[1.6rem] border border-white/70 bg-white/88 p-5 shadow-[0_22px_60px_-46px_rgba(15,118,110,0.4)]">
-                            <div className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                            <div className="text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                 Progress Scene
                             </div>
                             <div className="mt-3 flex items-end justify-between gap-4">
@@ -75,8 +83,8 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                                     </span>
                                 </div>
                                 <div className="text-sm leading-7 text-[var(--school-muted)]">
-                                    Gunakan panah keyboard atau tombol berikut untuk
-                                    menjelajah scene.
+                                    Gunakan tombol berikut untuk menjelajah
+                                    lokasi.
                                 </div>
                             </div>
                         </div>
@@ -92,7 +100,7 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                                         : 'border-white/70 bg-white/72 text-[var(--school-muted)]'
                                 }`}
                             >
-                                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                                <div className="text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                     {scene.eyebrow}
                                 </div>
                                 <div className="mt-2 text-xl font-semibold">
@@ -119,7 +127,7 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                         </div>
                         <div className="grid gap-4 border-t border-white/70 p-6 md:grid-cols-[0.7fr_0.3fr]">
                             <div className="rounded-[1.5rem] border border-[var(--school-green-100)] bg-[rgba(248,252,251,0.82)] p-5">
-                                <div className="flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                                <div className="flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                     <Route className="size-4" />
                                     Hotspot Aktif
                                 </div>
@@ -129,7 +137,9 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                                             key={hotspot.id}
                                             type="button"
                                             onClick={() =>
-                                                setSelectedTourSceneId(hotspot.targetSceneId)
+                                                setSelectedTourSceneId(
+                                                    hotspot.targetSceneId,
+                                                )
                                             }
                                             className="rounded-full border border-[var(--school-green-200)] bg-white px-4 py-2 text-sm font-semibold text-[var(--school-ink)] transition hover:-translate-y-0.5 hover:border-[var(--school-green-300)]"
                                         >
@@ -144,7 +154,9 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                                     onClick={() =>
                                         setSelectedTourSceneId(
                                             virtualTourScenes[
-                                                (selectedSceneIndex - 1 + virtualTourScenes.length) %
+                                                (selectedSceneIndex -
+                                                    1 +
+                                                    virtualTourScenes.length) %
                                                     virtualTourScenes.length
                                             ].id,
                                         )
@@ -159,7 +171,8 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                                     onClick={() =>
                                         setSelectedTourSceneId(
                                             virtualTourScenes[
-                                                (selectedSceneIndex + 1) % virtualTourScenes.length
+                                                (selectedSceneIndex + 1) %
+                                                    virtualTourScenes.length
                                             ].id,
                                         )
                                     }
@@ -172,25 +185,30 @@ export default function VirtualTourPage({ school }: VirtualTourPageProps) {
                         </div>
                         <div className="grid gap-4 p-6 md:grid-cols-2">
                             <div className="rounded-[1.5rem] border border-[var(--school-green-100)] bg-[rgba(248,252,251,0.82)] p-5">
-                                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                                <div className="text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                     Hotspot berikutnya
                                 </div>
                                 <div className="mt-3 text-sm leading-7 text-[var(--school-muted)]">
-                                    Gunakan drag untuk memutar panorama. Hotspot di dalam scene akan memindahkan Anda ke lokasi berikutnya tanpa reload halaman.
+                                    Gunakan drag untuk memutar panorama. Hotspot
+                                    di dalam scene akan memindahkan Anda ke
+                                    lokasi berikutnya tanpa reload halaman.
                                 </div>
                             </div>
                             <div className="rounded-[1.5rem] border border-[rgba(245,158,11,0.22)] bg-[rgba(255,251,235,0.82)] p-5">
-                                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-gold-700)]">
+                                <div className="text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-gold-700)] uppercase">
                                     Konteks Lokasi
                                 </div>
                                 <div className="mt-3 flex items-start gap-3 text-sm leading-7 text-[var(--school-muted)]">
                                     <ArrowRightCircle className="mt-1 size-4 shrink-0 text-[var(--school-gold-700)]" />
-                                    Sekolah {school.name} berada di Tenjo, Kabupaten Bogor, dengan area yang cukup luas untuk divisualisasikan sebagai jalur orientasi virtual.
+                                    Sekolah {school.name} berada di Tenjo,
+                                    Kabupaten Bogor, dengan area yang cukup luas
+                                    untuk divisualisasikan sebagai jalur
+                                    orientasi virtual.
                                 </div>
                             </div>
                         </div>
                         <div className="border-t border-white/70 p-6">
-                            <div className="flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[var(--school-green-700)]">
+                            <div className="flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
                                 <Move3d className="size-4" />
                                 Fakta Lokasi
                             </div>

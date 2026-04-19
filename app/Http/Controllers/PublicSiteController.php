@@ -50,6 +50,24 @@ class PublicSiteController extends Controller
         ]);
     }
 
+    public function media(): Response
+    {
+        return Inertia::render('public/media', [
+            'school' => $this->schoolPayload(),
+            'featuredArticles' => $this->featuredArticlesPayload(limit: 8),
+            'featuredWorks' => $this->featuredWorksPayload(limit: 6),
+        ]);
+    }
+
+    public function layanan(): Response
+    {
+        return Inertia::render('public/layanan', [
+            'school' => $this->schoolPayload(),
+            'ppdb' => $this->ppdbPayload(),
+            'featuredArticles' => $this->featuredArticlesPayload(limit: 3),
+        ]);
+    }
+
     public function documents(): Response
     {
         return Inertia::render('public/documents', [
@@ -81,6 +99,14 @@ class PublicSiteController extends Controller
         ]);
     }
 
+    public function kesiswaan(): Response
+    {
+        return Inertia::render('public/kesiswaan', [
+            'school' => $this->schoolPayload(),
+            'featuredArticles' => $this->featuredArticlesPayload(limit: 4),
+        ]);
+    }
+
     public function sitemap(): HttpResponse
     {
         $schoolUpdatedAt = SchoolProfile::query()
@@ -92,7 +118,10 @@ class PublicSiteController extends Controller
             ['route' => 'home', 'priority' => '1.0', 'changefreq' => 'weekly'],
             ['route' => 'profile', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['route' => 'akademik', 'priority' => '0.8', 'changefreq' => 'monthly'],
+            ['route' => 'kesiswaan', 'priority' => '0.8', 'changefreq' => 'weekly'],
             ['route' => 'ppdb', 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['route' => 'media', 'priority' => '0.8', 'changefreq' => 'daily'],
+            ['route' => 'layanan', 'priority' => '0.7', 'changefreq' => 'weekly'],
             ['route' => 'documents', 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['route' => 'berita.index', 'priority' => '0.8', 'changefreq' => 'daily'],
             ['route' => 'organization', 'priority' => '0.7', 'changefreq' => 'weekly'],
