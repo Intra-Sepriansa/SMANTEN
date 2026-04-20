@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\Internal\Admin\ArticleController;
+use App\Http\Controllers\Api\Internal\Admin\ExportController;
+use App\Http\Controllers\Api\Internal\Admin\MediaAssetController;
 use App\Http\Controllers\Api\Internal\Admin\OrganizationAssignmentController;
 use App\Http\Controllers\Api\Internal\Admin\PortfolioItemController;
 use App\Http\Controllers\Api\Internal\Admin\PpdbReviewController;
 use App\Http\Controllers\Api\Internal\Admin\PublicPortalSettingController;
 use App\Http\Controllers\Api\Internal\Admin\RoleAssignmentController;
 use App\Http\Controllers\Api\Internal\Admin\RoomController;
+use App\Http\Controllers\Api\Internal\Admin\SiteSettingRevisionController;
 use App\Http\Controllers\Api\Internal\Admin\TimetableEntryController;
 use App\Http\Controllers\Api\Internal\Admin\TimetableVersionController;
 use App\Http\Controllers\DashboardController;
@@ -49,7 +52,21 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 
             Route::post('ppdb-applications/{ppdbApplication}/evaluate', [PpdbReviewController::class, 'evaluate'])->name('ppdb-applications.evaluate');
             Route::patch('ppdb-applications/{ppdbApplication}/status', [PpdbReviewController::class, 'updateStatus'])->name('ppdb-applications.status.update');
+            Route::get('ppdb-applications/{ppdbApplication}/receipt', [ExportController::class, 'ppdbReceipt'])->name('ppdb-applications.receipt');
             Route::patch('site-settings/public-portal', [PublicPortalSettingController::class, 'update'])->name('site-settings.public-portal.update');
+            Route::get('site-settings/public-portal/revisions', [SiteSettingRevisionController::class, 'index'])->name('site-settings.public-portal.revisions.index');
+            Route::post('site-settings/public-portal/revisions/{revision}/restore', [SiteSettingRevisionController::class, 'restore'])->name('site-settings.public-portal.revisions.restore');
+
+            Route::get('exports/ppdb-applications.csv', [ExportController::class, 'ppdbApplications'])->name('exports.ppdb-applications');
+            Route::get('exports/timetable.csv', [ExportController::class, 'timetable'])->name('exports.timetable');
+            Route::get('exports/students.csv', [ExportController::class, 'students'])->name('exports.students');
+            Route::get('exports/teachers.csv', [ExportController::class, 'teachers'])->name('exports.teachers');
+            Route::get('exports/activity-logs.csv', [ExportController::class, 'activityLogs'])->name('exports.activity-logs');
+
+            Route::get('media-assets', [MediaAssetController::class, 'index'])->name('media-assets.index');
+            Route::post('media-assets', [MediaAssetController::class, 'store'])->name('media-assets.store');
+            Route::patch('media-assets/{mediaAsset}', [MediaAssetController::class, 'update'])->name('media-assets.update');
+            Route::delete('media-assets/{mediaAsset}', [MediaAssetController::class, 'destroy'])->name('media-assets.destroy');
 
             Route::get('organization-assignments', [OrganizationAssignmentController::class, 'index'])->name('organization-assignments.index');
             Route::post('organization-assignments', [OrganizationAssignmentController::class, 'store'])->name('organization-assignments.store');

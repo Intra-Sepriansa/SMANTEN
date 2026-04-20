@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePublicPortalSettingRequest extends FormRequest
 {
@@ -28,6 +29,13 @@ class UpdatePublicPortalSettingRequest extends FormRequest
             'navigation.items.*.label' => ['required', 'string', 'max:40'],
             'navigation.items.*.visible' => ['required', 'boolean'],
             'navigation.items.*.position' => ['required', 'integer', 'min:1', 'max:30'],
+            'publishing' => ['nullable', 'array'],
+            'publishing.status' => ['nullable', 'string', Rule::in(['draft', 'published', 'scheduled'])],
+            'publishing.scheduled_at' => ['nullable', 'date'],
+            'seo' => ['nullable', 'array'],
+            'seo.title' => ['nullable', 'string', 'max:80'],
+            'seo.description' => ['nullable', 'string', 'max:180'],
+            'seo.keywords' => ['nullable', 'string', 'max:180'],
         ];
     }
 }

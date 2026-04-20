@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { GraduationCap, LayoutDashboard, Users } from 'lucide-react';
+import { Download, GraduationCap, LayoutDashboard, Users } from 'lucide-react';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -9,6 +9,7 @@ import { formatAdminDate, formatAdminDateTime } from '@/lib/admin-format';
 import { dashboard } from '@/routes';
 import { admin as adminDashboard } from '@/routes/dashboard';
 import { studentSchedule, teachers } from '@/routes/dashboard/admin';
+import { timetable as exportTimetable } from '@/routes/internal-api/exports';
 
 type ScheduleDesk = {
     versions: Array<{
@@ -119,6 +120,24 @@ export default function AdminSchedule({
                 ]}
             >
                 <section className="space-y-4">
+                    <AdminPanel className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div className="text-sm font-semibold text-neutral-950 dark:text-white">
+                                Export Jadwal
+                            </div>
+                            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                                Unduh entry jadwal lengkap untuk rekap Excel.
+                            </p>
+                        </div>
+                        <a
+                            href={exportTimetable.url()}
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-(--school-green-700) px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-(--school-green-600)"
+                        >
+                            <Download className="size-4" />
+                            Download CSV
+                        </a>
+                    </AdminPanel>
+
                     <AdminSectionIntro
                         eyebrow="Version Board"
                         title="Versi jadwal"
@@ -221,7 +240,7 @@ export default function AdminSchedule({
                                         </span>
                                     </div>
 
-                                    <div className="mt-4 flex flex-wrap gap-2 text-[0.68rem] font-semibold tracking-[0.16em] uppercase text-neutral-500 dark:text-neutral-400">
+                                    <div className="mt-4 flex flex-wrap gap-2 text-[0.68rem] font-semibold tracking-[0.16em] text-neutral-500 uppercase dark:text-neutral-400">
                                         <span className="rounded-full bg-neutral-100 px-3 py-1 dark:bg-neutral-800">
                                             Cap {room.capacity ?? '-'}
                                         </span>

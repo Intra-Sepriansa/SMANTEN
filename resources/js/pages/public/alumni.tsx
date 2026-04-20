@@ -1518,7 +1518,7 @@ export default function AlumniPage({
                 <meta name="twitter:image" content={ogImage} />
             </Head>
 
-            <div className="space-y-16 pb-20 lg:space-y-24">
+            <div className="space-y-10 pb-16 lg:space-y-12">
                 {/* ═══════════════════ HERO ═══════════════════ */}
                 <motion.section
                     ref={heroRef}
@@ -1620,7 +1620,7 @@ export default function AlumniPage({
                 </motion.section>
 
                 {/* ═══════════════════ STATS BAR ═══════════════════ */}
-                <div className="relative z-20 mx-auto -mt-12 max-w-7xl px-4 sm:px-6 lg:-mt-16">
+                <div className="relative z-20 mx-auto -mt-6 max-w-7xl px-4 sm:px-6 lg:-mt-8">
                     <div className="grid gap-5 md:grid-cols-4">
                         {[
                             {
@@ -1704,7 +1704,7 @@ export default function AlumniPage({
                 {/* ═══════════════════ ANALYTICS CHARTS ═══════════════════ */}
                 {allThreads.length > 0 && (
                     <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                        <div className="grid gap-6 lg:grid-cols-2">
+                        <div className="grid gap-5 lg:grid-cols-2">
                             <AlumniAngkatanChart
                                 data={Object.entries(
                                     filteredThreads.reduce<
@@ -1765,7 +1765,7 @@ export default function AlumniPage({
                         <BorderGlow
                             borderRadius={32}
                             colors={['#8B5CF6', '#EC4899', '#F59E0B']}
-                            className="rounded-4xl border border-white/80 bg-white/90 p-8 shadow-[0_32px_90px_-50px_rgba(15,118,110,0.3)] backdrop-blur-xl md:p-10"
+                            className="rounded-4xl border border-white/80 bg-white/90 p-6 shadow-[0_32px_90px_-50px_rgba(15,118,110,0.3)] backdrop-blur-xl md:p-8"
                         >
                             <div className="mb-6 flex items-center gap-2">
                                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[0.6rem] font-bold tracking-[0.2em] text-amber-700 uppercase">
@@ -1850,7 +1850,7 @@ export default function AlumniPage({
                 )}
 
                 {/* ═══════════════════ FORUM CONTROLS ═══════════════════ */}
-                <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6">
+                <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6">
                     {/* Search + Sort + Write CTA */}
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-4 md:flex-row">
@@ -2063,13 +2063,13 @@ export default function AlumniPage({
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={motionViewport}
-                        className="relative overflow-hidden rounded-[2.5rem] bg-linear-to-br from-slate-900 via-violet-950 to-slate-900 p-10 md:p-16"
+                        className="relative overflow-hidden rounded-[2.5rem] bg-linear-to-br from-slate-900 via-violet-950 to-slate-900 p-8 md:p-10"
                     >
                         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.04] mix-blend-overlay" />
                         <div className="absolute top-1/4 -left-20 size-100 rounded-full bg-violet-500/15 blur-[120px]" />
                         <div className="absolute right-0 bottom-0 size-75 rounded-full bg-amber-500/10 blur-[100px]" />
-                        <div className="relative z-10 grid items-center gap-10 lg:grid-cols-2">
-                            <div className="space-y-6">
+                        <div className="relative z-10 grid items-center gap-8 lg:grid-cols-2">
+                            <div className="space-y-5">
                                 <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 backdrop-blur-md">
                                     <Send className="size-4 text-violet-400" />
                                     <span className="text-[0.65rem] font-bold tracking-[0.2em] text-violet-300 uppercase">

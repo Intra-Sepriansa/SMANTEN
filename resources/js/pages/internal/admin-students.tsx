@@ -1,5 +1,10 @@
 import { Head } from '@inertiajs/react';
-import { CalendarDays, LayoutDashboard, Sparkles } from 'lucide-react';
+import {
+    CalendarDays,
+    Download,
+    LayoutDashboard,
+    Sparkles,
+} from 'lucide-react';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -8,10 +13,8 @@ import {
 import { formatAdminDateTime } from '@/lib/admin-format';
 import { dashboard } from '@/routes';
 import { admin as adminDashboard } from '@/routes/dashboard';
-import {
-    studentPortfolio,
-    studentSchedule,
-} from '@/routes/dashboard/admin';
+import { studentPortfolio, studentSchedule } from '@/routes/dashboard/admin';
+import { students as exportStudents } from '@/routes/internal-api/exports';
 
 type StudentDesk = {
     students: Array<{
@@ -104,6 +107,25 @@ export default function AdminStudents({
                 ]}
             >
                 <section className="grid gap-6">
+                    <AdminPanel className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div className="text-sm font-semibold text-neutral-950 dark:text-white">
+                                Export Data Siswa
+                            </div>
+                            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                                Unduh data siswa untuk rekap Excel dan arsip
+                                akademik.
+                            </p>
+                        </div>
+                        <a
+                            href={exportStudents.url()}
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-(--school-green-700) px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-(--school-green-600)"
+                        >
+                            <Download className="size-4" />
+                            Download CSV
+                        </a>
+                    </AdminPanel>
+
                     <div className="space-y-4">
                         <AdminSectionIntro
                             eyebrow="Creator Leaders"

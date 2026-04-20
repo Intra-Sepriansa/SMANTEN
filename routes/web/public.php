@@ -19,6 +19,7 @@ Route::middleware(TrackPublicPageVisit::class)->controller(PublicSiteController:
     Route::get('/organisasi', 'organization')->name('organization');
     Route::get('/guru', 'guru')->name('guru');
     Route::get('/ekstrakurikuler', 'extracurricular')->name('extracurricular');
+    Route::get('/ekstrakurikuler/{slug}', 'extracurricularShow')->name('extracurricular.show');
     Route::get('/alumni', 'alumni')->name('alumni');
     Route::get('/alumni/tulis-cerita', 'alumniWriteStory')->name('alumni.write-story');
     Route::get('/alumni/cerita/{slug}', 'alumniStoryShow')->name('alumni.story.show');

@@ -1,167 +1,43 @@
 import { Head, Link } from '@inertiajs/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-    Activity,
     ArrowRight,
     BadgeCheck,
     CalendarDays,
     Compass,
-    Heart,
     Megaphone,
-    PlayCircle,
-    ShieldCheck,
+    Search,
     Sparkles,
-    Trophy,
     Users,
 } from 'lucide-react';
-import { startTransition, useDeferredValue, useRef, useState } from 'react';
 import {
-    beritaIndex,
-    beritaShow,
-} from '@/actions/App/Http/Controllers/PublicSiteController';
+    startTransition,
+    useDeferredValue,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
+import { extracurricularShow } from '@/actions/App/Http/Controllers/PublicSiteController';
+import DomeGallery from '@/components/DomeGallery';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
-import { VideoGrid } from '@/components/public/video-grid';
 import { Button } from '@/components/ui/button';
+import {
+    extracurricularCategories,
+    extracurricularPrograms,
+} from '@/lib/extracurricular-content';
 import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
 import { cn } from '@/lib/utils';
-import type { FeaturedArticle, SchoolProfilePayload } from '@/types';
+import type { SchoolProfilePayload } from '@/types';
 
 type ExtracurricularPageProps = {
     school: SchoolProfilePayload;
-    featuredArticles: FeaturedArticle[];
 };
-
-const extracurricularCategories = [
-    'Semua',
-    'Kepemimpinan',
-    'Olahraga',
-    'Karakter',
-    'Pengabdian',
-    'Media',
-    'Seni',
-] as const;
 
 const sectionMenu = [
     { id: 'unggulan', label: 'Unit Unggulan' },
     { id: 'jalur', label: 'Jalur Pembinaan' },
-    { id: 'video', label: 'Video Showcase' },
-    { id: 'publikasi', label: 'Publikasi' },
-] as const;
-
-const extracurricularPrograms = [
-    {
-        name: 'Paskibra',
-        category: 'Kepemimpinan',
-        image: '/images/eskul/paskibra.png',
-        accent: '#DC2626',
-        icon: ShieldCheck,
-        summary:
-            'Korps disiplin dan kepemimpinan yang menyiapkan siswa tampil presisi di upacara, event besar, dan kompetisi baris-berbaris.',
-        cadence: 'Latihan rutin 2-3 kali per minggu',
-        metric: 'Disiplin',
-        metricSub: 'Tingkat tinggi',
-        focus: ['Baris-berbaris', 'Komando', 'Kepemimpinan'],
-        highlights: ['Upacara', 'Latihan formasi', 'Mental juang'],
-    },
-    {
-        name: 'Futsal',
-        category: 'Olahraga',
-        image: '/images/eskul/futsal.png',
-        accent: '#16A34A',
-        icon: Trophy,
-        summary:
-            'Ruang pembinaan fisik, strategi permainan, dan kekompakan tim bagi siswa yang aktif di kompetisi olahraga sekolah.',
-        cadence: 'Sparring dan latihan pekanan',
-        metric: 'Tim',
-        metricSub: 'Kompetitif',
-        focus: ['Teknik dasar', 'Game sense', 'Kerja tim'],
-        highlights: ['Friendly match', 'Seleksi tim', 'Turnamen sekolah'],
-    },
-    {
-        name: 'Rohis',
-        category: 'Karakter',
-        image: '/images/eskul/rohis.png',
-        accent: '#0F766E',
-        icon: Heart,
-        summary:
-            'Pembinaan akhlak, kepemimpinan spiritual, dan program keagamaan yang menjaga ritme karakter siswa tetap kuat.',
-        cadence: 'Kajian, mentoring, dan agenda sosial',
-        metric: 'Karakter',
-        metricSub: 'Konsisten',
-        focus: ['Pembinaan', 'Kajian', 'Kepedulian'],
-        highlights: ['Mentoring', 'Peringatan hari besar', 'Program sosial'],
-    },
-    {
-        name: 'PMR',
-        category: 'Pengabdian',
-        image: '/images/eskul/pmr.png',
-        accent: '#E11D48',
-        icon: Activity,
-        summary:
-            'Unit kesiapsiagaan siswa yang berfokus pada pertolongan pertama, kesehatan remaja, dan respon cepat saat kegiatan sekolah.',
-        cadence: 'Simulasi, pelatihan, dan siaga acara',
-        metric: 'Siaga',
-        metricSub: 'P3K',
-        focus: ['Kesehatan', 'Pertolongan pertama', 'Empati'],
-        highlights: ['P3K acara', 'Simulasi tanggap', 'Edukasi kesehatan'],
-    },
-    {
-        name: 'Pramuka',
-        category: 'Kepemimpinan',
-        image: '/images/eskul/pramuka.png',
-        accent: '#A16207',
-        icon: Compass,
-        summary:
-            'Wadah pembentukan siswa yang mandiri, tangguh, dan mampu bekerja dalam tim.',
-        cadence: 'Latihan ambalan dan agenda lapangan',
-        metric: 'Ambalan',
-        metricSub: 'Aktif',
-        focus: ['Kemandirian', 'Tim', 'Ketahanan'],
-        highlights: ['Perkemahan', 'Navigasi', 'Project teamwork'],
-    },
-    {
-        name: 'Pencak Silat',
-        category: 'Olahraga',
-        image: '/images/eskul/silat.png',
-        accent: '#7C3AED',
-        icon: Sparkles,
-        summary:
-            'Latihan bela diri tradisional yang menggabungkan ketahanan fisik, fokus mental, dan estetika gerak.',
-        cadence: 'Latihan teknik dan demonstrasi',
-        metric: 'Teknik',
-        metricSub: 'Presisi',
-        focus: ['Bela diri', 'Fokus', 'Kontrol tubuh'],
-        highlights: ['Demo budaya', 'Latihan teknik', 'Kesiapan tanding'],
-    },
-    {
-        name: 'Jurnalistik',
-        category: 'Media',
-        image: '/images/sekolah/kegiatan_siswa.jpg',
-        accent: '#0284C7',
-        icon: Megaphone,
-        summary:
-            'Tim liputan yang mengolah berita, dokumentasi visual, dan publikasi kegiatan sekolah untuk kanal digital resmi.',
-        cadence: 'Liputan event dan produksi konten',
-        metric: 'Konten',
-        metricSub: 'Aktif',
-        focus: ['Menulis', 'Foto video', 'Redaksi'],
-        highlights: ['Berita sekolah', 'Liputan event', 'Konten sosial media'],
-    },
-    {
-        name: 'Tari Tradisional',
-        category: 'Seni',
-        image: '/images/eskul/collage.png',
-        accent: '#F59E0B',
-        icon: Sparkles,
-        summary:
-            'Wadah seni untuk mengasah ekspresi, koreografi, dan keberanian tampil.',
-        cadence: 'Latihan koreografi dan penampilan',
-        metric: 'Seni',
-        metricSub: 'Budaya',
-        focus: ['Ekspresi', 'Gerak', 'Kepercayaan diri'],
-        highlights: ['Pentas seni', 'Tamu sekolah', 'Hari besar budaya'],
-    },
+    { id: 'galeri', label: 'Galeri Eskul' },
 ] as const;
 
 const developmentLanes = [
@@ -198,38 +74,42 @@ const developmentLanes = [
 const extracurricularWorkflow = [
     {
         step: '01',
-        title: 'Pilih Jalur',
+        title: 'Pilih Unit',
         description:
-            'Siswa masuk ke unit yang paling sesuai dengan minat, energi, dan target pengembangan diri.',
+            'Siswa membuka unit yang paling nyambung dengan ritme, minat, dan target pengembangan dirinya.',
     },
     {
         step: '02',
         title: 'Masuk Latihan',
         description:
-            'Ritme pembinaan dibangun lewat latihan rutin, disiplin kehadiran, dan evaluasi progres.',
+            'Latihan dibentuk teratur agar siswa cepat membaca fokus dan ekspektasi unit.',
     },
     {
         step: '03',
-        title: 'Tampil & Bertugas',
+        title: 'Tampil Nyata',
         description:
-            'Setiap unit diarahkan untuk punya momen tampil, bertugas, atau berkontribusi di event nyata.',
+            'Setiap unit diarahkan punya momen tampil, bertugas, bertanding, atau berkarya.',
     },
     {
         step: '04',
         title: 'Masuk Portofolio',
         description:
-            'Dokumentasi video, publikasi berita, dan capaian kegiatan dicatat di kanal sekolah.',
+            'Dokumentasi kegiatan mengalir ke kanal sekolah agar jejak unit tetap terlihat.',
     },
 ] as const;
 
 export default function ExtracurricularPage({
     school,
-    featuredArticles,
 }: ExtracurricularPageProps) {
     const heroRef = useRef<HTMLDivElement>(null);
     const [activeCategory, setActiveCategory] =
         useState<(typeof extracurricularCategories)[number]>('Semua');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [spotlightSlug, setSpotlightSlug] = useState<string | null>(
+        extracurricularPrograms[0]?.slug ?? null,
+    );
     const deferredCategory = useDeferredValue(activeCategory);
+    const deferredSearch = useDeferredValue(searchQuery);
     const { scrollYProgress } = useScroll({
         target: heroRef,
         offset: ['start start', 'end start'],
@@ -237,14 +117,54 @@ export default function ExtracurricularPage({
     const heroY = useTransform(scrollYProgress, [0, 1], [0, 140]);
     const heroOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-    const filteredPrograms =
-        deferredCategory === 'Semua'
-            ? extracurricularPrograms
-            : extracurricularPrograms.filter(
-                  (program) => program.category === deferredCategory,
-              );
+    const filteredPrograms = useMemo(() => {
+        const normalizedSearch = deferredSearch.trim().toLowerCase();
 
-    const articleShowcase = featuredArticles.slice(0, 4);
+        return extracurricularPrograms.filter((program) => {
+            const matchesCategory =
+                deferredCategory === 'Semua' ||
+                program.category === deferredCategory;
+            const matchesSearch =
+                normalizedSearch.length === 0 ||
+                program.name.toLowerCase().includes(normalizedSearch) ||
+                program.focus.some((item) =>
+                    item.toLowerCase().includes(normalizedSearch),
+                ) ||
+                program.highlights.some((item) =>
+                    item.toLowerCase().includes(normalizedSearch),
+                );
+
+            return matchesCategory && matchesSearch;
+        });
+    }, [deferredCategory, deferredSearch]);
+
+    const activeSpotlightSlug =
+        spotlightSlug &&
+        filteredPrograms.some((program) => program.slug === spotlightSlug)
+            ? spotlightSlug
+            : (filteredPrograms[0]?.slug ?? null);
+
+    const spotlightProgram =
+        filteredPrograms.find(
+            (program) => program.slug === activeSpotlightSlug,
+        ) ??
+        filteredPrograms[0] ??
+        extracurricularPrograms[0];
+
+    const extracurricularGalleryImages = useMemo(
+        () =>
+            extracurricularPrograms
+                .filter(
+                    (program) =>
+                        program.image.startsWith('/images/eskul/') &&
+                        program.image !== '/images/eskul/collage.png',
+                )
+                .map((program) => ({
+                    src: program.image,
+                    alt: `${program.name} ${school.name}`,
+                })),
+        [school.name],
+    );
 
     return (
         <>
@@ -255,7 +175,7 @@ export default function ExtracurricularPage({
                 />
             </Head>
 
-            <div className="space-y-16 pb-20 lg:space-y-24">
+            <div className="space-y-10 pb-16 lg:space-y-14">
                 <motion.section
                     ref={heroRef}
                     initial={{ opacity: 0 }}
@@ -306,7 +226,7 @@ export default function ExtracurricularPage({
                             >
                                 Minat, Latihan, dan{' '}
                                 <span className="bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
-                                    Prestasi Siswa.
+                                    Arah Unit.
                                 </span>
                             </motion.h1>
 
@@ -316,8 +236,9 @@ export default function ExtracurricularPage({
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg lg:text-xl"
                             >
-                                Informasi unit ekstrakurikuler, jalur pembinaan,
-                                video kegiatan, dan publikasi siswa.
+                                Buka unit yang paling cocok, baca ritmenya, lalu
+                                masuk ke halaman detail tanpa harus
+                                menebak-nebak arah latihannya.
                             </motion.p>
                         </div>
                     </motion.div>
@@ -339,30 +260,30 @@ export default function ExtracurricularPage({
                     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                         {[
                             {
-                                label: 'Ekskul Aktif',
-                                value: '18',
-                                detail: 'Jalur pengembangan siswa',
+                                label: 'Ekskul Tersusun',
+                                value: `${extracurricularPrograms.length}`,
+                                detail: 'Unit sudah dibagi per jalur pembinaan',
                                 icon: Users,
                                 accent: 'text-sky-600',
                             },
                             {
-                                label: 'Unit Unggulan',
-                                value: '8',
-                                detail: 'Diorientasikan untuk tampil',
-                                icon: BadgeCheck,
+                                label: 'Halaman Detail',
+                                value: `${extracurricularPrograms.length}`,
+                                detail: 'Setiap unit bisa dibuka secara khusus',
+                                icon: Sparkles,
                                 accent: 'text-emerald-600',
                             },
                             {
                                 label: 'Jalur Pembinaan',
-                                value: '4',
-                                detail: 'Disiplin, olahraga, media, karakter',
+                                value: `${developmentLanes.length}`,
+                                detail: 'Mudah dibaca dari disiplin sampai seni',
                                 icon: Compass,
                                 accent: 'text-amber-600',
                             },
                             {
-                                label: 'Publikasi Kegiatan',
-                                value: `${featuredArticles.length}+`,
-                                detail: 'Siap ditautkan ke berita sekolah',
+                                label: 'Dokumentasi Aktif',
+                                value: `${extracurricularGalleryImages.length}`,
+                                detail: 'Frame visual dari unit yang aktif di halaman ini',
                                 icon: Megaphone,
                                 accent: 'text-violet-600',
                             },
@@ -402,162 +323,311 @@ export default function ExtracurricularPage({
                     className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6"
                 >
                     <SectionHeading
-                        eyebrow="Katalog Unggulan"
-                        title="Unit ekstrakurikuler aktif."
-                        description="Pilih kategori untuk melihat fokus latihan, ritme pembinaan, dan kegiatan tiap unit."
+                        eyebrow="Katalog Interaktif"
+                        title="Ekskul siap dibuka per unit."
+                        description="Filter, cari, lalu buka halaman setiap unit untuk membaca ritme, fokus, dan bentuk tampilnya."
                     />
 
-                    <div className="flex flex-wrap gap-2 rounded-[1.8rem] border border-white/70 bg-white/80 p-2 shadow-[0_18px_45px_-34px_rgba(15,118,110,0.35)] backdrop-blur-xl">
-                        {extracurricularCategories.map((category) => {
-                            const isActive = category === activeCategory;
+                    <div className="space-y-4 rounded-[2rem] border border-white/70 bg-white/82 p-4 shadow-[0_18px_45px_-34px_rgba(15,118,110,0.35)] backdrop-blur-xl">
+                        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                            <div className="flex flex-wrap gap-2">
+                                {extracurricularCategories.map((category) => {
+                                    const isActive =
+                                        category === activeCategory;
 
-                            return (
-                                <button
-                                    key={category}
-                                    type="button"
-                                    onClick={() => {
-                                        startTransition(() =>
-                                            setActiveCategory(category),
-                                        );
-                                    }}
-                                    className={cn(
-                                        'rounded-full px-4 py-2.5 text-sm font-semibold transition',
-                                        isActive
-                                            ? 'bg-[var(--school-green-700)] text-white shadow-md'
-                                            : 'text-[var(--school-muted)] hover:bg-white hover:text-[var(--school-ink)]',
-                                    )}
-                                >
-                                    {category}
-                                </button>
-                            );
-                        })}
+                                    return (
+                                        <button
+                                            key={category}
+                                            type="button"
+                                            onClick={() => {
+                                                startTransition(() =>
+                                                    setActiveCategory(category),
+                                                );
+                                            }}
+                                            className={cn(
+                                                'rounded-full px-4 py-2.5 text-sm font-semibold transition',
+                                                isActive
+                                                    ? 'bg-[var(--school-green-700)] text-white shadow-md'
+                                                    : 'text-[var(--school-muted)] hover:bg-white hover:text-[var(--school-ink)]',
+                                            )}
+                                        >
+                                            {category}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <label className="relative block w-full max-w-sm">
+                                <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-400" />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(event) =>
+                                        setSearchQuery(event.target.value)
+                                    }
+                                    placeholder="Cari unit, fokus, atau bentuk tampil"
+                                    className="h-12 w-full rounded-full border border-slate-200 bg-slate-50 pr-4 pl-11 text-sm text-[var(--school-ink)] transition outline-none placeholder:text-slate-400 focus:border-[var(--school-green-200)] focus:bg-white"
+                                />
+                            </label>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-1">
+                            <div className="text-sm text-[var(--school-muted)]">
+                                Menampilkan{' '}
+                                <span className="font-semibold text-[var(--school-ink)]">
+                                    {filteredPrograms.length}
+                                </span>{' '}
+                                unit.
+                            </div>
+                            <div className="text-sm text-[var(--school-muted)]">
+                                Hover kartu untuk mengganti spotlight.
+                            </div>
+                        </div>
                     </div>
+
+                    {filteredPrograms.length > 0 && spotlightProgram ? (
+                        <BorderGlow
+                            borderRadius={36}
+                            colors={[
+                                spotlightProgram.accent,
+                                '#0E9EE4',
+                                '#10B981',
+                            ]}
+                            className="overflow-hidden rounded-[2.2rem] border border-white/70 bg-white/88 shadow-[0_28px_75px_-48px_rgba(15,118,110,0.35)] backdrop-blur-xl"
+                        >
+                            <div className="grid gap-0 xl:grid-cols-[1.02fr_0.98fr]">
+                                <div className="relative min-h-[22rem] overflow-hidden">
+                                    <img
+                                        src={spotlightProgram.image}
+                                        alt={spotlightProgram.name}
+                                        className="absolute inset-0 h-full w-full object-cover"
+                                        style={{
+                                            objectPosition:
+                                                spotlightProgram.objectPosition ??
+                                                'center',
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute inset-0 opacity-52 mix-blend-multiply"
+                                        style={{
+                                            backgroundColor:
+                                                spotlightProgram.accent,
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/22 to-transparent" />
+                                    <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-8">
+                                        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.65rem] font-bold tracking-[0.2em] uppercase backdrop-blur">
+                                            Spotlight Unit
+                                        </div>
+                                        <div className="mt-5 flex items-center gap-4">
+                                            <div className="flex size-14 items-center justify-center rounded-[1.35rem] bg-white/14 shadow-[0_20px_45px_-28px_rgba(255,255,255,0.65)] backdrop-blur">
+                                                <spotlightProgram.icon className="size-6" />
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-semibold tracking-[0.18em] text-white/70 uppercase">
+                                                    {spotlightProgram.category}
+                                                </div>
+                                                <h3 className="mt-1 font-heading text-4xl leading-tight">
+                                                    {spotlightProgram.name}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <p className="mt-5 max-w-xl text-sm leading-7 text-white/82">
+                                            {spotlightProgram.headline}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-6 p-6 md:p-8">
+                                    <div>
+                                        <div className="text-[0.68rem] font-bold tracking-[0.22em] text-[var(--school-green-700)] uppercase">
+                                            Snapshot Unit
+                                        </div>
+                                        <p className="mt-3 text-sm leading-7 text-[var(--school-muted)]">
+                                            {spotlightProgram.summary}
+                                        </p>
+                                    </div>
+
+                                    <div className="grid gap-3 md:grid-cols-3">
+                                        {spotlightProgram.stats.map((item) => (
+                                            <div
+                                                key={item.label}
+                                                className="rounded-[1.35rem] border border-slate-200 bg-slate-50/80 p-4"
+                                            >
+                                                <div className="text-[0.66rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
+                                                    {item.label}
+                                                </div>
+                                                <div className="mt-2 text-sm font-semibold text-[var(--school-ink)]">
+                                                    {item.value}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid gap-4 md:grid-cols-[0.92fr_1.08fr]">
+                                        <div>
+                                            <div className="text-[0.68rem] font-bold tracking-[0.22em] text-slate-400 uppercase">
+                                                Fokus Utama
+                                            </div>
+                                            <div className="mt-3 flex flex-wrap gap-2">
+                                                {spotlightProgram.focus.map(
+                                                    (item) => (
+                                                        <span
+                                                            key={item}
+                                                            className="rounded-full border px-3 py-1 text-xs font-semibold"
+                                                            style={{
+                                                                borderColor: `${spotlightProgram.accent}24`,
+                                                                backgroundColor: `${spotlightProgram.accent}10`,
+                                                                color: spotlightProgram.accent,
+                                                            }}
+                                                        >
+                                                            {item}
+                                                        </span>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="rounded-[1.45rem] border border-slate-200 bg-slate-50/80 p-4">
+                                            <div className="flex items-center gap-2 text-[0.68rem] font-bold tracking-[0.22em] text-[var(--school-green-700)] uppercase">
+                                                <CalendarDays className="size-4" />
+                                                Ritme Pembinaan
+                                            </div>
+                                            <div className="mt-2 text-sm leading-6 text-[var(--school-ink)]">
+                                                {spotlightProgram.cadence}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        asChild
+                                        className="rounded-full bg-[var(--school-green-700)] px-6 text-white hover:bg-[var(--school-green-600)]"
+                                    >
+                                        <Link
+                                            href={extracurricularShow({
+                                                slug: spotlightProgram.slug,
+                                            })}
+                                        >
+                                            Buka halaman {spotlightProgram.name}
+                                            <ArrowRight className="ml-2 size-4" />
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        </BorderGlow>
+                    ) : (
+                        <div className="rounded-[2rem] border border-dashed border-slate-200 bg-white/78 p-8 text-center shadow-[0_18px_45px_-34px_rgba(15,118,110,0.18)] backdrop-blur-xl">
+                            <div className="text-lg font-semibold text-[var(--school-ink)]">
+                                Belum ada unit yang cocok dengan filter ini.
+                            </div>
+                            <p className="mt-2 text-sm leading-7 text-[var(--school-muted)]">
+                                Coba ganti kategori atau kata kunci supaya unit
+                                yang relevan muncul lagi.
+                            </p>
+                        </div>
+                    )}
 
                     <motion.div
                         variants={staggerContainer}
                         initial="hidden"
                         whileInView="show"
                         viewport={motionViewport}
-                        className="grid gap-6 lg:grid-cols-2"
+                        className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
                     >
                         {filteredPrograms.map((program) => (
                             <motion.article
-                                key={program.name}
+                                key={program.slug}
                                 variants={fadeUp}
-                                className="group h-full"
+                                whileHover={{ y: -6 }}
+                                className="group"
                             >
-                                <BorderGlow
-                                    borderRadius={34}
-                                    colors={[
-                                        program.accent,
-                                        '#0E9EE4',
-                                        '#FFFFFF',
-                                    ]}
-                                    className="relative h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_28px_75px_-48px_rgba(15,118,110,0.42)] backdrop-blur-xl"
+                                <Link
+                                    href={extracurricularShow({
+                                        slug: program.slug,
+                                    })}
+                                    className="block h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_24px_70px_-44px_rgba(15,118,110,0.24)] backdrop-blur-xl transition"
+                                    onMouseEnter={() =>
+                                        setSpotlightSlug(program.slug)
+                                    }
+                                    onFocus={() =>
+                                        setSpotlightSlug(program.slug)
+                                    }
                                 >
-                                    <div className="grid gap-0 md:grid-cols-[0.92fr_1.08fr]">
-                                        <div className="relative min-h-[18rem] overflow-hidden">
-                                            <img
-                                                src={program.image}
-                                                alt={program.name}
-                                                className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                            />
-                                            <div
-                                                className="absolute inset-0 opacity-55 mix-blend-multiply"
-                                                style={{
-                                                    backgroundColor:
-                                                        program.accent,
-                                                }}
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
-                                            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                                                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[0.65rem] font-bold tracking-[0.2em] uppercase backdrop-blur">
-                                                    {program.category}
-                                                </div>
-                                                <div className="mt-4 flex items-center gap-3">
-                                                    <div className="flex size-12 items-center justify-center rounded-2xl bg-white/15 shadow-[0_20px_50px_-36px_rgba(255,255,255,0.95)] backdrop-blur">
-                                                        <program.icon className="size-5" />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="font-heading text-3xl leading-tight">
-                                                            {program.name}
-                                                        </h3>
-                                                        <p className="mt-1 text-sm text-white/80">
-                                                            {program.metric} •{' '}
-                                                            {program.metricSub}
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                    <div className="relative h-68 overflow-hidden">
+                                        <img
+                                            src={program.image}
+                                            alt={program.name}
+                                            className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                            style={{
+                                                objectPosition:
+                                                    program.objectPosition ??
+                                                    'center',
+                                            }}
+                                        />
+                                        <div
+                                            className="absolute inset-0 opacity-52 mix-blend-multiply"
+                                            style={{
+                                                backgroundColor: program.accent,
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                                        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                                            <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/10 px-3 py-1 text-[0.64rem] font-bold tracking-[0.18em] uppercase backdrop-blur">
+                                                {program.category}
                                             </div>
-                                        </div>
-
-                                        <div className="space-y-5 p-6 md:p-7">
-                                            <p className="text-sm leading-7 text-[var(--school-muted)]">
-                                                {program.summary}
-                                            </p>
-
-                                            <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50/80 p-4">
-                                                <div className="flex items-center gap-2 text-[0.68rem] font-bold tracking-[0.22em] text-[var(--school-green-700)] uppercase">
-                                                    <CalendarDays className="size-4" />
-                                                    Ritme Pembinaan
+                                            <div className="mt-4 flex items-center gap-3">
+                                                <div className="flex size-11 items-center justify-center rounded-2xl bg-white/12 backdrop-blur">
+                                                    <program.icon className="size-5" />
                                                 </div>
-                                                <p className="mt-2 text-sm leading-6 text-[var(--school-ink)]">
-                                                    {program.cadence}
-                                                </p>
-                                            </div>
-
-                                            <div className="grid gap-4 md:grid-cols-2">
                                                 <div>
-                                                    <div className="text-[0.68rem] font-bold tracking-[0.22em] text-slate-400 uppercase">
-                                                        Fokus
-                                                    </div>
-                                                    <div className="mt-3 flex flex-wrap gap-2">
-                                                        {program.focus.map(
-                                                            (item) => (
-                                                                <span
-                                                                    key={item}
-                                                                    className="rounded-full border px-3 py-1 text-xs font-semibold"
-                                                                    style={{
-                                                                        borderColor: `${program.accent}28`,
-                                                                        backgroundColor: `${program.accent}10`,
-                                                                        color: program.accent,
-                                                                    }}
-                                                                >
-                                                                    {item}
-                                                                </span>
-                                                            ),
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <div className="text-[0.68rem] font-bold tracking-[0.22em] text-slate-400 uppercase">
-                                                        Bentuk Tampil
-                                                    </div>
-                                                    <div className="mt-3 space-y-2">
-                                                        {program.highlights.map(
-                                                            (item) => (
-                                                                <div
-                                                                    key={item}
-                                                                    className="flex items-center gap-2 text-sm text-[var(--school-ink)]"
-                                                                >
-                                                                    <div
-                                                                        className="size-2 rounded-full"
-                                                                        style={{
-                                                                            backgroundColor:
-                                                                                program.accent,
-                                                                        }}
-                                                                    />
-                                                                    {item}
-                                                                </div>
-                                                            ),
-                                                        )}
-                                                    </div>
+                                                    <h3 className="font-heading text-3xl leading-tight">
+                                                        {program.name}
+                                                    </h3>
+                                                    <p className="mt-1 text-sm text-white/78">
+                                                        {program.metric} •{' '}
+                                                        {program.metricSub}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </BorderGlow>
+
+                                    <div className="space-y-4 p-5">
+                                        <p className="text-sm leading-7 text-[var(--school-muted)]">
+                                            {program.headline}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-2">
+                                            {program.focus
+                                                .slice(0, 3)
+                                                .map((item) => (
+                                                    <span
+                                                        key={item}
+                                                        className="rounded-full border px-3 py-1 text-xs font-semibold"
+                                                        style={{
+                                                            borderColor: `${program.accent}24`,
+                                                            backgroundColor: `${program.accent}10`,
+                                                            color: program.accent,
+                                                        }}
+                                                    >
+                                                        {item}
+                                                    </span>
+                                                ))}
+                                        </div>
+
+                                        <div className="flex items-center justify-between gap-4 rounded-[1.35rem] border border-slate-200 bg-slate-50/80 px-4 py-3">
+                                            <div>
+                                                <div className="text-[0.66rem] font-bold tracking-[0.2em] text-slate-400 uppercase">
+                                                    Ritme
+                                                </div>
+                                                <div className="mt-1 text-sm font-semibold text-[var(--school-ink)]">
+                                                    {program.cadence}
+                                                </div>
+                                            </div>
+                                            <ArrowRight className="size-4 text-[var(--school-green-700)] transition-transform group-hover:translate-x-1" />
+                                        </div>
+                                    </div>
+                                </Link>
                             </motion.article>
                         ))}
                     </motion.div>
@@ -569,8 +639,8 @@ export default function ExtracurricularPage({
                 >
                     <SectionHeading
                         eyebrow="Jalur Pembinaan"
-                        title="Jalur pembinaan ekstrakurikuler."
-                        description="Setiap unit dikelompokkan agar siswa memahami arah latihan dan pengembangan diri."
+                        title="Arah unit dibuat lebih mudah dibaca."
+                        description="Unit dikelompokkan agar siswa bisa cepat memahami jalur latihan yang paling pas."
                     />
 
                     <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
@@ -620,9 +690,9 @@ export default function ExtracurricularPage({
                                         Dari minat ke kegiatan terarah.
                                     </h3>
                                     <p className="mt-3 text-sm leading-7 text-[var(--school-muted)]">
-                                        Siswa memilih unit, mengikuti latihan,
-                                        bertugas dalam kegiatan, lalu
-                                        dokumentasinya dicatat oleh sekolah.
+                                        Pengunjung tinggal pilih unit, baca
+                                        ritmenya, lalu buka detail yang paling
+                                        relevan.
                                     </p>
                                 </div>
 
@@ -653,124 +723,35 @@ export default function ExtracurricularPage({
                     </div>
                 </div>
 
-                <div
-                    id="video"
-                    className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6"
-                >
-                    <SectionHeading
-                        eyebrow="Video Showcase"
-                        title="Galeri video kegiatan ekstrakurikuler."
-                        description="Video dapat difilter agar pengunjung cepat menemukan kegiatan yang relevan."
-                    />
-                    <VideoGrid />
-                </div>
-
-                <div
-                    id="publikasi"
-                    className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6"
-                >
-                    <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div id="galeri" className="space-y-8">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6">
                         <SectionHeading
-                            eyebrow="Publikasi Kegiatan"
-                            title="Berita dan dokumentasi kegiatan ekskul."
-                            description="Publikasi kegiatan akan diperbarui melalui kanal berita sekolah."
+                            eyebrow="Galeri Eskul"
+                            title="Satu bentang visual untuk seluruh unit."
+                            description="Geser galeri untuk membaca energi kegiatan siswa dari kepemimpinan, olahraga, karakter, sampai seni dalam satu lintasan penuh."
                         />
-
-                        <Button
-                            asChild
-                            className="rounded-full bg-[var(--school-green-700)] px-6 text-white hover:bg-[var(--school-green-600)]"
-                        >
-                            <Link href={beritaIndex()}>
-                                Lihat Semua Berita
-                                <ArrowRight className="ml-2 size-4" />
-                            </Link>
-                        </Button>
                     </div>
 
-                    {articleShowcase.length > 0 ? (
-                        <motion.div
-                            variants={staggerContainer}
-                            initial="hidden"
-                            whileInView="show"
-                            viewport={motionViewport}
-                            className="grid gap-5 lg:grid-cols-2 xl:grid-cols-4"
-                        >
-                            {articleShowcase.map((article) => (
-                                <motion.article
-                                    key={article.id}
-                                    variants={fadeUp}
-                                    whileHover={{ y: -6 }}
-                                    className="group overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_24px_70px_-44px_rgba(15,118,110,0.24)] backdrop-blur-xl"
-                                >
-                                    <div className="relative h-56 overflow-hidden bg-slate-100">
-                                        {article.imageUrl ? (
-                                            <img
-                                                src={article.imageUrl}
-                                                alt={article.title}
-                                                className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-[var(--school-green-700)]" />
-                                        )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
-                                        <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[0.65rem] font-bold tracking-[0.18em] text-white uppercase backdrop-blur">
-                                            {article.category ?? 'Kegiatan'}
-                                        </div>
-                                        <div className="absolute right-4 bottom-4 flex size-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur">
-                                            <PlayCircle className="size-5" />
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-4 p-6">
-                                        <div className="flex items-center gap-2 text-[0.68rem] font-bold tracking-[0.18em] text-slate-400 uppercase">
-                                            <CalendarDays className="size-4" />
-                                            {article.publishedAt
-                                                ? new Intl.DateTimeFormat(
-                                                      'id-ID',
-                                                      {
-                                                          dateStyle: 'medium',
-                                                      },
-                                                  ).format(
-                                                      new Date(
-                                                          article.publishedAt,
-                                                      ),
-                                                  )
-                                                : 'Publikasi sekolah'}
-                                        </div>
-
-                                        <h3 className="font-heading text-2xl leading-tight text-[var(--school-ink)]">
-                                            {article.title}
-                                        </h3>
-
-                                        <p className="text-sm leading-7 text-[var(--school-muted)]">
-                                            {article.excerpt ??
-                                                'Dokumentasi kegiatan siswa siap diperbarui melalui publikasi sekolah.'}
-                                        </p>
-
-                                        <Link
-                                            href={
-                                                article.slug
-                                                    ? beritaShow({
-                                                          slug: article.slug,
-                                                      })
-                                                    : beritaIndex()
-                                            }
-                                            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--school-green-700)] transition hover:text-[var(--school-green-600)]"
-                                        >
-                                            Buka Publikasi
-                                            <ArrowRight className="size-4" />
-                                        </Link>
-                                    </div>
-                                </motion.article>
-                            ))}
-                        </motion.div>
-                    ) : (
-                        <div className="rounded-[2rem] border border-dashed border-[var(--school-green-200)] bg-white/80 p-8 text-sm leading-7 text-[var(--school-muted)]">
-                            Publikasi ekskul belum masuk ke feed berita.
-                            Dokumentasi kegiatan berikutnya akan muncul setelah
-                            diterbitkan.
+                    <div className="relative right-1/2 left-1/2 -mr-[50vw] -ml-[50vw] w-screen overflow-hidden bg-transparent">
+                        <div className="h-[22rem] w-full sm:h-[28rem] lg:h-[34rem] xl:h-[38rem]">
+                            <DomeGallery
+                                images={extracurricularGalleryImages}
+                                fit={0.82}
+                                fitBasis="width"
+                                minRadius={760}
+                                maxVerticalRotationDeg={0}
+                                segments={34}
+                                dragDampening={2}
+                                padFactor={0.12}
+                                overlayBlurColor="transparent"
+                                openedImageWidth="min(78vw, 540px)"
+                                openedImageHeight="min(78vw, 540px)"
+                                imageBorderRadius="24px"
+                                openedImageBorderRadius="30px"
+                                grayscale
+                            />
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </>

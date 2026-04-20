@@ -45,6 +45,23 @@ it('renders the ppdb hero card swap highlights', function (): void {
         ->toContain('tlRef.current?.kill()');
 });
 
+it('renders the ppdb zonasi cubes matrix', function (): void {
+    $ppdbPage = file_get_contents(resource_path('js/pages/public/ppdb.tsx'));
+    $cubes = file_get_contents(resource_path('js/components/Cubes.tsx'));
+
+    expect($ppdbPage)
+        ->toContain("import Cubes from '@/components/Cubes';")
+        ->toContain('Matrix Zonasi')
+        ->toContain('<Cubes')
+        ->toContain('Zona Reaktif')
+        ->toContain('Pusat sekolah tetap menjadi acuan');
+
+    expect($cubes)
+        ->toContain('prefersReducedMotion')
+        ->toContain('triggerRipple')
+        ->toContain('handlePointerMove');
+});
+
 it('does not clip the desktop navbar dropdown container', function (): void {
     $layoutSource = file_get_contents(resource_path('js/layouts/public-layout.tsx'));
     $cssSource = file_get_contents(resource_path('css/app.css'));
@@ -173,6 +190,127 @@ it('renders desktop menu triggers for sections with submenu', function (): void 
         ->toContain("return 'Komunitas';");
 });
 
+it('keeps mobile submenu navigation predictable on touch devices', function (): void {
+    $layoutSource = file_get_contents(resource_path('js/layouts/public-layout.tsx'));
+
+    $this->get(route('extracurricular.show', 'paskibra'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/extracurricular-show')
+            ->where('slug', 'paskibra'));
+
+    expect($layoutSource)
+        ->toContain('function getMobileSubmenuId(href: string): string')
+        ->toContain('const toggleMobileSection = useCallback((href: string) => {')
+        ->toContain('setMobileExpanded((currentExpanded) =>')
+        ->toContain('currentExpanded === href ? null : href')
+        ->toContain('const resetNavigationState = window.setTimeout(() => {')
+        ->toContain('closeMobileNavigation();')
+        ->toContain('window.clearTimeout(resetNavigationState);')
+        ->toContain('}, [closeMobileNavigation, currentPath]);')
+        ->toContain('className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left touch-manipulation"')
+        ->toContain('aria-controls={')
+        ->toContain('id={submenuId}')
+        ->toContain('touch-manipulation rounded-full border border-white/80 bg-white/82 px-3.5 py-2 text-sm font-semibold text-(--school-ink)')
+        ->toContain('text-sm font-semibold text-(--school-green-700) touch-manipulation transition-all hover:bg-white')
+        ->toContain('<ArrowUpRight className="size-4 shrink-0" />')
+        ->not->toContain('className="flex min-w-0 flex-1 items-start justify-between gap-4 px-4 py-4"')
+        ->not->toContain('className="grid w-14 shrink-0 place-items-center border-l border-black/5 text-(--school-muted) transition-colors hover:bg-(--school-green-50) hover:text-(--school-green-700)"');
+});
+
+it('boots the inertia client only after the app root is available', function (): void {
+    $appSource = file_get_contents(resource_path('js/app.tsx'));
+    $viteConfigSource = file_get_contents(base_path('vite.config.ts'));
+    $appBladeSource = file_get_contents(resource_path('views/app.blade.php'));
+    $ssrSource = file_get_contents(resource_path('js/ssr.tsx'));
+
+    $this->get(route('documents'))
+        ->assertOk()
+        ->assertSee('id="app"', false)
+        ->assertSee('<link rel="icon" href="/images/logo_clean.png" type="image/png">', false)
+        ->assertSee('<link rel="apple-touch-icon" href="/images/logo_clean.png">', false)
+        ->assertSee('Dokumen & Unduhan | SMAN 1 Tenjo', false)
+        ->assertDontSee('- Laravel', false);
+
+    expect($appSource)
+        ->toContain("const appName = 'SMAN 1 Tenjo';")
+        ->toContain('function formatAppTitle(title?: string): string {')
+        ->toContain('return title.includes(appName) ? title : `${title} - ${appName}`;')
+        ->toContain("const INERTIA_APP_ID = 'app';")
+        ->toContain('const MAX_BOOTSTRAP_ATTEMPTS = 120;')
+        ->toContain('__smantenInertiaBootstrapped?: boolean;')
+        ->toContain('function startInertiaApp(): void {')
+        ->toContain('if (window.__smantenInertiaBootstrapped) {')
+        ->toContain('window.__smantenInertiaBootstrapped = true;')
+        ->toContain('document.getElementById(INERTIA_APP_ID)')
+        ->toContain('window.requestAnimationFrame(() => {')
+        ->toContain('bootstrapInertiaApp(attempt + 1);')
+        ->toContain('document.readyState === \'loading\'')
+        ->toContain('document.addEventListener(\'DOMContentLoaded\', () => {')
+        ->toContain('initializeTheme();')
+        ->toContain('console.error(');
+
+    expect($ssrSource)
+        ->toContain("const appName = 'SMAN 1 Tenjo';")
+        ->toContain('function formatAppTitle(title?: string): string {')
+        ->toContain('return title.includes(appName) ? title : `${title} - ${appName}`;')
+        ->not->toContain('import.meta.env.VITE_APP_NAME');
+
+    expect($appBladeSource)
+        ->toContain('<link rel="icon" href="/images/logo_clean.png" type="image/png">')
+        ->toContain('<link rel="apple-touch-icon" href="/images/logo_clean.png">')
+        ->toContain('<title>SMAN 1 Tenjo</title>')
+        ->not->toContain('/favicon.ico')
+        ->not->toContain('/favicon.svg')
+        ->not->toContain('/apple-touch-icon.png');
+
+    expect($viteConfigSource)
+        ->toContain("const viteHost = '127.0.0.1';")
+        ->toContain('const vitePort = 5173;')
+        ->toContain('const viteAllowedOrigins = [')
+        ->toContain('/^https?:\\/\\/smanten\\.test$/i,')
+        ->toContain('/^https?:\\/\\/127\\.0\\.0\\.1(?::\\d+)?$/,')
+        ->toContain('/^https?:\\/\\/localhost(?::\\d+)?$/,')
+        ->toContain('server: {')
+        ->toContain('host: viteHost,')
+        ->toContain('port: vitePort,')
+        ->toContain('strictPort: true,')
+        ->toContain('origin: `http://${viteHost}:${vitePort}`,')
+        ->toContain('cors: {')
+        ->toContain('origin: viteAllowedOrigins,')
+        ->toContain('hmr: {')
+        ->toContain('protocol: \'ws\',');
+});
+
+it('renders flowing menu strips in the desktop navigation dropdown', function (): void {
+    $layoutSource = file_get_contents(resource_path('js/layouts/public-layout.tsx'));
+    $flowingMenuSource = file_get_contents(resource_path('js/components/FlowingMenu.tsx'));
+
+    $this->get(route('organization'))->assertOk();
+
+    expect($layoutSource)
+        ->toContain("import FlowingMenu from '@/components/FlowingMenu';")
+        ->toContain("import type { FlowingMenuItemData } from '@/components/FlowingMenu';")
+        ->toContain('const DEFAULT_FLOWING_MENU_POSITIONS = [')
+        ->toContain('function buildDesktopFlowingMenuItems(')
+        ->toContain("heroImage: '/images/sekolah/guru_mengajar.jpg'")
+        ->toContain("heroImage: '/images/profil/hero-banner.png'")
+        ->toContain('flowingMenuItems =')
+        ->toContain('<FlowingMenu')
+        ->toContain('imagePosition:')
+        ->toContain('menuImagePositions:')
+        ->toContain('presentation.heroImagePosition');
+
+    expect($flowingMenuSource)
+        ->toContain('export interface FlowingMenuItemData')
+        ->toContain('imagePosition?: string;')
+        ->toContain('imageSize?: string;')
+        ->toContain('ResizeObserver')
+        ->toContain('prefersReducedMotion')
+        ->toContain('backgroundPosition: imagePosition')
+        ->toContain('prefetch');
+});
+
 it('renders the documents and downloads page with the folder animation', function (): void {
     $documentsPage = file_get_contents(resource_path('js/pages/public/documents.tsx'));
     $folderComponent = file_get_contents(resource_path('js/components/reactbits/folder.tsx'));
@@ -272,6 +410,91 @@ it('renders the guru page using profile cards bound to teacher data', function (
         ->not->toContain('node.biography ??');
 });
 
+it('renders advanced extracurricular catalog and detail pages', function (): void {
+    $catalogSource = file_get_contents(resource_path('js/pages/public/extracurricular.tsx'));
+    $detailSource = file_get_contents(resource_path('js/pages/public/extracurricular-show.tsx'));
+    $contentSource = file_get_contents(resource_path('js/lib/extracurricular-content.ts'));
+    $domeGallerySource = file_get_contents(resource_path('js/components/DomeGallery.tsx'));
+    $controllerSource = file_get_contents(app_path('Http/Controllers/PublicSiteController.php'));
+    $routeSource = file_get_contents(base_path('routes/web/public.php'));
+
+    $this->get(route('extracurricular'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/extracurricular')
+            ->has('school.name')
+            ->has('featuredArticles'));
+
+    $this->get(route('extracurricular.show', 'paskibra'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('public/extracurricular-show')
+            ->where('slug', 'paskibra')
+            ->has('school.name'));
+
+    $this->get('/ekstrakurikuler/unit-tidak-ada')
+        ->assertNotFound();
+
+    expect($routeSource)
+        ->toContain("Route::get('/ekstrakurikuler/{slug}', 'extracurricularShow')->name('extracurricular.show');");
+
+    expect($controllerSource)
+        ->toContain('private const EXTRACURRICULAR_SLUGS = [')
+        ->toContain('public function extracurricularShow(string $slug): Response')
+        ->toContain('abort_unless(in_array($slug, self::EXTRACURRICULAR_SLUGS, true), 404);')
+        ->toContain("route('extracurricular.show', \$slug)");
+
+    expect($contentSource)
+        ->toContain("slug: 'paskibra'")
+        ->toContain("slug: 'jurnalistik'")
+        ->toContain('headline:')
+        ->toContain('fit:')
+        ->toContain('routine:')
+        ->toContain('getRelatedExtracurricularPrograms');
+
+    expect($catalogSource)
+        ->toContain("const [searchQuery, setSearchQuery] = useState('');")
+        ->toContain('const [spotlightSlug, setSpotlightSlug] = useState<string | null>(')
+        ->toContain('Hover kartu untuk mengganti spotlight.')
+        ->toContain('Spotlight Unit')
+        ->toContain('DomeGallery')
+        ->toContain('Galeri Eskul')
+        ->toContain('Satu bentang visual untuk seluruh unit.')
+        ->toContain('overlayBlurColor="transparent"')
+        ->toContain("program.image.startsWith('/images/eskul/')")
+        ->toContain("program.image !== '/images/eskul/collage.png'")
+        ->toContain('Cari unit, fokus, atau bentuk tampil')
+        ->toContain('href={extracurricularShow({')
+        ->toContain('setSpotlightSlug(program.slug)')
+        ->not->toContain('bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.92),_rgba(2,6,23,1))]')
+        ->not->toContain('id="publikasi"')
+        ->not->toContain('Publikasi Kegiatan')
+        ->not->toContain('Berita dan dokumentasi kegiatan ekskul.')
+        ->not->toContain('Lihat Semua Berita')
+        ->not->toContain('Video Showcase')
+        ->not->toContain('VideoGrid');
+
+    expect($detailSource)
+        ->toContain('getExtracurricularProgramBySlug')
+        ->toContain('getRelatedExtracurricularPrograms')
+        ->toContain('Kembali ke katalog')
+        ->toContain('Fokus Utama')
+        ->toContain('Ritme Pembinaan')
+        ->toContain('Unit Terkait');
+
+    expect($domeGallerySource)
+        ->toContain("img.style.cssText = 'width:100%; height:100%; object-fit:cover; filter:none;';")
+        ->toContain('filter: `var(--image-filter, ${grayscale ? \'grayscale(1)\' : \'none\'})`');
+});
+
+it('includes extracurricular detail pages in the public sitemap', function (): void {
+    $this->get('/sitemap.xml')
+        ->assertOk()
+        ->assertSee(route('extracurricular.show', 'paskibra'), false)
+        ->assertSee(route('extracurricular.show', 'futsal'), false)
+        ->assertSee(route('extracurricular.show', 'tari-tradisional'), false);
+});
+
 it('moves portal access to the upper quick links and removes the ppdb cta button', function (): void {
     $this->get(route('home'))
         ->assertOk()
@@ -282,6 +505,7 @@ it('moves portal access to the upper quick links and removes the ppdb cta button
 it('renders the strategic partner logo loop below the home hero', function (): void {
     $homePage = file_get_contents(resource_path('js/pages/public/home.tsx'));
     $partnerSection = file_get_contents(resource_path('js/components/public/partner-logo-loop-section.tsx'));
+    $heroCarouselSource = file_get_contents(resource_path('js/components/public/hero-carousel.tsx'));
 
     expect($homePage)
         ->toContain('PartnerLogoLoopSection')
@@ -312,6 +536,21 @@ it('renders the strategic partner logo loop below the home hero', function (): v
         ->not->toContain('Mitra strategis')
         ->not->toContain('Jejaring yang ikut menguatkan ekosistem SMAN 1 Tenjo.')
         ->not->toContain('Logo dapat diganti menjadi aset resmi kapan saja');
+
+    expect($heroCarouselSource)
+        ->toContain("import { index as beritaIndex } from '@/routes/berita';")
+        ->toContain('useReducedMotion')
+        ->toContain('href={beritaIndex()}')
+        ->toContain('prefetch')
+        ->toContain('group/cta relative mt-6')
+        ->toContain('rounded-[8px]')
+        ->toContain('bg-[linear-gradient(135deg,rgba(22,121,111,0.96),rgba(15,91,85,0.98))]')
+        ->toContain('Sparkles className="size-4 text-(--school-gold-400)"')
+        ->toContain('ArrowUpRight')
+        ->toContain('prefersReducedMotion')
+        ->not->toContain('bg-[#0E9EE4]')
+        ->not->toContain('rounded-none')
+        ->not->toContain('absolute right-4 size-5 translate-x-4 opacity-0');
 });
 
 it('renders a more compact footer with focused quick access blocks', function (): void {
@@ -347,14 +586,22 @@ it('renders explicit photo and video sections inside the media page', function (
 });
 
 it('keeps the profile page focused on identity instead of duplicating other public pages', function (): void {
-    $this->get(route('profile'))
-        ->assertOk()
-        ->assertDontSee('id="struktur-organisasi"', false)
-        ->assertDontSee('id="kurikulum"', false)
-        ->assertDontSeeText('Lokasi & Kontak')
-        ->assertSee('id="halaman-pendukung"', false)
-        ->assertSeeText('Halaman Pendukung')
-        ->assertSeeText('Informasi lanjutan tersedia di halaman khusus.');
+    $profileSource = file_get_contents(resource_path('js/pages/public/profile.tsx'));
+
+    $this->get(route('profile'))->assertOk();
+
+    expect($profileSource)
+        ->toContain('id="halaman-pendukung"')
+        ->toContain('Halaman Pendukung')
+        ->toContain('Informasi lanjutan tersedia di halaman khusus.')
+        ->not->toContain('id="struktur-organisasi"')
+        ->not->toContain('id="kurikulum"')
+        ->not->toContain('Lokasi & Kontak')
+        ->not->toContain("{ label: 'NPSN', value: school.npsn }")
+        ->not->toContain("label: 'Akreditasi'")
+        ->not->toContain("label: 'Kurikulum'")
+        ->not->toContain("label: 'Jadwal'")
+        ->not->toContain('studyScheduleType ?? \'Aktif\'');
 });
 
 it('keeps the kesiswaan page focused on internal student affairs sections', function (): void {
@@ -404,6 +651,7 @@ it('keeps public page copy concise and removes old filler phrases', function ():
         'resources/js/pages/public/organization.tsx',
         'resources/js/pages/public/ppdb.tsx',
         'resources/js/pages/public/extracurricular.tsx',
+        'resources/js/pages/public/extracurricular-show.tsx',
         'resources/js/pages/public/virtual-tour.tsx',
         'resources/js/pages/public/alumni-write-story.tsx',
     ];

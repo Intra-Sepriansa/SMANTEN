@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\PublicPortalSettingsService;
+use App\Services\PublicRealtimeStatsService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -46,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             'siteSettings' => [
                 'publicPortal' => fn () => app(PublicPortalSettingsService::class)->publicPortal(),
             ],
+            'publicRealtime' => fn () => app(PublicRealtimeStatsService::class)->summary(),
         ];
     }
 }

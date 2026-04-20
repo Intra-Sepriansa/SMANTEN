@@ -31,9 +31,8 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/images/logo_clean.png" type="image/png">
+        <link rel="apple-touch-icon" href="/images/logo_clean.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,700,800|space-grotesk:500,700" rel="stylesheet" />
@@ -41,7 +40,7 @@
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx'])
         <x-inertia::head>
-            <title>{{ config('app.name', 'SMAN 1 Tenjo') }}</title>
+            <title>SMAN 1 Tenjo</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

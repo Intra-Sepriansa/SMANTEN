@@ -45,6 +45,16 @@ export const defaultPublicPortalSettings: PublicPortalSettings = {
             position: index + 1,
         })),
     },
+    publishing: {
+        status: 'published',
+        scheduled_at: null,
+    },
+    seo: {
+        title: 'SMA Negeri 1 Tenjo',
+        description:
+            'Portal informasi SMA Negeri 1 Tenjo untuk berita, PPDB, layanan, dokumen, dan kegiatan sekolah.',
+        keywords: 'SMAN 1 Tenjo, PPDB, sekolah, Bogor',
+    },
 };
 
 function resolveNavigationLabel(href: string, label: string): string {
@@ -85,6 +95,14 @@ export function resolvePublicPortalSettings(
                 ...item,
                 ...(navigationByHref.get(item.href) ?? {}),
             })),
+        },
+        publishing: {
+            ...defaultPublicPortalSettings.publishing,
+            ...(settings?.publishing ?? {}),
+        },
+        seo: {
+            ...defaultPublicPortalSettings.seo,
+            ...(settings?.seo ?? {}),
         },
     };
 }

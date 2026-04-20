@@ -39,7 +39,7 @@ export default function BeritaIndexPage({
                 />
             </Head>
 
-            <div className="space-y-16 pb-20 lg:space-y-24">
+            <div className="space-y-10 pb-16 lg:space-y-14">
                 {/* ═══════════ HERO SECTION ═══════════ */}
                 <motion.section
                     ref={heroRef}
@@ -113,7 +113,7 @@ export default function BeritaIndexPage({
                 </motion.section>
 
                 {/* ═══════════ MAIN CONTENT GRID ═══════════ */}
-                <div className="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl space-y-10 px-4 sm:px-6 lg:px-8">
                     {/* Featured Article (Top Story) */}
                     {featuredArticle && (
                         <motion.section

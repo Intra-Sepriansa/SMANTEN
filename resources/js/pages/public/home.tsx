@@ -173,18 +173,18 @@ export default function HomePage({
                         >
                             <BorderGlow
                                 borderRadius={32}
-                                className="group relative h-full overflow-hidden rounded-[2rem] border border-white/60 bg-[rgba(255,255,255,0.7)] p-6 shadow-[0_20px_40px_-20px_rgba(4,47,46,0.15)] backdrop-blur-xl transition-all duration-300 hover:border-white/90 hover:bg-white hover:shadow-[0_30px_60px_-24px_rgba(15,118,110,0.3)]"
+                                className="group relative h-full overflow-hidden rounded-4xl border border-white/60 bg-[rgba(255,255,255,0.7)] p-6 shadow-[0_20px_40px_-20px_rgba(4,47,46,0.15)] backdrop-blur-xl transition-all duration-300 hover:border-white/90 hover:bg-white hover:shadow-[0_30px_60px_-24px_rgba(15,118,110,0.3)]"
                             >
-                                <div className="absolute -top-4 -right-4 size-24 rounded-full bg-[var(--school-green-100)] opacity-40 blur-2xl transition duration-500 group-hover:bg-[#0E9EE4] group-hover:opacity-30" />
+                                <div className="absolute -top-4 -right-4 size-24 rounded-full bg-(--school-green-100) opacity-40 blur-2xl transition duration-500 group-hover:bg-[#0E9EE4] group-hover:opacity-30" />
                                 <div className="relative flex items-center justify-between">
-                                    <div className="text-[0.7rem] font-bold tracking-[0.25em] text-[var(--school-muted)] uppercase transition-colors group-hover:text-[var(--school-ink)]">
+                                    <div className="text-[0.7rem] font-bold tracking-[0.25em] text-(--school-muted) uppercase transition-colors group-hover:text-(--school-ink)">
                                         {stat.label}
                                     </div>
-                                    <div className="rounded-full bg-[var(--school-green-50)] p-2.5 text-[var(--school-green-700)] transition-colors group-hover:bg-[var(--school-green-100)]">
+                                    <div className="rounded-full bg-(--school-green-50) p-2.5 text-(--school-green-700) transition-colors group-hover:bg-(--school-green-100)">
                                         <stat.icon className="size-5" />
                                     </div>
                                 </div>
-                                <div className="relative mt-5 text-4xl font-extrabold tracking-tight text-[var(--school-ink)] lg:text-5xl">
+                                <div className="relative mt-5 text-4xl font-extrabold tracking-tight text-(--school-ink) lg:text-5xl">
                                     <AnimatedCounter
                                         value={stat.value}
                                         delay={stat.delay}
@@ -213,7 +213,7 @@ export default function HomePage({
                         <BorderGlow
                             borderRadius={32}
                             colors={['#0F766E', '#D97706', '#0E9EE4']}
-                            className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-[0_32px_90px_-50px_rgba(15,118,110,0.35)]"
+                            className="relative overflow-hidden rounded-4xl border border-white/70 bg-white shadow-[0_32px_90px_-50px_rgba(15,118,110,0.35)]"
                         >
                             <div className="grid lg:grid-cols-[340px_1fr]">
                                 {/* Portrait Side */}
@@ -223,12 +223,12 @@ export default function HomePage({
                                         alt={`${school.principalName ?? 'Kepala Sekolah'} — Kepala SMA Negeri 1 Tenjo`}
                                         className="h-full w-full object-cover object-top"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/30" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(4,47,46,0.6)] via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-transparent to-white/30" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-[rgba(4,47,46,0.6)] via-transparent to-transparent" />
                                     {/* Name overlay on image */}
                                     <div className="absolute right-6 bottom-6 left-6">
                                         <div className="rounded-2xl border border-white/15 bg-black/30 px-5 py-4 backdrop-blur-md">
-                                            <div className="text-[0.62rem] font-bold tracking-[0.3em] text-[var(--school-gold)] uppercase">
+                                            <div className="text-[0.62rem] font-bold tracking-[0.3em] text-(--school-gold) uppercase">
                                                 Kepala Sekolah
                                             </div>
                                             <div className="mt-1 text-lg font-bold text-white">
@@ -245,7 +245,7 @@ export default function HomePage({
                                 {/* Content Side */}
                                 <div className="relative p-8 lg:p-10">
                                     {/* Decorative quote */}
-                                    <Quote className="absolute top-8 right-8 size-20 text-[var(--school-green-100)] opacity-40 lg:top-10 lg:right-10" />
+                                    <Quote className="absolute top-8 right-8 size-20 text-(--school-green-100) opacity-40 lg:top-10 lg:right-10" />
 
                                     {/* Mobile portrait */}
                                     <div className="mb-6 flex items-center gap-4 lg:hidden">
@@ -258,34 +258,34 @@ export default function HomePage({
                                             className="size-20 rounded-2xl object-cover object-top shadow-lg"
                                         />
                                         <div>
-                                            <div className="text-[0.62rem] font-bold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
+                                            <div className="text-[0.62rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
                                                 Kepala Sekolah
                                             </div>
-                                            <div className="text-lg font-bold text-[var(--school-ink)]">
+                                            <div className="text-lg font-bold text-(--school-ink)">
                                                 {school.principalName ??
                                                     'Titin Sriwartini'}
                                             </div>
-                                            <div className="text-xs text-[var(--school-muted)]">
+                                            <div className="text-xs text-(--school-muted)">
                                                 SMA Negeri 1 Tenjo
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-[var(--school-green-100)] bg-[var(--school-green-50)] px-4 py-1.5">
-                                        <Sparkles className="size-3.5 text-[var(--school-green-700)]" />
-                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
+                                    <div className="inline-flex items-center gap-2 rounded-full border border-(--school-green-100) bg-(--school-green-50) px-4 py-1.5">
+                                        <Sparkles className="size-3.5 text-(--school-green-700)" />
+                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
                                             Sambutan Kepala Sekolah
                                         </span>
                                     </div>
 
                                     <div className="relative mt-6 space-y-4">
-                                        <p className="text-sm leading-7 font-semibold text-[var(--school-ink)] italic">
+                                        <p className="text-sm leading-7 font-semibold text-(--school-ink) italic">
                                             Assalamu'alaikum warahmatullahi
                                             wabarakatuh,
                                         </p>
-                                        <p className="text-sm leading-7 text-[var(--school-muted)]">
+                                        <p className="text-sm leading-7 text-(--school-muted)">
                                             Selamat datang di website resmi{' '}
-                                            <strong className="text-[var(--school-ink)]">
+                                            <strong className="text-(--school-ink)">
                                                 SMA Negeri 1 Tenjo
                                             </strong>
                                             . Website ini kami hadirkan sebagai
@@ -294,7 +294,7 @@ export default function HomePage({
                                             prestasi sekolah kepada seluruh
                                             masyarakat.
                                         </p>
-                                        <p className="text-sm leading-7 text-[var(--school-muted)]">
+                                        <p className="text-sm leading-7 text-(--school-muted)">
                                             Sebagai lembaga pendidikan, kami
                                             berkomitmen untuk menciptakan
                                             lingkungan belajar yang kondusif,
@@ -307,30 +307,30 @@ export default function HomePage({
                                             nilai-nilai akhlak dan budaya
                                             bangsa.
                                         </p>
-                                        <p className="text-sm leading-7 text-[var(--school-muted)]">
+                                        <p className="text-sm leading-7 text-(--school-muted)">
                                             Terima kasih atas kepercayaan dan
                                             dukungan yang diberikan kepada SMA
                                             Negeri 1 Tenjo. Semoga layanan
                                             informasi ini bermanfaat bagi siswa,
                                             orang tua, alumni, dan masyarakat.
                                         </p>
-                                        <p className="text-sm leading-7 font-semibold text-[var(--school-ink)] italic">
+                                        <p className="text-sm leading-7 font-semibold text-(--school-ink) italic">
                                             Wassalamu'alaikum warahmatullahi
                                             wabarakatuh.
                                         </p>
                                     </div>
 
                                     {/* Signature area - desktop */}
-                                    <div className="mt-8 hidden items-center gap-4 border-t border-black/[0.04] pt-6 lg:flex">
+                                    <div className="mt-8 hidden items-center gap-4 border-t border-black/4 pt-6 lg:flex">
                                         <div className="flex size-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--school-green-600),var(--school-green-700))] text-white shadow-[0_8px_20px_-6px_rgba(15,118,110,0.4)]">
                                             <GraduationCap className="size-5" />
                                         </div>
                                         <div>
-                                            <div className="text-base font-bold text-[var(--school-ink)]">
+                                            <div className="text-base font-bold text-(--school-ink)">
                                                 {school.principalName ??
                                                     'Titin Sriwartini'}
                                             </div>
-                                            <div className="text-xs text-[var(--school-muted)]">
+                                            <div className="text-xs text-(--school-muted)">
                                                 Kepala SMA Negeri 1 Tenjo
                                             </div>
                                         </div>
@@ -359,11 +359,11 @@ export default function HomePage({
                         >
                             <BorderGlow
                                 borderRadius={32}
-                                className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(160deg,rgba(4,47,46,0.97),rgba(15,118,110,0.93)_42%,rgba(13,158,228,0.88))] p-8 text-white shadow-[0_38px_90px_-50px_rgba(4,47,46,0.8)] md:p-10"
+                                className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(160deg,rgba(4,47,46,0.97),rgba(15,118,110,0.93)_42%,rgba(13,158,228,0.88))] p-8 text-white shadow-[0_38px_90px_-50px_rgba(4,47,46,0.8)] md:p-10"
                             >
                                 {/* Ambient light orbs */}
-                                <div className="pointer-events-none absolute -top-20 -right-20 size-[28rem] rounded-full bg-white/[0.04] blur-[100px] transition-transform duration-[1.2s] group-hover:-translate-x-16 group-hover:translate-y-8" />
-                                <div className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-[var(--school-gold)]/10 blur-[80px] transition-all duration-[1.4s] group-hover:opacity-30" />
+                                <div className="pointer-events-none absolute -top-20 -right-20 size-112 rounded-full bg-white/4 blur-[100px] transition-transform duration-[1.2s] group-hover:-translate-x-16 group-hover:translate-y-8" />
+                                <div className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-(--school-gold)/10 blur-[80px] transition-all duration-[1.4s] group-hover:opacity-30" />
                                 {/* Subtle grid pattern overlay */}
                                 <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-60" />
 
@@ -371,9 +371,9 @@ export default function HomePage({
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-3">
                                         <div className="flex size-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 backdrop-blur-sm">
-                                            <Heart className="size-5 text-[var(--school-gold)]" />
+                                            <Heart className="size-5 text-(--school-gold)" />
                                         </div>
-                                        <div className="inline-flex rounded-full border border-white/20 bg-white/[0.08] px-4 py-1.5 text-[0.72rem] font-bold tracking-[0.28em] text-[var(--school-gold)] uppercase backdrop-blur-sm">
+                                        <div className="inline-flex rounded-full border border-white/20 bg-white/8 px-4 py-1.5 text-[0.72rem] font-bold tracking-[0.28em] text-(--school-gold) uppercase backdrop-blur-sm">
                                             Nilai Inti
                                         </div>
                                     </div>
@@ -432,11 +432,11 @@ export default function HomePage({
                                                 duration: 0.6,
                                                 ease: [0.22, 1, 0.36, 1],
                                             }}
-                                            className="group/card relative overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.06] backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:bg-white/[0.12] hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.3)]"
+                                            className="group/card relative overflow-hidden rounded-2xl border border-white/12 bg-white/6 backdrop-blur-md transition-all duration-300 hover:border-white/25 hover:bg-white/12 hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.3)]"
                                         >
                                             {/* Image */}
                                             <div className="relative mx-auto flex items-center justify-center overflow-hidden pt-3 md:pt-4">
-                                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/[0.04]" />
+                                                <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white/4" />
                                                 <img
                                                     src={value.image}
                                                     alt={value.name}
@@ -459,7 +459,7 @@ export default function HomePage({
                                 </div>
 
                                 {/* Bottom decorative line */}
-                                <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                                <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-px bg-linear-to-r from-transparent via-white/20 to-transparent" />
                             </BorderGlow>
                         </motion.div>
 
@@ -496,7 +496,7 @@ export default function HomePage({
                                             '#F59E0B',
                                             '#0E9EE4',
                                         ]}
-                                        className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/60 bg-[rgba(255,255,255,0.72)] p-6 shadow-[0_20px_60px_-20px_rgba(4,47,46,0.1)] backdrop-blur-xl transition-all duration-300 hover:border-white/90 hover:bg-white/95 hover:shadow-[0_32px_80px_-24px_rgba(4,47,46,0.18)]"
+                                        className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/60 bg-[rgba(255,255,255,0.72)] p-6 shadow-[0_20px_60px_-20px_rgba(4,47,46,0.1)] backdrop-blur-xl transition-all duration-300 hover:border-white/90 hover:bg-white/95 hover:shadow-[0_32px_80px_-24px_rgba(4,47,46,0.18)]"
                                     >
                                         {/* Accent orb */}
                                         <div
@@ -530,25 +530,25 @@ export default function HomePage({
                                         </div>
 
                                         {/* Title */}
-                                        <h3 className="relative z-10 mt-4 text-xl leading-tight font-semibold text-[var(--school-ink)] md:text-2xl">
+                                        <h3 className="relative z-10 mt-4 text-xl leading-tight font-semibold text-(--school-ink) md:text-2xl">
                                             {program.title}
                                         </h3>
 
                                         {/* Description — shows longDescription on wider tiles */}
-                                        <p className="relative z-10 mt-3 flex-1 text-[0.84rem] leading-7 text-[var(--school-muted)] transition-colors group-hover:text-[var(--school-ink)]/80">
+                                        <p className="relative z-10 mt-3 flex-1 text-[0.84rem] leading-7 text-(--school-muted) transition-colors group-hover:text-(--school-ink)/80">
                                             {index >= 2
                                                 ? program.longDescription
                                                 : program.description}
                                         </p>
 
                                         {/* Stats row */}
-                                        <div className="relative z-10 mt-5 flex gap-6 border-t border-black/[0.04] pt-4">
+                                        <div className="relative z-10 mt-5 flex gap-6 border-t border-black/4 pt-4">
                                             {program.stats.map((stat) => (
                                                 <div key={stat.label}>
-                                                    <div className="text-xl font-bold tracking-tight text-[var(--school-ink)]">
+                                                    <div className="text-xl font-bold tracking-tight text-(--school-ink)">
                                                         {stat.value}
                                                     </div>
-                                                    <div className="mt-0.5 text-[0.68rem] font-medium tracking-[0.18em] text-[var(--school-muted)] uppercase">
+                                                    <div className="mt-0.5 text-[0.68rem] font-medium tracking-[0.18em] text-(--school-muted) uppercase">
                                                         {stat.label}
                                                     </div>
                                                 </div>
@@ -599,7 +599,7 @@ export default function HomePage({
                         >
                             <BorderGlow
                                 borderRadius={32}
-                                className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(165deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_50%,rgba(13,158,228,0.85))] text-white shadow-[0_38px_90px_-50px_rgba(4,47,46,0.75)]"
+                                className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(165deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_50%,rgba(13,158,228,0.85))] text-white shadow-[0_38px_90px_-50px_rgba(4,47,46,0.75)]"
                             >
                                 {/* Hero Image */}
                                 <div className="relative h-52 w-full shrink-0 overflow-hidden md:h-64">
@@ -609,11 +609,11 @@ export default function HomePage({
                                         className="h-full w-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-105"
                                         loading="lazy"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-b from-[rgba(4,47,46,0.4)] via-transparent to-[rgba(4,47,46,0.95)]" />
+                                    <div className="absolute inset-0 bg-linear-to-b from-[rgba(4,47,46,0.4)] via-transparent to-[rgba(4,47,46,0.95)]" />
                                     {/* Floating VISI badge */}
-                                    <div className="absolute top-6 left-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.08] px-4 py-1.5 backdrop-blur-md">
-                                        <Trophy className="size-3.5 text-[var(--school-gold)]" />
-                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-[var(--school-gold)] uppercase">
+                                    <div className="absolute top-6 left-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-1.5 backdrop-blur-md">
+                                        <Trophy className="size-3.5 text-(--school-gold)" />
+                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
                                             Visi Sekolah
                                         </span>
                                     </div>
@@ -622,14 +622,14 @@ export default function HomePage({
                                 {/* Visi Content */}
                                 <div className="relative z-10 flex flex-1 flex-col justify-between p-8 md:p-10">
                                     {/* Ambient glow */}
-                                    <div className="pointer-events-none absolute -top-16 -right-16 size-72 rounded-full bg-[var(--school-gold)]/8 blur-[100px]" />
+                                    <div className="pointer-events-none absolute -top-16 -right-16 size-72 rounded-full bg-(--school-gold)/8 blur-[100px]" />
 
                                     <div>
                                         <blockquote className="relative">
                                             <div className="absolute -top-2 -left-3 font-heading text-5xl leading-none text-white/15">
                                                 "
                                             </div>
-                                            <p className="relative z-10 font-heading text-xl leading-[1.5] md:text-2xl lg:text-[1.7rem]">
+                                            <p className="relative z-10 font-heading text-xl leading-normal md:text-2xl lg:text-[1.7rem]">
                                                 Terwujudnya sekolah yang unggul
                                                 dalam prestasi, berkarakter,
                                                 berbudaya lingkungan, menguasai
@@ -647,7 +647,7 @@ export default function HomePage({
                                     </div>
 
                                     {/* Bottom line */}
-                                    <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                                    <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-px bg-linear-to-r from-transparent via-white/15 to-transparent" />
                                 </div>
                             </BorderGlow>
                         </motion.div>
@@ -662,14 +662,14 @@ export default function HomePage({
                         >
                             {/* Misi header */}
                             <div className="flex items-center gap-3 px-1">
-                                <div className="flex size-9 items-center justify-center rounded-xl border border-[var(--school-green-200)] bg-[var(--school-green-50)] text-[var(--school-green-700)]">
+                                <div className="flex size-9 items-center justify-center rounded-xl border border-(--school-green-200) bg-(--school-green-50) text-(--school-green-700)">
                                     <Compass className="size-4" />
                                 </div>
                                 <div>
-                                    <div className="text-[0.68rem] font-bold tracking-[0.28em] text-[var(--school-green-700)] uppercase">
+                                    <div className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
                                         Misi Sekolah
                                     </div>
-                                    <div className="text-xs text-[var(--school-muted)]">
+                                    <div className="text-xs text-(--school-muted)">
                                         5 langkah strategis
                                     </div>
                                 </div>
@@ -765,10 +765,10 @@ export default function HomePage({
 
                                         {/* Content */}
                                         <div className="relative z-10 min-w-0 flex-1">
-                                            <h4 className="text-base font-semibold text-[var(--school-ink)] md:text-lg">
+                                            <h4 className="text-base font-semibold text-(--school-ink) md:text-lg">
                                                 {misi.title}
                                             </h4>
-                                            <p className="mt-1.5 text-[0.82rem] leading-relaxed text-[var(--school-muted)] transition-colors group-hover/misi:text-[var(--school-ink)]/75">
+                                            <p className="mt-1.5 text-[0.82rem] leading-relaxed text-(--school-muted) transition-colors group-hover/misi:text-(--school-ink)/75">
                                                 {misi.description}
                                             </p>
                                         </div>
@@ -812,19 +812,19 @@ export default function HomePage({
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         loading="lazy"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-white via-white/30 to-transparent" />
                                     {/* Floating metric */}
                                     <div className="absolute bottom-4 left-5 flex items-center gap-2">
-                                        <div className="flex size-9 items-center justify-center rounded-xl border border-[var(--school-green-200)] bg-white/90 text-[var(--school-green-700)] shadow-lg backdrop-blur-sm">
+                                        <div className="flex size-9 items-center justify-center rounded-xl border border-(--school-green-200) bg-white/90 text-(--school-green-700) shadow-lg backdrop-blur-sm">
                                             <Map className="size-4" />
                                         </div>
                                         <div className="rounded-xl bg-white/90 px-3 py-1 shadow-lg backdrop-blur-sm">
-                                            <span className="text-lg font-extrabold text-[var(--school-green-700)]">
+                                            <span className="text-lg font-extrabold text-(--school-green-700)">
                                                 <AnimatedCounter
                                                     value={11396}
                                                 />
                                             </span>
-                                            <span className="ml-1 text-xs font-semibold text-[var(--school-muted)]">
+                                            <span className="ml-1 text-xs font-semibold text-(--school-muted)">
                                                 m²
                                             </span>
                                         </div>
@@ -833,10 +833,10 @@ export default function HomePage({
 
                                 {/* Content */}
                                 <div className="p-6 pt-4">
-                                    <h3 className="text-xl font-bold text-[var(--school-ink)]">
+                                    <h3 className="text-xl font-bold text-(--school-ink)">
                                         Lahan Sekolah 11.396 m²
                                     </h3>
-                                    <p className="mt-2.5 text-sm leading-7 text-[var(--school-muted)]">
+                                    <p className="mt-2.5 text-sm leading-7 text-(--school-muted)">
                                         Lahan sekolah mendukung ruang belajar,
                                         kegiatan siswa, dan aktivitas luar
                                         kelas.
@@ -850,7 +850,7 @@ export default function HomePage({
                                         ].map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="rounded-full border border-[var(--school-green-100)] bg-[var(--school-green-50)] px-2.5 py-0.5 text-[0.65rem] font-semibold tracking-wider text-[var(--school-green-700)] uppercase"
+                                                className="rounded-full border border-(--school-green-100) bg-(--school-green-50) px-2.5 py-0.5 text-[0.65rem] font-semibold tracking-wider text-(--school-green-700) uppercase"
                                             >
                                                 {tag}
                                             </span>
@@ -879,7 +879,7 @@ export default function HomePage({
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         loading="lazy"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-white via-white/30 to-transparent" />
                                     {/* Floating metric */}
                                     <div className="absolute bottom-4 left-5 flex items-center gap-2">
                                         <div className="flex size-9 items-center justify-center rounded-xl border border-sky-200 bg-white/90 text-sky-700 shadow-lg backdrop-blur-sm">
@@ -889,7 +889,7 @@ export default function HomePage({
                                             <span className="text-lg font-extrabold text-sky-700">
                                                 <AnimatedCounter value={30} />
                                             </span>
-                                            <span className="mx-1 text-xs font-bold text-[var(--school-muted)]">
+                                            <span className="mx-1 text-xs font-bold text-(--school-muted)">
                                                 :
                                             </span>
                                             <span className="text-lg font-extrabold text-sky-700">
@@ -901,10 +901,10 @@ export default function HomePage({
 
                                 {/* Content */}
                                 <div className="p-6 pt-4">
-                                    <h3 className="text-xl font-bold text-[var(--school-ink)]">
+                                    <h3 className="text-xl font-bold text-(--school-ink)">
                                         Moving Class Nyata
                                     </h3>
-                                    <p className="mt-2.5 text-sm leading-7 text-[var(--school-muted)]">
+                                    <p className="mt-2.5 text-sm leading-7 text-(--school-muted)">
                                         30 rombel dan 21 ruang kelas dikelola
                                         melalui jadwal belajar yang tertata.
                                     </p>
@@ -943,7 +943,7 @@ export default function HomePage({
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         loading="lazy"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-white via-white/30 to-transparent" />
                                     {/* Floating metric */}
                                     <div className="absolute bottom-4 left-5 flex items-center gap-2">
                                         <div className="flex size-9 items-center justify-center rounded-xl border border-violet-200 bg-white/90 text-violet-700 shadow-lg backdrop-blur-sm">
@@ -953,7 +953,7 @@ export default function HomePage({
                                             <span className="text-lg font-extrabold text-violet-700">
                                                 3 Lab
                                             </span>
-                                            <span className="mx-1 text-xs font-bold text-[var(--school-muted)]">
+                                            <span className="mx-1 text-xs font-bold text-(--school-muted)">
                                                 +
                                             </span>
                                             <span className="text-lg font-extrabold text-violet-700">
@@ -965,10 +965,10 @@ export default function HomePage({
 
                                 {/* Content */}
                                 <div className="p-6 pt-4">
-                                    <h3 className="text-xl font-bold text-[var(--school-ink)]">
+                                    <h3 className="text-xl font-bold text-(--school-ink)">
                                         Fasilitas Akademik Kunci
                                     </h3>
-                                    <p className="mt-2.5 text-sm leading-7 text-[var(--school-muted)]">
+                                    <p className="mt-2.5 text-sm leading-7 text-(--school-muted)">
                                         Laboratorium dan perpustakaan mendukung
                                         pembelajaran, literasi, dan projek
                                         siswa.
@@ -1003,7 +1003,7 @@ export default function HomePage({
                         <Button
                             asChild
                             variant="outline"
-                            className="group/btn flex items-center gap-2 rounded-full border-[var(--school-green-200)] bg-white/80 px-6 transition-all hover:border-[var(--school-green-400)] hover:bg-[var(--school-green-50)] hover:shadow-lg"
+                            className="group/btn flex items-center gap-2 rounded-full border-(--school-green-200) bg-white/80 px-6 transition-all hover:border-(--school-green-400) hover:bg-(--school-green-50) hover:shadow-lg"
                         >
                             <Link href="/karya">
                                 Lihat Semua Karya
@@ -1084,7 +1084,7 @@ export default function HomePage({
                                             '#F59E0B',
                                             '#0E9EE4',
                                         ]}
-                                        className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-[0_28px_80px_-48px_rgba(15,118,110,0.35)] transition-all duration-300 hover:shadow-[0_36px_100px_-44px_rgba(15,118,110,0.5)]"
+                                        className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/70 bg-white shadow-[0_28px_80px_-48px_rgba(15,118,110,0.35)] transition-all duration-300 hover:shadow-[0_36px_100px_-44px_rgba(15,118,110,0.5)]"
                                     >
                                         {/* Hero Image */}
                                         <div className="relative h-56 w-full shrink-0 overflow-hidden">
@@ -1106,7 +1106,7 @@ export default function HomePage({
                                                     }
                                                 }}
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
 
                                             {/* Type Badge floating */}
                                             <div
@@ -1124,7 +1124,7 @@ export default function HomePage({
 
                                             {/* Price badge if exists */}
                                             {work.priceEstimate && (
-                                                <div className="absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 text-[0.72rem] font-bold text-[var(--school-ink)] shadow-lg backdrop-blur-md">
+                                                <div className="absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 text-[0.72rem] font-bold text-(--school-ink) shadow-lg backdrop-blur-md">
                                                     {typeof work.priceEstimate ===
                                                     'number'
                                                         ? `Rp ${numberFormatter.format(work.priceEstimate)}`
@@ -1143,19 +1143,19 @@ export default function HomePage({
                                         {/* Content */}
                                         <div className="flex flex-1 flex-col justify-between p-6">
                                             <div>
-                                                <p className="text-sm leading-7 text-[var(--school-muted)]">
+                                                <p className="text-sm leading-7 text-(--school-muted)">
                                                     {work.summary ??
                                                         'Karya siswa SMAN 1 Tenjo dalam program pembelajaran berbasis proyek.'}
                                                 </p>
                                             </div>
 
                                             {/* Metadata */}
-                                            <div className="mt-5 space-y-2.5 border-t border-black/[0.04] pt-4">
+                                            <div className="mt-5 space-y-2.5 border-t border-black/4 pt-4">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="flex size-6 items-center justify-center rounded-md bg-[var(--school-green-50)] text-[var(--school-green-700)]">
+                                                    <div className="flex size-6 items-center justify-center rounded-md bg-(--school-green-50) text-(--school-green-700)">
                                                         <Landmark className="size-3" />
                                                     </div>
-                                                    <span className="text-[0.78rem] text-[var(--school-muted)]">
+                                                    <span className="text-[0.78rem] text-(--school-muted)">
                                                         {work.projectTitle ??
                                                             'Karya siswa'}
                                                     </span>
@@ -1164,7 +1164,7 @@ export default function HomePage({
                                                     <div className="flex size-6 items-center justify-center rounded-md bg-violet-50 text-violet-600">
                                                         <Sparkles className="size-3" />
                                                     </div>
-                                                    <span className="text-[0.78rem] text-[var(--school-muted)]">
+                                                    <span className="text-[0.78rem] text-(--school-muted)">
                                                         {work.themeName ??
                                                             'Karya unggulan'}
                                                     </span>
@@ -1173,7 +1173,7 @@ export default function HomePage({
                                                     <div className="flex size-6 items-center justify-center rounded-md bg-amber-50 text-amber-600">
                                                         <Users className="size-3" />
                                                     </div>
-                                                    <span className="text-[0.78rem] text-[var(--school-muted)]">
+                                                    <span className="text-[0.78rem] text-(--school-muted)">
                                                         {work.creatorName ??
                                                             'Tim siswa'}
                                                     </span>
@@ -1199,14 +1199,14 @@ export default function HomePage({
                         <BorderGlow
                             borderRadius={32}
                             colors={['#0F766E', '#0E9EE4', '#F59E0B']}
-                            className="relative h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-[0_28px_80px_-50px_rgba(15,118,110,0.4)]"
+                            className="relative h-full overflow-hidden rounded-4xl border border-white/70 bg-white shadow-[0_28px_80px_-50px_rgba(15,118,110,0.4)]"
                         >
                             {/* Header gradient */}
                             <div className="relative overflow-hidden bg-[linear-gradient(135deg,rgba(4,47,46,0.97),rgba(15,118,110,0.9)_60%,rgba(13,158,228,0.82))] px-8 pt-8 pb-10">
-                                <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-white/[0.05] blur-[60px]" />
-                                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-4 py-1.5 backdrop-blur-md">
-                                    <Radar className="size-3.5 text-[var(--school-gold)]" />
-                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-[var(--school-gold)] uppercase">
+                                <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-white/5 blur-[60px]" />
+                                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 backdrop-blur-md">
+                                    <Radar className="size-3.5 text-(--school-gold)" />
+                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-gold) uppercase">
                                         Admissions Pulse
                                     </span>
                                 </div>
@@ -1276,7 +1276,7 @@ export default function HomePage({
 
                                                     <div className="relative z-10 flex items-start justify-between">
                                                         <div>
-                                                            <div className="text-[0.65rem] font-bold tracking-[0.22em] text-[var(--school-muted)] uppercase">
+                                                            <div className="text-[0.65rem] font-bold tracking-[0.22em] text-(--school-muted) uppercase">
                                                                 {
                                                                     quota.trackType
                                                                 }
@@ -1308,7 +1308,7 @@ export default function HomePage({
 
                                                     {/* Progress bar */}
                                                     <div className="relative z-10 mt-3">
-                                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/[0.04]">
+                                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/4">
                                                             <motion.div
                                                                 initial={{
                                                                     width: 0,
@@ -1336,7 +1336,7 @@ export default function HomePage({
                                                                 }}
                                                             />
                                                         </div>
-                                                        <div className="mt-1 text-[0.65rem] font-semibold text-[var(--school-muted)]">
+                                                        <div className="mt-1 text-[0.65rem] font-semibold text-(--school-muted)">
                                                             {
                                                                 quota.quotaPercentage
                                                             }
@@ -1353,7 +1353,7 @@ export default function HomePage({
                                         <Button
                                             asChild
                                             size="lg"
-                                            className="group/cta w-full rounded-2xl bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-[var(--school-ink)] shadow-[0_8px_24px_-8px_rgba(245,158,11,0.4)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(245,158,11,0.55)]"
+                                            className="group/cta w-full rounded-2xl bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-(--school-ink) shadow-[0_8px_24px_-8px_rgba(245,158,11,0.4)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(245,158,11,0.55)]"
                                         >
                                             <Link href="/ppdb">
                                                 Mulai Simulasi Zona
@@ -1377,7 +1377,7 @@ export default function HomePage({
                         <BorderGlow
                             borderRadius={32}
                             colors={['#F59E0B', '#D97706', '#FBBF24']}
-                            className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,247,237,0.88))] shadow-[0_28px_80px_-50px_rgba(245,158,11,0.3)]"
+                            className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,247,237,0.88))] shadow-[0_28px_80px_-50px_rgba(245,158,11,0.3)]"
                         >
                             {/* Header */}
                             <div className="p-8 pb-4">
@@ -1387,7 +1387,7 @@ export default function HomePage({
                                         Virtual Tour Shell
                                     </span>
                                 </div>
-                                <h2 className="mt-5 font-heading text-3xl leading-tight text-[var(--school-ink)] md:text-4xl">
+                                <h2 className="mt-5 font-heading text-3xl leading-tight text-(--school-ink) md:text-4xl">
                                     Lahan, laboratorium, dan perpustakaan
                                     disusun sebagai pengalaman jelajah.
                                 </h2>
@@ -1435,16 +1435,16 @@ export default function HomePage({
                                                 >
                                                     {scene.eyebrow}
                                                 </div>
-                                                <div className="mt-1 text-base font-bold text-[var(--school-ink)]">
+                                                <div className="mt-1 text-base font-bold text-(--school-ink)">
                                                     {scene.title}
                                                 </div>
-                                                <p className="mt-1 text-[0.78rem] leading-relaxed text-[var(--school-muted)] transition-colors group-hover/scene:text-[var(--school-ink)]/70">
+                                                <p className="mt-1 text-[0.78rem] leading-relaxed text-(--school-muted) transition-colors group-hover/scene:text-(--school-ink)/70">
                                                     {scene.description}
                                                 </p>
                                             </div>
                                             {/* Arrow hint */}
                                             <ArrowRight
-                                                className="mt-1 size-4 shrink-0 text-[var(--school-muted)] opacity-0 transition-all group-hover/scene:translate-x-1 group-hover/scene:opacity-100"
+                                                className="mt-1 size-4 shrink-0 text-(--school-muted) opacity-0 transition-all group-hover/scene:translate-x-1 group-hover/scene:opacity-100"
                                                 style={{
                                                     color: scene.accentColor,
                                                 }}
@@ -1482,7 +1482,7 @@ export default function HomePage({
                         <Button
                             asChild
                             variant="outline"
-                            className="group/media flex items-center gap-2 rounded-full border-[var(--school-green-200)] bg-white/80 px-6 transition-all hover:border-[var(--school-green-400)] hover:bg-[var(--school-green-50)] hover:shadow-lg"
+                            className="group/media flex items-center gap-2 rounded-full border-(--school-green-200) bg-white/80 px-6 transition-all hover:border-(--school-green-400) hover:bg-(--school-green-50) hover:shadow-lg"
                         >
                             <Link href="/berita">
                                 Buka Semua Berita
@@ -1521,7 +1521,7 @@ export default function HomePage({
                                         ]}
                                         className="relative h-full overflow-hidden rounded-[1.7rem] border border-white/60 bg-white/70 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.05)] backdrop-blur-xl transition-all duration-500 hover:border-white/90 hover:bg-white hover:shadow-[0_30px_60px_-20px_rgba(14,165,233,0.15)]"
                                     >
-                                        <div className="pointer-events-none absolute top-0 right-0 size-64 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-100/50 via-teal-50/10 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+                                        <div className="pointer-events-none absolute top-0 right-0 size-64 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-sky-100/50 via-teal-50/10 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
 
                                         <div className="relative p-7">
                                             <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-200/50 bg-sky-50/80 px-3 py-1.5 text-[0.65rem] font-extrabold tracking-[0.22em] text-sky-700 uppercase backdrop-blur-md transition-colors group-hover:border-sky-300 group-hover:bg-sky-100">
@@ -1529,7 +1529,7 @@ export default function HomePage({
                                                 {article.category ??
                                                     'Aktivitas Sekolah'}
                                             </div>
-                                            <h3 className="mt-4 line-clamp-2 text-2xl leading-[1.3] font-black tracking-tight text-[var(--school-ink)] transition-colors group-hover:bg-gradient-to-r group-hover:from-sky-700 group-hover:to-teal-600 group-hover:bg-clip-text group-hover:text-transparent">
+                                            <h3 className="mt-4 line-clamp-2 text-2xl leading-[1.3] font-black tracking-tight text-(--school-ink) transition-colors group-hover:bg-linear-to-r group-hover:from-sky-700 group-hover:to-teal-600 group-hover:bg-clip-text group-hover:text-transparent">
                                                 {article.title}
                                             </h3>
                                             <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-slate-500">
@@ -1570,8 +1570,8 @@ export default function HomePage({
                     {/* ─── Eskul Cards Infinite Marquee ─── */}
                     <div className="relative -mx-4 flex w-full overflow-hidden px-4 py-6">
                         {/* Gradient Masks for smooth fade out at edges */}
-                        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#FAF7EE] to-transparent sm:w-24 lg:w-40" />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#FAF7EE] to-transparent sm:w-24 lg:w-40" />
+                        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-linear-to-r from-[#FAF7EE] to-transparent sm:w-24 lg:w-40" />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-linear-to-l from-[#FAF7EE] to-transparent sm:w-24 lg:w-40" />
 
                         {(() => {
                             const eskulItems = [
@@ -1672,7 +1672,7 @@ export default function HomePage({
                                         (eskul, idx) => (
                                             <motion.article
                                                 key={`${eskul.name}-${idx}`}
-                                                className="group h-full w-[360px] shrink-0"
+                                                className="group h-full w-90 shrink-0"
                                             >
                                                 <BorderGlow
                                                     borderRadius={30}
@@ -1690,7 +1690,7 @@ export default function HomePage({
                                                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                             loading="lazy"
                                                         />
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                                                        <div className="absolute inset-0 bg-linear-to-t from-white via-white/30 to-transparent" />
                                                         <div className="absolute bottom-4 left-5 flex items-center gap-2">
                                                             <div
                                                                 className="flex size-9 items-center justify-center rounded-xl border bg-white/90 shadow-lg backdrop-blur-sm"
@@ -1712,7 +1712,7 @@ export default function HomePage({
                                                                         eskul.metric
                                                                     }
                                                                 </span>
-                                                                <span className="ml-1 text-xs font-semibold text-[var(--school-muted)]">
+                                                                <span className="ml-1 text-xs font-semibold text-(--school-muted)">
                                                                     {
                                                                         eskul.metricSub
                                                                     }
@@ -1721,10 +1721,10 @@ export default function HomePage({
                                                         </div>
                                                     </div>
                                                     <div className="p-6 pt-4">
-                                                        <h3 className="text-xl font-bold text-[var(--school-ink)]">
+                                                        <h3 className="text-xl font-bold text-(--school-ink)">
                                                             {eskul.name}
                                                         </h3>
-                                                        <p className="mt-2 text-sm leading-7 text-[var(--school-muted)]">
+                                                        <p className="mt-2 text-sm leading-7 text-(--school-muted)">
                                                             {eskul.description}
                                                         </p>
                                                         <div className="mt-4 flex flex-wrap gap-2.5">
@@ -1769,10 +1769,10 @@ export default function HomePage({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-[var(--school-ink)]">
+                                <h3 className="text-lg font-bold text-(--school-ink)">
                                     Video dari Channel Resmi
                                 </h3>
-                                <p className="text-xs text-[var(--school-muted)]">
+                                <p className="text-xs text-(--school-muted)">
                                     SMAN 1 Tenjo Official — YouTube
                                 </p>
                             </div>
@@ -1837,7 +1837,7 @@ export default function HomePage({
                                     href={`https://www.youtube.com/watch?v=${video.id}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="block rounded-[1.7rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--school-green-400)]"
+                                    className="block rounded-[1.7rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-(--school-green-400)"
                                 >
                                     <motion.div
                                         variants={fadeUp}
@@ -1867,7 +1867,7 @@ export default function HomePage({
                                                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-1"
                                                     loading="lazy"
                                                 />
-                                                <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80" />
+                                                <div className="absolute inset-0 z-10 bg-linear-to-t from-black/80 via-black/10 to-transparent opacity-80" />
 
                                                 {/* Play button with YouTube Official Icon */}
                                                 <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
@@ -1897,7 +1897,7 @@ export default function HomePage({
 
                                             {/* Info */}
                                             <div className="relative p-6">
-                                                <h4 className="line-clamp-2 text-[15px] leading-[1.4] font-black text-[var(--school-ink)] transition-colors duration-300 group-hover:text-red-600">
+                                                <h4 className="line-clamp-2 text-[15px] leading-[1.4] font-black text-(--school-ink) transition-colors duration-300 group-hover:text-red-600">
                                                     {video.title}
                                                 </h4>
                                                 <div className="mt-4 flex items-center gap-2 border-t border-slate-100/80 pt-4 text-xs font-semibold text-slate-500">
@@ -1942,16 +1942,16 @@ export default function HomePage({
                         <BorderGlow
                             borderRadius={32}
                             colors={['#0F766E', '#D97706', '#7C3AED']}
-                            className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(160deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_50%,rgba(13,158,228,0.85))] shadow-[0_38px_90px_-50px_rgba(4,47,46,0.75)]"
+                            className="relative overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(160deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_50%,rgba(13,158,228,0.85))] shadow-[0_38px_90px_-50px_rgba(4,47,46,0.75)]"
                         >
                             <div className="grid lg:grid-cols-[1fr_320px]">
                                 <div className="relative z-10 p-8 text-white lg:p-10">
                                     {/* Ambient orb */}
-                                    <div className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-white/[0.04] blur-[80px]" />
+                                    <div className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-white/4 blur-[80px]" />
 
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.08] px-4 py-1.5 backdrop-blur-sm">
-                                        <GraduationCap className="size-3.5 text-[var(--school-gold)]" />
-                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-[var(--school-gold)] uppercase">
+                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-1.5 backdrop-blur-sm">
+                                        <GraduationCap className="size-3.5 text-(--school-gold)" />
+                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
                                             Alumni Network
                                         </span>
                                     </div>
@@ -1995,7 +1995,7 @@ export default function HomePage({
                                         ].map((s) => (
                                             <div
                                                 key={s.label}
-                                                className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-3 backdrop-blur-sm"
+                                                className="rounded-2xl border border-white/10 bg-white/6 px-5 py-3 backdrop-blur-sm"
                                             >
                                                 <div className="text-2xl font-extrabold text-white">
                                                     <AnimatedCounter
@@ -2018,7 +2018,7 @@ export default function HomePage({
                                         alt="Alumni SMAN 1 Tenjo"
                                         className="h-full w-full object-cover object-center"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[rgba(4,47,46,0.4)]" />
+                                    <div className="absolute inset-0 bg-linear-to-l from-transparent to-[rgba(4,47,46,0.4)]" />
                                 </div>
                             </div>
                         </BorderGlow>
@@ -2083,7 +2083,7 @@ export default function HomePage({
                                                         {initials}
                                                     </div>
                                                     <div className="min-w-0 flex-1">
-                                                        <h4 className="truncate text-lg font-bold text-[var(--school-ink)]">
+                                                        <h4 className="truncate text-lg font-bold text-(--school-ink)">
                                                             {alumnus.fullName}
                                                         </h4>
                                                         <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -2100,7 +2100,7 @@ export default function HomePage({
                                                                 }
                                                             </span>
                                                             {alumnus.occupationTitle && (
-                                                                <span className="rounded-full border border-black/[0.06] bg-[var(--school-green-50)] px-2.5 py-0.5 text-[0.6rem] font-semibold text-[var(--school-green-700)]">
+                                                                <span className="rounded-full border border-black/6 bg-(--school-green-50) px-2.5 py-0.5 text-[0.6rem] font-semibold text-(--school-green-700)">
                                                                     {
                                                                         alumnus.occupationTitle
                                                                     }
@@ -2112,9 +2112,9 @@ export default function HomePage({
 
                                                 {/* Institution */}
                                                 {alumnus.institutionName && (
-                                                    <div className="mt-4 flex items-center gap-2 rounded-xl border border-black/[0.04] bg-[var(--school-green-50)]/50 px-4 py-2.5">
-                                                        <Landmark className="size-4 shrink-0 text-[var(--school-green-700)]" />
-                                                        <span className="text-sm font-semibold text-[var(--school-ink)]">
+                                                    <div className="mt-4 flex items-center gap-2 rounded-xl border border-black/4 bg-(--school-green-50)/50 px-4 py-2.5">
+                                                        <Landmark className="size-4 shrink-0 text-(--school-green-700)" />
+                                                        <span className="text-sm font-semibold text-(--school-ink)">
                                                             {
                                                                 alumnus.institutionName
                                                             }
@@ -2124,7 +2124,7 @@ export default function HomePage({
 
                                                 {/* Bio */}
                                                 {alumnus.bio && (
-                                                    <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-[var(--school-muted)]">
+                                                    <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-(--school-muted)">
                                                         {alumnus.bio}
                                                     </p>
                                                 )}
@@ -2132,7 +2132,7 @@ export default function HomePage({
                                                 {/* Location */}
                                                 {(alumnus.city ||
                                                     alumnus.province) && (
-                                                    <div className="mt-4 flex items-center gap-1.5 border-t border-black/[0.04] pt-4 text-[0.72rem] text-[var(--school-muted)]">
+                                                    <div className="mt-4 flex items-center gap-1.5 border-t border-black/4 pt-4 text-[0.72rem] text-(--school-muted)">
                                                         <MapPinned className="size-3.5" />
                                                         <span>
                                                             {[
@@ -2159,16 +2159,16 @@ export default function HomePage({
                         >
                             <BorderGlow
                                 borderRadius={27}
-                                className="overflow-hidden rounded-[1.7rem] border border-dashed border-[var(--school-green-200)] bg-white/70 shadow-[0_16px_50px_-30px_rgba(15,118,110,0.2)]"
+                                className="overflow-hidden rounded-[1.7rem] border border-dashed border-(--school-green-200) bg-white/70 shadow-[0_16px_50px_-30px_rgba(15,118,110,0.2)]"
                             >
                                 <div className="flex flex-col items-center justify-center p-10 text-center md:p-14">
-                                    <div className="flex size-16 items-center justify-center rounded-2xl bg-[var(--school-green-50)] text-[var(--school-green-700)]">
+                                    <div className="flex size-16 items-center justify-center rounded-2xl bg-(--school-green-50) text-(--school-green-700)">
                                         <GraduationCap className="size-7" />
                                     </div>
-                                    <h4 className="mt-5 text-xl font-bold text-[var(--school-ink)]">
+                                    <h4 className="mt-5 text-xl font-bold text-(--school-ink)">
                                         Profil Alumni Segera Hadir
                                     </h4>
-                                    <p className="mt-2 max-w-md text-sm leading-7 text-[var(--school-muted)]">
+                                    <p className="mt-2 max-w-md text-sm leading-7 text-(--school-muted)">
                                         Profil alumni akan ditampilkan setelah
                                         data dikonfirmasi dan persetujuan
                                         diperoleh.
@@ -2182,7 +2182,7 @@ export default function HomePage({
                                         ].map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="rounded-full border border-[var(--school-green-200)] bg-[var(--school-green-50)] px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.2em] text-[var(--school-green-700)] uppercase"
+                                                className="rounded-full border border-(--school-green-200) bg-(--school-green-50) px-4 py-1.5 text-[0.65rem] font-bold tracking-[0.2em] text-(--school-green-700) uppercase"
                                             >
                                                 {tag}
                                             </span>

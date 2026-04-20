@@ -1,6 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import {
     ArrowUpRight,
+    CalendarClock,
     Eye,
     EyeOff,
     Globe,
@@ -8,6 +9,7 @@ import {
     LayoutTemplate,
     RotateCcw,
     Save,
+    SearchCheck,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -338,6 +340,141 @@ export function PublicPortalCmsPanel() {
                                         'hero.primary_cta.href',
                                     )}
                                 />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-4 lg:grid-cols-2">
+                        <div className="space-y-4 rounded-3xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/50">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-neutral-950 dark:text-white">
+                                <SearchCheck className="size-4" />
+                                SEO halaman publik
+                            </div>
+
+                            <div className="grid gap-3">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seo-title">SEO title</Label>
+                                    <Input
+                                        id="seo-title"
+                                        value={settings.seo.title}
+                                        onChange={(event) =>
+                                            setSettings((current) => ({
+                                                ...current,
+                                                seo: {
+                                                    ...current.seo,
+                                                    title: event.target.value,
+                                                },
+                                            }))
+                                        }
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seo-description">
+                                        Meta description
+                                    </Label>
+                                    <textarea
+                                        id="seo-description"
+                                        value={settings.seo.description}
+                                        onChange={(event) =>
+                                            setSettings((current) => ({
+                                                ...current,
+                                                seo: {
+                                                    ...current.seo,
+                                                    description:
+                                                        event.target.value,
+                                                },
+                                            }))
+                                        }
+                                        rows={3}
+                                        className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-800 shadow-xs transition outline-none focus:border-(--school-green-400) focus:ring-3 focus:ring-(--school-green-200)/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seo-keywords">
+                                        Keywords
+                                    </Label>
+                                    <Input
+                                        id="seo-keywords"
+                                        value={settings.seo.keywords}
+                                        onChange={(event) =>
+                                            setSettings((current) => ({
+                                                ...current,
+                                                seo: {
+                                                    ...current.seo,
+                                                    keywords:
+                                                        event.target.value,
+                                                },
+                                            }))
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 rounded-3xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950/50">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-neutral-950 dark:text-white">
+                                <CalendarClock className="size-4" />
+                                Jadwal publish
+                            </div>
+
+                            <div className="grid gap-3">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="publishing-status">
+                                        Status konten
+                                    </Label>
+                                    <select
+                                        id="publishing-status"
+                                        value={settings.publishing.status}
+                                        onChange={(event) =>
+                                            setSettings((current) => ({
+                                                ...current,
+                                                publishing: {
+                                                    ...current.publishing,
+                                                    status: event.target
+                                                        .value as PublicPortalSettings['publishing']['status'],
+                                                },
+                                            }))
+                                        }
+                                        className="h-10 rounded-2xl border border-neutral-200 bg-white px-4 text-sm text-neutral-800 shadow-xs transition outline-none focus:border-(--school-green-400) focus:ring-3 focus:ring-(--school-green-200)/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                                    >
+                                        <option value="published">
+                                            Published
+                                        </option>
+                                        <option value="draft">Draft</option>
+                                        <option value="scheduled">
+                                            Scheduled
+                                        </option>
+                                    </select>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="publishing-scheduled-at">
+                                        Tayang terjadwal
+                                    </Label>
+                                    <Input
+                                        id="publishing-scheduled-at"
+                                        type="datetime-local"
+                                        value={
+                                            settings.publishing.scheduled_at ??
+                                            ''
+                                        }
+                                        onChange={(event) =>
+                                            setSettings((current) => ({
+                                                ...current,
+                                                publishing: {
+                                                    ...current.publishing,
+                                                    scheduled_at:
+                                                        event.target.value ||
+                                                        null,
+                                                },
+                                            }))
+                                        }
+                                    />
+                                </div>
+                                <div className="rounded-2xl border border-dashed border-neutral-300 bg-white/70 px-4 py-3 text-xs leading-5 text-neutral-500 dark:border-neutral-700 dark:bg-neutral-950/45 dark:text-neutral-400">
+                                    Draft dan jadwal publish disimpan sebagai
+                                    metadata revisi agar admin punya alur review
+                                    sebelum perubahan tayang.
+                                </div>
                             </div>
                         </div>
                     </div>

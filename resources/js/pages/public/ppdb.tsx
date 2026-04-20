@@ -38,6 +38,7 @@ import {
 } from 'react';
 import CardSwap, { Card } from '@/components/CardSwap';
 import { PpdbQuotaChart } from '@/components/charts/school-charts';
+import Cubes from '@/components/Cubes';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Button } from '@/components/ui/button';
@@ -175,10 +176,10 @@ function FaqItem({
                     onClick={() => setOpen(!open)}
                     className="flex w-full items-center gap-4 p-6 text-left transition-colors hover:bg-[rgba(240,253,244,0.4)]"
                 >
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white font-heading text-sm text-[var(--school-green-700)] shadow-sm">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white font-heading text-sm text-(--school-green-700) shadow-sm">
                         {String(index + 1).padStart(2, '0')}
                     </div>
-                    <h3 className="flex-1 font-heading text-base text-[var(--school-ink)] md:text-lg">
+                    <h3 className="flex-1 font-heading text-base text-(--school-ink) md:text-lg">
                         {question}
                     </h3>
                     <motion.div
@@ -198,8 +199,8 @@ function FaqItem({
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="overflow-hidden"
                         >
-                            <div className="bg-gradient-to-b from-transparent to-white/30 px-6 pb-6 pl-20">
-                                <p className="text-sm leading-relaxed text-[var(--school-muted)]">
+                            <div className="bg-linear-to-b from-transparent to-white/30 px-6 pb-6 pl-20">
+                                <p className="text-sm leading-relaxed text-(--school-muted)">
                                     {answer}
                                 </p>
                             </div>
@@ -571,6 +572,86 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
     }
 
     const currentTrackConfig = trackConfig[trackType] ?? trackConfig.zonasi;
+    const zonasiVisualizationAccent = preview
+        ? preview.insideZone
+            ? '#10B981'
+            : '#F59E0B'
+        : currentTrackConfig.accent;
+    const zonasiVisualizationCubeBorder = preview
+        ? preview.insideZone
+            ? 'rgba(15, 118, 110, 0.52)'
+            : 'rgba(180, 83, 9, 0.52)'
+        : 'rgba(51, 65, 85, 0.42)';
+    const zonasiVisualizationFaceColor = preview
+        ? preview.insideZone
+            ? 'rgba(15, 118, 110, 0.04)'
+            : 'rgba(180, 83, 9, 0.04)'
+        : 'rgba(15, 23, 42, 0.025)';
+    const zonasiVisualizationShadow = preview
+        ? preview.insideZone
+            ? '0 10px 28px rgba(15, 118, 110, 0.1)'
+            : '0 10px 28px rgba(180, 83, 9, 0.1)'
+        : '0 10px 28px rgba(15, 23, 42, 0.08)';
+    const zonasiVisualizationRipple = preview
+        ? preview.insideZone
+            ? '#0F766E'
+            : '#B45309'
+        : '#334155';
+    const zonasiMatrixCards = [
+        {
+            label: 'Jalur Aktif',
+            value: trackType,
+            helper: selectedQuota
+                ? `${numberFormatter.format(selectedQuota.quotaSeats)} kursi • ${numberFormatter.format(selectedQuota.quotaPercentage)}%`
+                : 'Mengikuti konfigurasi panitia',
+            icon: currentTrackConfig.icon,
+        },
+        {
+            label: 'Radius Aktif',
+            value: `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km`,
+            helper: `Pusat radius ${school.name}`,
+            icon: MapPin,
+        },
+        {
+            label: 'Status Simulasi',
+            value: preview
+                ? preview.insideZone
+                    ? 'Dalam Radius'
+                    : 'Luar Radius'
+                : 'Menunggu Titik Rumah',
+            helper: preview
+                ? `${numberFormatter.format(preview.distanceKm)} km dari sekolah`
+                : 'Klik peta atau gunakan GPS',
+            icon: preview
+                ? preview.insideZone
+                    ? CheckCircle2
+                    : AlertCircle
+                : Crosshair,
+        },
+        {
+            label: 'Koordinat Rumah',
+            value: preview
+                ? `${preview.homePosition[0].toFixed(3)}, ${preview.homePosition[1].toFixed(3)}`
+                : 'Belum Dipilih',
+            helper: preview
+                ? 'Gunakan untuk validasi awal domisili'
+                : 'Lengkapi sebelum kirim formulir',
+            icon: Crosshair,
+        },
+    ];
+    const zonasiMatrixChips = preview
+        ? [
+              preview.insideZone
+                  ? 'Prioritas zonasi terbuka'
+                  : 'Siapkan jalur cadangan',
+              `${numberFormatter.format(preview.distanceKm)} km dari sekolah`,
+              `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km radius aktif`,
+          ]
+        : [
+              `Jalur ${trackType}`,
+              `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km radius aktif`,
+              'Klik grid untuk baca pola sebaran',
+          ];
 
     return (
         <>
@@ -589,7 +670,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                     id="hero"
-                    className="relative right-1/2 left-1/2 -mt-8 -mr-[50vw] -ml-[50vw] h-[85vh] w-[100vw] overflow-hidden bg-neutral-900 md:-mt-10 lg:h-[100dvh]"
+                    className="relative right-1/2 left-1/2 -mt-8 -mr-[50vw] -ml-[50vw] h-[85vh] w-screen overflow-hidden bg-neutral-900 md:-mt-10 lg:h-dvh"
                 >
                     {/* Background Image with Parallax */}
                     <motion.div
@@ -601,14 +682,14 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                             alt="Kampus SMAN 1 Tenjo"
                             className="h-[120%] w-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(2,6,23,0.97)] via-[rgba(2,6,23,0.55)] to-[rgba(2,6,23,0.2)]" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[rgba(2,6,23,0.7)] via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-linear-to-t from-[rgba(2,6,23,0.97)] via-[rgba(2,6,23,0.55)] to-[rgba(2,6,23,0.2)]" />
+                        <div className="absolute inset-0 bg-linear-to-r from-[rgba(2,6,23,0.7)] via-transparent to-transparent" />
                     </motion.div>
 
                     {/* Ambient Effects */}
-                    <div className="pointer-events-none absolute inset-0 z-[1]">
-                        <div className="absolute top-1/3 -left-40 size-[500px] rounded-full bg-emerald-500/[0.07] blur-[150px]" />
-                        <div className="absolute -right-32 bottom-1/4 size-[400px] rounded-full bg-violet-500/[0.06] blur-[130px]" />
+                    <div className="pointer-events-none absolute inset-0 z-1">
+                        <div className="absolute top-1/3 -left-40 size-125 rounded-full bg-emerald-500/7 blur-[150px]" />
+                        <div className="absolute -right-32 bottom-1/4 size-100 rounded-full bg-violet-500/6 blur-[130px]" />
                     </div>
 
                     {/* Content Overlay */}
@@ -616,7 +697,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         className="absolute inset-0 z-10 flex flex-col justify-end"
                         style={{ opacity: heroOpacity }}
                     >
-                        <div className="mx-auto grid w-full max-w-[84rem] items-end gap-10 p-5 pb-14 md:p-8 md:pb-20 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)]">
+                        <div className="mx-auto grid w-full max-w-336 items-end gap-10 p-5 pb-14 md:p-8 md:pb-20 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.8fr)]">
                             <div className="relative z-10 max-w-4xl">
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
@@ -693,7 +774,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         <motion.div
                                             key={s.label}
                                             whileHover={{ y: -4, scale: 1.03 }}
-                                            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 shadow-2xl backdrop-blur-lg transition-all hover:border-white/20 hover:bg-white/[0.08]"
+                                            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/4 px-6 py-4 shadow-2xl backdrop-blur-lg transition-all hover:border-white/20 hover:bg-white/8"
                                         >
                                             <div
                                                 className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -703,7 +784,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             />
                                             <div className="relative flex items-center gap-3.5">
                                                 <div
-                                                    className="group-hover:border-opacity-30 flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] shadow-inner transition-all"
+                                                    className="group-hover:border-opacity-30 flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/6 shadow-inner transition-all"
                                                     style={{
                                                         borderColor: `${s.accentColor}20`,
                                                     }}
@@ -733,7 +814,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                 initial={{ opacity: 0, x: 36, rotate: 1 }}
                                 animate={{ opacity: 1, x: 0, rotate: 0 }}
                                 transition={{ duration: 0.7, delay: 0.7 }}
-                                className="relative hidden h-[460px] lg:block"
+                                className="relative hidden h-115 lg:block"
                                 aria-hidden="true"
                             >
                                 <CardSwap
@@ -751,7 +832,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         return (
                                             <Card
                                                 key={card.title}
-                                                customClass="overflow-hidden border-white/80 bg-white/92 p-6 text-[var(--school-ink)] shadow-[0_30px_90px_-35px_rgba(15,23,42,0.55)] backdrop-blur-xl"
+                                                customClass="overflow-hidden border-white/80 bg-white/92 p-6 text-(--school-ink) shadow-[0_30px_90px_-35px_rgba(15,23,42,0.55)] backdrop-blur-xl"
                                             >
                                                 <div className="flex h-full flex-col justify-between">
                                                     <div>
@@ -767,7 +848,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                                         card.eyebrow
                                                                     }
                                                                 </div>
-                                                                <h2 className="mt-2 truncate font-heading text-2xl text-[var(--school-ink)]">
+                                                                <h2 className="mt-2 truncate font-heading text-2xl text-(--school-ink)">
                                                                     {card.title}
                                                                 </h2>
                                                             </div>
@@ -783,7 +864,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         </div>
 
                                                         <div className="mt-7">
-                                                            <div className="font-heading text-4xl leading-none text-[var(--school-ink)]">
+                                                            <div className="font-heading text-4xl leading-none text-(--school-ink)">
                                                                 {card.stat}
                                                             </div>
                                                             <div className="mt-2 text-[0.68rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
@@ -854,7 +935,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                             <span className="text-[0.55rem] font-bold tracking-[0.3em] text-white/40 uppercase">
                                 Scroll
                             </span>
-                            <div className="h-8 w-[1.5px] bg-gradient-to-b from-white/40 to-transparent" />
+                            <div className="h-8 w-[1.5px] bg-linear-to-b from-white/40 to-transparent" />
                         </motion.div>
                     </motion.div>
                 </motion.section>
@@ -907,10 +988,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 {String(i + 1).padStart(2, '0')}
                                             </div>
                                         </div>
-                                        <h3 className="mt-5 font-heading text-xl text-[var(--school-ink)]">
+                                        <h3 className="mt-5 font-heading text-xl text-(--school-ink)">
                                             {item.label}
                                         </h3>
-                                        <div className="mt-3 font-heading text-2xl text-[var(--school-ink)]">
+                                        <div className="mt-3 font-heading text-2xl text-(--school-ink)">
                                             {item.value}
                                         </div>
                                     </div>
@@ -938,10 +1019,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={motionViewport}
-                                className="flex flex-col justify-center rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_-30px_rgba(15,118,110,0.15)] backdrop-blur-xl md:p-8"
+                                className="flex flex-col justify-center rounded-4xl border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_-30px_rgba(15,118,110,0.15)] backdrop-blur-xl md:p-8"
                             >
                                 <div className="space-y-5">
-                                    <h3 className="font-heading text-lg font-semibold text-[var(--school-ink)]">
+                                    <h3 className="font-heading text-lg font-semibold text-(--school-ink)">
                                         Ringkasan Kapasitas
                                     </h3>
                                     <div className="grid grid-cols-2 gap-4">
@@ -950,20 +1031,20 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 key={q.trackType}
                                                 className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4"
                                             >
-                                                <div className="text-2xl font-bold text-[var(--school-ink)]">
+                                                <div className="text-2xl font-bold text-(--school-ink)">
                                                     {q.quotaSeats}
                                                 </div>
                                                 <div className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                     {q.trackType}
                                                 </div>
-                                                <div className="text-xs text-[var(--school-muted)]">
+                                                <div className="text-xs text-(--school-muted)">
                                                     {q.quotaPercentage}%
                                                     kapasitas
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-teal-50 p-4">
+                                    <div className="rounded-2xl border border-emerald-100 bg-linear-to-br from-emerald-50 to-teal-50 p-4">
                                         <div className="text-3xl font-bold text-emerald-700">
                                             {ppdb.capacity}
                                         </div>
@@ -1063,7 +1144,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             >
                                                 {quota.trackType}
                                             </div>
-                                            <div className="mt-2 font-heading text-3xl text-[var(--school-ink)]">
+                                            <div className="mt-2 font-heading text-3xl text-(--school-ink)">
                                                 <AnimatedCounter
                                                     value={quota.quotaSeats}
                                                 />
@@ -1086,7 +1167,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                     }}
                                                     className="mt-4 rounded-xl border border-emerald-50 bg-[rgba(240,253,244,0.6)] px-3 py-2.5"
                                                 >
-                                                    <p className="text-[0.72rem] leading-relaxed text-[var(--school-muted)]">
+                                                    <p className="text-[0.72rem] leading-relaxed text-(--school-muted)">
                                                         {config.description}
                                                     </p>
                                                 </motion.div>
@@ -1107,6 +1188,189 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         description="Klik peta, masukkan alamat, atau gunakan GPS untuk menghitung jarak domisili ke sekolah."
                     />
 
+                    <motion.div
+                        variants={fadeUp}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={motionViewport}
+                    >
+                        <BorderGlow
+                            borderRadius={32}
+                            colors={[
+                                zonasiVisualizationAccent,
+                                '#0EA5E9',
+                                '#8B5CF6',
+                            ]}
+                            className="relative overflow-hidden rounded-4xl border border-white/70 bg-white/88 shadow-[0_28px_80px_-40px_rgba(15,23,42,0.22)] backdrop-blur-xl"
+                        >
+                            <div
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                    background: `radial-gradient(circle at top left, ${zonasiVisualizationAccent}12, transparent 32%), radial-gradient(circle at bottom right, rgba(14,165,233,0.1), transparent 28%)`,
+                                }}
+                            />
+
+                            <div className="relative z-10 grid gap-8 p-6 md:p-8 xl:grid-cols-[minmax(0,0.8fr)_minmax(320px,1fr)] xl:items-center">
+                                <div className="space-y-6">
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <div
+                                            className="flex size-11 items-center justify-center rounded-2xl border bg-white shadow-sm"
+                                            style={{
+                                                borderColor: `${zonasiVisualizationAccent}35`,
+                                                color: zonasiVisualizationAccent,
+                                            }}
+                                        >
+                                            <Sparkles className="size-5" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div
+                                                className="text-[0.68rem] font-bold tracking-[0.24em] uppercase"
+                                                style={{
+                                                    color: zonasiVisualizationAccent,
+                                                }}
+                                            >
+                                                Matrix Zonasi
+                                            </div>
+                                            <div className="font-heading text-2xl text-(--school-ink) md:text-3xl">
+                                                Baca sebaran radius sebelum
+                                                kirim formulir.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p className="max-w-2xl text-sm leading-relaxed text-(--school-muted) md:text-base">
+                                        Pusat sekolah tetap menjadi acuan
+                                        pembacaan radius. Gunakan jalur aktif,
+                                        status simulasi, dan titik rumah untuk
+                                        menilai peluang awal sebelum melanjutkan
+                                        pengiriman data.
+                                    </p>
+
+                                    <div className="grid gap-3 sm:grid-cols-2">
+                                        {zonasiMatrixCards.map((item) => {
+                                            const ItemIcon = item.icon;
+
+                                            return (
+                                                <div
+                                                    key={item.label}
+                                                    className="rounded-[1.35rem] border border-white/80 bg-white/82 p-4 shadow-sm"
+                                                >
+                                                    <div className="flex items-start justify-between gap-3">
+                                                        <div className="min-w-0">
+                                                            <div className="text-[0.62rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
+                                                                {item.label}
+                                                            </div>
+                                                            <div className="mt-2 min-w-0 truncate font-heading text-xl text-(--school-ink) sm:text-2xl">
+                                                                {item.value}
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className="flex size-10 shrink-0 items-center justify-center rounded-xl border bg-white"
+                                                            style={{
+                                                                borderColor: `${zonasiVisualizationAccent}25`,
+                                                                color: zonasiVisualizationAccent,
+                                                            }}
+                                                        >
+                                                            <ItemIcon className="size-4" />
+                                                        </div>
+                                                    </div>
+                                                    <p className="mt-2 text-xs leading-relaxed text-(--school-muted)">
+                                                        {item.helper}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <div className="relative min-h-80 overflow-hidden rounded-[1.7rem] border border-slate-200/80 px-5 py-6 sm:px-6">
+                                    <div className="relative z-10 flex h-full flex-col gap-5">
+                                        <div className="flex flex-wrap items-center justify-between gap-3">
+                                            <div className="space-y-1">
+                                                <div className="text-[0.62rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
+                                                    Zona Reaktif
+                                                </div>
+                                                <div className="font-heading text-xl text-(--school-ink) md:text-2xl">
+                                                    {preview
+                                                        ? preview.insideZone
+                                                            ? 'Area Masih Dalam Jangkauan'
+                                                            : 'Pertimbangkan Jalur Tambahan'
+                                                        : 'Tunggu Titik Rumah Dipilih'}
+                                                </div>
+                                            </div>
+                                            <div
+                                                className="rounded-full border px-4 py-2 text-[0.62rem] font-bold tracking-[0.2em] uppercase"
+                                                style={{
+                                                    borderColor: `${zonasiVisualizationAccent}50`,
+                                                    backgroundColor: `${zonasiVisualizationAccent}18`,
+                                                    color: zonasiVisualizationAccent,
+                                                }}
+                                            >
+                                                {preview
+                                                    ? preview.insideZone
+                                                        ? 'Zona Aman'
+                                                        : 'Zona Terluar'
+                                                    : 'Siap Dibaca'}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-1 items-center justify-center">
+                                            <Cubes
+                                                className="mx-auto max-w-[24rem] cursor-pointer"
+                                                gridSize={8}
+                                                maxAngle={
+                                                    preview
+                                                        ? preview.insideZone
+                                                            ? 50
+                                                            : 36
+                                                        : 42
+                                                }
+                                                radius={
+                                                    preview
+                                                        ? preview.insideZone
+                                                            ? 2.6
+                                                            : 3.1
+                                                        : 2.8
+                                                }
+                                                cellGap={{ row: 10, col: 10 }}
+                                                borderStyle={`1.5px dashed ${zonasiVisualizationCubeBorder}`}
+                                                faceColor={
+                                                    zonasiVisualizationFaceColor
+                                                }
+                                                rippleColor={
+                                                    zonasiVisualizationRipple
+                                                }
+                                                rippleSpeed={
+                                                    preview
+                                                        ? preview.insideZone
+                                                            ? 1.8
+                                                            : 1.35
+                                                        : 1.55
+                                                }
+                                                shadow={
+                                                    zonasiVisualizationShadow
+                                                }
+                                                autoAnimate={false}
+                                                rippleOnClick
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2">
+                                            {zonasiMatrixChips.map((chip) => (
+                                                <span
+                                                    key={chip}
+                                                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[0.64rem] font-semibold tracking-[0.16em] text-slate-600 uppercase"
+                                                >
+                                                    {chip}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </BorderGlow>
+                    </motion.div>
+
                     <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
                         {/* ── FORM PANEL ── */}
                         <motion.div
@@ -1121,14 +1385,14 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     colors={['#10B981', '#0EA5E9', '#8B5CF6']}
                                     className="relative overflow-hidden rounded-[1.9rem] border border-white/70 bg-white/88 shadow-[0_28px_80px_-50px_rgba(15,118,110,0.45)]"
                                 >
-                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/[0.02] via-transparent to-violet-500/[0.02]" />
+                                    <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-emerald-500/2 via-transparent to-violet-500/2" />
                                     <div className="relative z-10 space-y-5 p-7 md:p-8">
                                         <div className="flex items-center gap-3">
                                             <div className="flex size-10 items-center justify-center rounded-xl border border-emerald-100 bg-[rgba(236,253,245,0.7)] text-emerald-600 shadow-sm">
                                                 <FileText className="size-4" />
                                             </div>
                                             <div>
-                                                <h3 className="font-heading text-lg text-[var(--school-ink)]">
+                                                <h3 className="font-heading text-lg text-(--school-ink)">
                                                     Formulir Pendaftaran
                                                 </h3>
                                                 <p className="text-[0.65rem] tracking-[0.2em] text-slate-500 uppercase">
@@ -1181,7 +1445,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         type={
                                                             field.type ?? 'text'
                                                         }
-                                                        className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40 focus:ring-emerald-500/20"
+                                                        className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-(--school-ink) shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40 focus:ring-emerald-500/20"
                                                     />
                                                 </div>
                                             ))}
@@ -1197,7 +1461,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         event.target.value,
                                                     )
                                                 }
-                                                className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white/60 pr-4 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all outline-none focus:border-emerald-500/40"
+                                                className="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white/60 pr-4 pl-11 text-sm text-(--school-ink) shadow-sm transition-all outline-none focus:border-emerald-500/40"
                                             >
                                                 {(ppdb?.trackQuotas ?? []).map(
                                                     (quota) => (
@@ -1231,7 +1495,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         setGeocodeResults([]);
                                                     }}
                                                     placeholder="Alamat lengkap rumah"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 pl-11 text-sm text-(--school-ink) shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                             </div>
 
@@ -1244,7 +1508,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         )
                                                     }
                                                     placeholder="Latitude"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-(--school-ink) shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                                 <Input
                                                     value={longitude}
@@ -1254,7 +1518,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                         )
                                                     }
                                                     placeholder="Longitude"
-                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-[var(--school-ink)] shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
+                                                    className="h-12 rounded-xl border-slate-200 bg-white/60 text-sm text-(--school-ink) shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-500/40"
                                                 />
                                             </div>
                                         </div>
@@ -1264,7 +1528,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             <Button
                                                 type="button"
                                                 variant="outline"
-                                                className="rounded-full border-[var(--school-green-200)] bg-white/80 text-xs text-[var(--school-green-700)] hover:bg-[var(--school-green-50)] hover:text-[var(--school-green-800)]"
+                                                className="rounded-full border-(--school-green-200) bg-white/80 text-xs text-(--school-green-700) hover:bg-(--school-green-50) hover:text-(--school-green-800)"
                                                 onClick={
                                                     handleUseCurrentLocation
                                                 }
@@ -1339,7 +1603,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                             }}
                                                             className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 text-left transition-all hover:border-emerald-200 hover:bg-emerald-50"
                                                         >
-                                                            <div className="text-sm font-medium text-[var(--school-ink)]">
+                                                            <div className="text-sm font-medium text-(--school-ink)">
                                                                 {
                                                                     result.displayName
                                                                 }
@@ -1369,12 +1633,12 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             }
                                             rows={3}
                                             placeholder="Ringkasan prestasi (opsional)"
-                                            className="w-full resize-none rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-[var(--school-ink)] shadow-sm transition-all outline-none placeholder:text-slate-400 focus:border-emerald-500/40"
+                                            className="w-full resize-none rounded-xl border border-slate-200 bg-white/60 px-4 py-3 text-sm text-(--school-ink) shadow-sm transition-all outline-none placeholder:text-slate-400 focus:border-emerald-500/40"
                                         />
 
                                         {/* Checkbox Flags */}
                                         <div className="grid gap-3 md:grid-cols-2">
-                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] shadow-sm transition-all hover:bg-white/90">
+                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-(--school-muted) shadow-sm transition-all hover:bg-white/90">
                                                 <input
                                                     type="checkbox"
                                                     checked={ketmFlag}
@@ -1388,7 +1652,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 />
                                                 Afirmasi KETM
                                             </label>
-                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-[var(--school-muted)] shadow-sm transition-all hover:bg-white/90">
+                                            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 px-4 py-3.5 text-sm text-(--school-muted) shadow-sm transition-all hover:bg-white/90">
                                                 <input
                                                     type="checkbox"
                                                     checked={
@@ -1410,10 +1674,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         <div className="rounded-2xl border border-emerald-100 bg-[rgba(240,253,244,0.6)] p-5 backdrop-blur-sm">
                                             <div className="flex items-center justify-between gap-4">
                                                 <div>
-                                                    <div className="text-[0.65rem] font-bold tracking-[0.2em] text-[var(--school-green-700)] uppercase">
+                                                    <div className="text-[0.65rem] font-bold tracking-[0.2em] text-(--school-green-700) uppercase">
                                                         Status Zona
                                                     </div>
-                                                    <div className="mt-2 font-heading text-2xl text-[var(--school-ink)]">
+                                                    <div className="mt-2 font-heading text-2xl text-(--school-ink)">
                                                         {preview ? (
                                                             preview.insideZone ? (
                                                                 <span className="inline-flex items-center gap-2 text-emerald-600">
@@ -1436,7 +1700,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 </div>
                                                 {preview && (
                                                     <div className="text-right">
-                                                        <div className="font-heading text-3xl text-[var(--school-ink)]">
+                                                        <div className="font-heading text-3xl text-(--school-ink)">
                                                             {numberFormatter.format(
                                                                 preview.distanceKm,
                                                             )}
@@ -1476,9 +1740,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                         <button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="relative w-full overflow-hidden rounded-2xl border border-[var(--school-green-600)] bg-[var(--school-green-700)] px-8 py-4 font-heading text-base text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-[var(--school-green-600)] hover:shadow-xl hover:shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="relative w-full overflow-hidden rounded-2xl border border-(--school-green-600) bg-(--school-green-700) px-8 py-4 font-heading text-base text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-(--school-green-600) hover:shadow-xl hover:shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
-                                            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 transition-transform duration-700 hover:translate-x-full" />
+                                            <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-white/0 via-white/20 to-white/0 transition-transform duration-700 hover:translate-x-full" />
                                             {isSubmitting ? (
                                                 <span className="relative flex items-center justify-center gap-2">
                                                     <LoaderCircle className="size-5 animate-spin" />
@@ -1511,7 +1775,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     <div className="p-3">
                                         <Suspense
                                             fallback={
-                                                <div className="flex h-[480px] items-center justify-center rounded-[1.6rem] border border-slate-100 bg-slate-50 text-slate-400">
+                                                <div className="flex h-120 items-center justify-center rounded-[1.6rem] border border-slate-100 bg-slate-50 text-slate-400">
                                                     <LoaderCircle className="size-8 animate-spin" />
                                                 </div>
                                             }
@@ -1559,7 +1823,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 key={stat.label}
                                                 className="border-r border-slate-100 bg-white/50 p-4 text-center last:border-r-0"
                                             >
-                                                <div className="text-[0.55rem] font-bold tracking-[0.25em] text-[var(--school-green-700)] uppercase">
+                                                <div className="text-[0.55rem] font-bold tracking-[0.25em] text-(--school-green-700) uppercase">
                                                     {stat.label}
                                                 </div>
                                                 <div className="mt-1.5 truncate font-mono text-xs text-slate-600">
@@ -1590,10 +1854,10 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                     <div className="p-7">
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
-                                                <div className="text-[0.65rem] font-bold tracking-[0.2em] text-[var(--school-green-700)] uppercase">
+                                                <div className="text-[0.65rem] font-bold tracking-[0.2em] text-(--school-green-700) uppercase">
                                                     Panel Hasil Simulasi
                                                 </div>
-                                                <div className="mt-3 font-heading text-4xl text-[var(--school-ink)]">
+                                                <div className="mt-3 font-heading text-4xl text-(--school-ink)">
                                                     {preview
                                                         ? `${numberFormatter.format(preview.distanceKm)} km`
                                                         : 'Belum ada data'}
@@ -1602,8 +1866,8 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                             <div
                                                 className={`rounded-full border px-5 py-2.5 text-xs font-bold tracking-[0.2em] uppercase backdrop-blur-md ${
                                                     preview?.insideZone
-                                                        ? 'border-emerald-200 bg-[rgba(220,252,231,0.68)] text-[var(--school-green-800)]'
-                                                        : 'border-amber-200 bg-[rgba(255,251,235,0.94)] text-[var(--school-gold-700)]'
+                                                        ? 'border-emerald-200 bg-[rgba(220,252,231,0.68)] text-(--school-green-800)'
+                                                        : 'border-amber-200 bg-[rgba(255,251,235,0.94)] text-(--school-gold-700)'
                                                 }`}
                                             >
                                                 {preview
@@ -1626,11 +1890,11 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                             color: currentTrackConfig.accent,
                                                         }}
                                                     />
-                                                    <span className="font-heading text-lg text-[var(--school-ink)] capitalize">
+                                                    <span className="font-heading text-lg text-(--school-ink) capitalize">
                                                         {trackType}
                                                     </span>
                                                 </div>
-                                                <p className="mt-1.5 text-xs text-[var(--school-muted)]">
+                                                <p className="mt-1.5 text-xs text-(--school-muted)">
                                                     {selectedQuota
                                                         ? `${numberFormatter.format(selectedQuota.quotaSeats)} kursi • ${numberFormatter.format(selectedQuota.quotaPercentage)}%`
                                                         : 'Mengikuti konfigurasi panitia.'}
@@ -1640,12 +1904,12 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                                                 <div className="text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 uppercase">
                                                     Langkah Berikutnya
                                                 </div>
-                                                <div className="mt-2 font-heading text-lg text-[var(--school-ink)]">
+                                                <div className="mt-2 font-heading text-lg text-(--school-ink)">
                                                     {submissionResult
                                                         ? submissionResult.registrationNumber
                                                         : 'Lengkapi formulir'}
                                                 </div>
-                                                <p className="mt-1.5 text-xs text-[var(--school-muted)]">
+                                                <p className="mt-1.5 text-xs text-(--school-muted)">
                                                     {submissionResult
                                                         ? 'Simpan nomor pendaftaran untuk verifikasi.'
                                                         : 'Input koordinat rumah, lalu kirim formulir.'}

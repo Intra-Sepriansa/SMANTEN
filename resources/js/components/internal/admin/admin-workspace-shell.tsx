@@ -23,7 +23,9 @@ type AdminWorkspaceAction = {
     label: string;
     href: NonNullable<InertiaLinkProps['href']>;
     detail?: string;
+    external?: boolean;
     icon?: LucideIcon;
+    target?: string;
     tone?: AdminTone;
 };
 
@@ -244,6 +246,47 @@ export function AdminWorkspaceShell({
                     {actions.map((action) => {
                         const tone = toneStyles[action.tone ?? 'slate'];
                         const ActionIcon = action.icon ?? currentWorkspace.icon;
+                        const actionCardClassName = cn(
+                            'admin-action-card group flex h-full items-start gap-4 overflow-hidden rounded-lg border bg-white/80 p-4 shadow-xl shadow-neutral-900/5 backdrop-blur transition dark:bg-neutral-950/55 dark:shadow-black/20',
+                            tone.border,
+                        );
+                        const actionContent = (
+                            <>
+                                <span
+                                    className={cn(
+                                        'admin-card-icon flex size-11 shrink-0 items-center justify-center rounded-lg shadow-lg',
+                                        tone.icon,
+                                    )}
+                                >
+                                    <ActionIcon className="size-5" />
+                                </span>
+
+                                <span className="min-w-0 flex-1">
+                                    <span
+                                        className={cn(
+                                            'inline-flex rounded-lg border px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] uppercase',
+                                            tone.badge,
+                                        )}
+                                    >
+                                        Shortcut
+                                    </span>
+                                    <span className="mt-3 flex items-center justify-between gap-3 text-sm font-bold text-neutral-950 dark:text-white">
+                                        {action.label}
+                                        <ArrowUpRight
+                                            className={cn(
+                                                'size-4 shrink-0 transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5',
+                                                tone.text,
+                                            )}
+                                        />
+                                    </span>
+                                    {action.detail && (
+                                        <span className="mt-1 block text-sm leading-5 text-neutral-500 dark:text-neutral-400">
+                                            {action.detail}
+                                        </span>
+                                    )}
+                                </span>
+                            </>
+                        );
 
                         return (
                             <motion.div
@@ -257,48 +300,34 @@ export function AdminWorkspaceShell({
                                     damping: 24,
                                 }}
                             >
-                                <Link
-                                    href={action.href}
-                                    prefetch
-                                    className={cn(
-                                        'admin-action-card group flex h-full items-start gap-4 overflow-hidden rounded-lg border bg-white/80 p-4 shadow-xl shadow-neutral-900/5 backdrop-blur transition dark:bg-neutral-950/55 dark:shadow-black/20',
-                                        tone.border,
-                                    )}
-                                >
-                                    <span
-                                        className={cn(
-                                            'admin-card-icon flex size-11 shrink-0 items-center justify-center rounded-lg shadow-lg',
-                                            tone.icon,
-                                        )}
+                                {action.external ? (
+                                    <a
+                                        href={
+                                            typeof action.href === 'string'
+                                                ? action.href
+                                                : 'url' in action.href
+                                                  ? action.href.url
+                                                  : '#'
+                                        }
+                                        target={action.target}
+                                        rel={
+                                            action.target === '_blank'
+                                                ? 'noreferrer'
+                                                : undefined
+                                        }
+                                        className={actionCardClassName}
                                     >
-                                        <ActionIcon className="size-5" />
-                                    </span>
-
-                                    <span className="min-w-0 flex-1">
-                                        <span
-                                            className={cn(
-                                                'inline-flex rounded-lg border px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] uppercase',
-                                                tone.badge,
-                                            )}
-                                        >
-                                            Shortcut
-                                        </span>
-                                        <span className="mt-3 flex items-center justify-between gap-3 text-sm font-bold text-neutral-950 dark:text-white">
-                                            {action.label}
-                                            <ArrowUpRight
-                                                className={cn(
-                                                    'size-4 shrink-0 transition duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5',
-                                                    tone.text,
-                                                )}
-                                            />
-                                        </span>
-                                        {action.detail && (
-                                            <span className="mt-1 block text-sm leading-5 text-neutral-500 dark:text-neutral-400">
-                                                {action.detail}
-                                            </span>
-                                        )}
-                                    </span>
-                                </Link>
+                                        {actionContent}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        href={action.href}
+                                        prefetch
+                                        className={actionCardClassName}
+                                    >
+                                        {actionContent}
+                                    </Link>
+                                )}
                             </motion.div>
                         );
                     })}

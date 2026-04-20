@@ -16,6 +16,17 @@ export type PublicPortalNavigationItemSetting = {
     position: number;
 };
 
+export type PublicPortalSeoSettings = {
+    title: string;
+    description: string;
+    keywords: string;
+};
+
+export type PublicPortalPublishingSettings = {
+    status: 'draft' | 'published' | 'scheduled';
+    scheduled_at: string | null;
+};
+
 export type PublicPortalSettings = {
     hero: {
         slides: PublicPortalHeroSlide[];
@@ -24,6 +35,8 @@ export type PublicPortalSettings = {
     navigation: {
         items: PublicPortalNavigationItemSetting[];
     };
+    publishing: PublicPortalPublishingSettings;
+    seo: PublicPortalSeoSettings;
 };
 
 export type SharedSiteSettings = {

@@ -7,6 +7,7 @@ import {
     CalendarDays,
     ClipboardList,
     Clock3,
+    Download,
     FileText,
     Flag,
     GraduationCap,
@@ -46,6 +47,7 @@ import {
     teachers,
     website,
 } from '@/routes/dashboard/admin';
+import { activityLogs } from '@/routes/internal-api/exports';
 
 type FocusTone = 'amber' | 'rose' | 'sky' | 'violet';
 
@@ -578,6 +580,20 @@ export default function AdminDashboard({
                                 <RefreshCw className="size-4" />
                                 Refresh
                             </motion.button>
+                            <motion.a
+                                variants={itemVariants}
+                                whileHover={{
+                                    scale: 1.02,
+                                    backgroundColor:
+                                        'rgba(255, 255, 255, 0.25)',
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                href={activityLogs.url()}
+                                className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/20 bg-white/20 px-4 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition"
+                            >
+                                <Download className="size-4" />
+                                Export Log
+                            </motion.a>
                         </motion.div>
                     </div>
                 </motion.section>
@@ -1086,8 +1102,17 @@ export default function AdminDashboard({
                                         </h3>
                                     </div>
 
-                                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-sky-400 to-violet-600 text-white shadow-lg shadow-sky-500/30">
-                                        <Activity className="size-5" />
+                                    <div className="flex items-center gap-2">
+                                        <a
+                                            href={activityLogs.url()}
+                                            className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-white/80 px-3 py-2 text-xs font-semibold text-sky-700 shadow-sm transition hover:bg-white dark:border-sky-400/20 dark:bg-neutral-950/50 dark:text-sky-200"
+                                        >
+                                            <Download className="size-4" />
+                                            Export
+                                        </a>
+                                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-sky-400 to-violet-600 text-white shadow-lg shadow-sky-500/30">
+                                            <Activity className="size-5" />
+                                        </div>
                                     </div>
                                 </div>
 

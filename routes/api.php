@@ -1,13 +1,16 @@
 <?php
 
 use App\Http\Controllers\Api\Public\AlumniForumController;
+use App\Http\Controllers\Api\Public\GlobalSearchController;
 use App\Http\Controllers\Api\Public\PpdbApplicationController;
 use App\Http\Controllers\Api\Public\PublicDiscoveryController;
+use App\Http\Controllers\Api\Public\TracerStudyController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('public')->name('api.public.')->group(function () {
+    Route::get('search', GlobalSearchController::class)->name('search');
     Route::get('geocode/search', [PublicDiscoveryController::class, 'geocode'])->name('geocode.search');
     Route::get('geocode/reverse', [PublicDiscoveryController::class, 'reverse'])->name('geocode.reverse');
     Route::get('organization/archive', [PublicDiscoveryController::class, 'organizationArchive'])->name('organization.archive');
@@ -23,6 +26,10 @@ Route::prefix('public')->name('api.public.')->group(function () {
     Route::post('alumni-forum/{post}/reactions', [AlumniForumController::class, 'react'])
         ->middleware('throttle:alumni-forum-react')
         ->name('alumni-forum.reactions.store');
+
+    Route::post('tracer-study', [TracerStudyController::class, 'store'])
+        ->middleware('throttle:alumni-forum-store')
+        ->name('tracer-study.store');
 });
 
 Route::prefix('ppdb')->name('api.ppdb.')->group(function () {

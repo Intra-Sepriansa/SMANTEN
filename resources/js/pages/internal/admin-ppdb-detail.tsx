@@ -6,6 +6,7 @@ import {
     Mail,
     MapPinned,
     Phone,
+    Printer,
     RefreshCcw,
     School,
     ShieldCheck,
@@ -40,7 +41,7 @@ import { dashboard } from '@/routes';
 import { ppdb as publicPpdb } from '@/routes';
 import { admin as adminDashboard } from '@/routes/dashboard';
 import { ppdb as adminPpdb } from '@/routes/dashboard/admin';
-import { evaluate } from '@/routes/internal-api/ppdb-applications';
+import { evaluate, receipt } from '@/routes/internal-api/ppdb-applications';
 import { update as updatePpdbStatus } from '@/routes/internal-api/ppdb-applications/status';
 
 type AdminPpdbDetailProps = {
@@ -238,6 +239,15 @@ export default function AdminPpdbDetail({
                         icon: LayoutDashboard,
                         tone: 'emerald',
                     },
+                    {
+                        label: 'Cetak Bukti',
+                        href: receipt(application.id),
+                        detail: 'Buka halaman bukti pendaftaran siap print.',
+                        external: true,
+                        icon: Printer,
+                        target: '_blank',
+                        tone: 'sky',
+                    },
                 ]}
             >
                 <div className="grid gap-6">
@@ -381,7 +391,8 @@ export default function AdminPpdbDetail({
                                     Alamat lengkap
                                 </div>
                                 <p className="mt-3 text-sm leading-6 text-neutral-700 dark:text-neutral-200">
-                                    {application.address || 'Alamat belum lengkap.'}
+                                    {application.address ||
+                                        'Alamat belum lengkap.'}
                                 </p>
                             </div>
                         </AdminPanel>
@@ -395,7 +406,8 @@ export default function AdminPpdbDetail({
                                 </div>
                                 <div className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                                     {application.documentsSummary.verified}/
-                                    {application.documentsSummary.total} verified
+                                    {application.documentsSummary.total}{' '}
+                                    verified
                                 </div>
                             </div>
 
@@ -416,7 +428,8 @@ export default function AdminPpdbDetail({
                                                         {document.type}
                                                     </div>
                                                     <div className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                                                        {document.originalName} •{' '}
+                                                        {document.originalName}{' '}
+                                                        •{' '}
                                                         {formatPpdbBytes(
                                                             document.sizeBytes,
                                                         )}
@@ -527,14 +540,16 @@ export default function AdminPpdbDetail({
                                                 <SelectValue placeholder="Pilih status" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {decisionOptions.map((option) => (
-                                                    <SelectItem
-                                                        key={option.value}
-                                                        value={option.value}
-                                                    >
-                                                        {option.label}
-                                                    </SelectItem>
-                                                ))}
+                                                {decisionOptions.map(
+                                                    (option) => (
+                                                        <SelectItem
+                                                            key={option.value}
+                                                            value={option.value}
+                                                        >
+                                                            {option.label}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -614,7 +629,8 @@ export default function AdminPpdbDetail({
                                             Review terbaru
                                         </div>
                                         <div className="mt-2 text-sm font-semibold text-neutral-950 dark:text-white">
-                                            {application.latestReview?.statusLabel ??
+                                            {application.latestReview
+                                                ?.statusLabel ??
                                                 'Belum ada review'}
                                         </div>
                                         <div className="mt-1 text-xs leading-5 text-neutral-500 dark:text-neutral-400">

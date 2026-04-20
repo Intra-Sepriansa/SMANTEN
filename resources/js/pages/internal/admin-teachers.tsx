@@ -1,5 +1,10 @@
 import { Head } from '@inertiajs/react';
-import { CalendarDays, FileText, LayoutDashboard } from 'lucide-react';
+import {
+    CalendarDays,
+    Download,
+    FileText,
+    LayoutDashboard,
+} from 'lucide-react';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -9,6 +14,7 @@ import { formatAdminDateTime } from '@/lib/admin-format';
 import { dashboard } from '@/routes';
 import { admin as adminDashboard } from '@/routes/dashboard';
 import { articles, schedule } from '@/routes/dashboard/admin';
+import { teachers as exportTeachers } from '@/routes/internal-api/exports';
 
 type TeacherDesk = {
     teachers: Array<{
@@ -98,6 +104,27 @@ export default function AdminTeachers({
                     },
                 ]}
             >
+                <section className="space-y-4">
+                    <AdminPanel className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div className="text-sm font-semibold text-neutral-950 dark:text-white">
+                                Export Data Guru
+                            </div>
+                            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                                Unduh data guru dan tenaga pendidik untuk rekap
+                                Excel.
+                            </p>
+                        </div>
+                        <a
+                            href={exportTeachers.url()}
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-(--school-green-700) px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-(--school-green-600)"
+                        >
+                            <Download className="size-4" />
+                            Download CSV
+                        </a>
+                    </AdminPanel>
+                </section>
+
                 <section className="space-y-4">
                     <AdminSectionIntro
                         eyebrow="Security Snapshot"

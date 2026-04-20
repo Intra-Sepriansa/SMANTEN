@@ -175,7 +175,7 @@ export default function MediaPage({ school }: MediaPageProps) {
                 />
             </Head>
 
-            <div className="space-y-16 pb-20 lg:space-y-24">
+            <div className="space-y-10 pb-16 lg:space-y-14">
                 <motion.section
                     ref={heroRef}
                     initial={{ opacity: 0 }}

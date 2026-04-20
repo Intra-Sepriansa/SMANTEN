@@ -1,9 +1,10 @@
 import { Link } from '@inertiajs/react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { index as beritaIndex } from '@/routes/berita';
 
 const slides = [
     {
@@ -30,6 +31,7 @@ const slides = [
 
 export function HeroCarousel() {
     const [current, setCurrent] = useState(0);
+    const prefersReducedMotion = useReducedMotion();
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -63,11 +65,11 @@ export function HeroCarousel() {
                 </motion.div>
             </AnimatePresence>
 
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/55 via-black/35 to-black/60" />
 
-            <div className="absolute inset-0 z-10 flex min-h-full items-center">
-                <div className="mx-auto w-full max-w-[84rem] px-5 md:px-8">
-                    <div className="w-full max-w-3xl space-y-6">
+            <div className="absolute inset-0 z-10 flex min-h-full items-center justify-center">
+                <div className="mx-auto w-full max-w-[84rem] px-5 text-center md:px-8">
+                    <div className="mx-auto flex w-full max-w-4xl flex-col items-center space-y-6">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={current}
@@ -75,7 +77,7 @@ export function HeroCarousel() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                className="space-y-4"
+                                className="flex flex-col items-center space-y-4"
                             >
                                 <div className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-white uppercase backdrop-blur">
                                     {slides[current].subtitle}
@@ -90,15 +92,54 @@ export function HeroCarousel() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.5 }}
+                            className="flex justify-center"
                         >
                             <Button
                                 asChild
                                 size="lg"
-                                className="group relative mt-6 overflow-hidden rounded-none bg-[#0E9EE4] px-8 py-7 text-sm font-semibold tracking-widest text-white uppercase shadow-[0_0_40px_-10px_rgba(14,158,228,0.5)] transition-all hover:bg-[#0b86c2] hover:pr-12"
+                                className="group/cta relative mt-6 h-auto min-h-0 overflow-hidden rounded-[8px] border border-white/16 bg-[linear-gradient(135deg,rgba(22,121,111,0.96),rgba(15,91,85,0.98))] px-0 py-0 text-sm font-semibold tracking-[0.18em] text-white uppercase shadow-[0_24px_60px_-24px_rgba(15,91,85,0.78)] transition-transform duration-500 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-24px_rgba(15,91,85,0.86)] focus-visible:ring-white/70"
                             >
-                                <Link href="/berita">
-                                    Lihat Berita
-                                    <ChevronRight className="absolute right-4 size-5 translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+                                <Link
+                                    href={beritaIndex()}
+                                    prefetch
+                                    className="relative flex items-center gap-3 overflow-hidden px-5 py-4 sm:px-6"
+                                >
+                                    <span className="pointer-events-none absolute inset-y-0 left-0 w-14 bg-[linear-gradient(180deg,rgba(243,168,29,0.22),rgba(247,191,89,0.05))]" />
+                                    <motion.span
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.34)_50%,transparent_78%)]"
+                                        initial={
+                                            prefersReducedMotion
+                                                ? false
+                                                : { x: '-135%' }
+                                        }
+                                        animate={
+                                            prefersReducedMotion
+                                                ? { opacity: 0 }
+                                                : { x: '135%' }
+                                        }
+                                        transition={
+                                            prefersReducedMotion
+                                                ? { duration: 0 }
+                                                : {
+                                                      duration: 2.8,
+                                                      repeat: Infinity,
+                                                      ease: 'easeInOut',
+                                                      repeatDelay: 1.2,
+                                                  }
+                                        }
+                                    />
+                                    <span className="relative flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-white/18 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] backdrop-blur-sm transition-transform duration-500 group-hover/cta:scale-[1.05]">
+                                        <Sparkles className="size-4 text-(--school-gold-400)" />
+                                    </span>
+                                    <span className="relative flex min-w-0 items-center gap-3">
+                                        <span className="whitespace-nowrap text-left text-sm font-bold tracking-[0.22em] text-white uppercase sm:text-[0.92rem]">
+                                            Lihat Berita
+                                        </span>
+                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-[8px] border border-white/14 bg-black/10 text-white/90 transition-all duration-500 group-hover/cta:translate-x-0.5 group-hover/cta:bg-white/12 group-hover/cta:text-(--school-gold-400)">
+                                            <ArrowUpRight className="size-4" />
+                                        </span>
+                                    </span>
                                 </Link>
                             </Button>
                         </motion.div>
@@ -129,7 +170,7 @@ export function HeroCarousel() {
                         className={cn(
                             'h-2.5 cursor-pointer rounded-full border border-white/80 transition-all',
                             current === index
-                                ? 'w-8 border-[#0E9EE4] bg-[#0E9EE4]'
+                                ? 'w-8 border-(--school-gold-400) bg-(--school-gold-400)'
                                 : 'w-2.5 bg-transparent hover:bg-white/50',
                         )}
                         aria-label={`Go to slide ${index + 1}`}

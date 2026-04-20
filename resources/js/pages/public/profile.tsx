@@ -143,43 +143,6 @@ export default function ProfilePage({ school }: ProfilePageProps) {
                                 {school.address}.
                             </motion.p>
 
-                            {/* Quick Stats Row */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.5 }}
-                                className="mt-10 flex flex-wrap gap-4"
-                            >
-                                {[
-                                    { label: 'NPSN', value: school.npsn },
-                                    {
-                                        label: 'Akreditasi',
-                                        value: school.accreditation,
-                                    },
-                                    {
-                                        label: 'Kurikulum',
-                                        value:
-                                            school.curriculumName ?? 'Merdeka',
-                                    },
-                                    {
-                                        label: 'Jadwal',
-                                        value:
-                                            school.studyScheduleType ?? 'Aktif',
-                                    },
-                                ].map((s) => (
-                                    <div
-                                        key={s.label}
-                                        className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-4 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/[0.1]"
-                                    >
-                                        <div className="text-xl font-extrabold text-white md:text-2xl">
-                                            {s.value}
-                                        </div>
-                                        <div className="mt-1 text-[0.65rem] font-bold tracking-[0.2em] text-white/60 uppercase">
-                                            {s.label}
-                                        </div>
-                                    </div>
-                                ))}
-                            </motion.div>
                         </div>
                     </div>
                 </motion.section>

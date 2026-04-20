@@ -7,6 +7,10 @@ import {
     AdminWorkspaceShell,
 } from '@/components/internal/admin/admin-workspace-shell';
 import { PublicPortalCmsPanel } from '@/components/internal/admin/public-portal-cms-panel';
+import {
+    CmsRevisionHistoryPanel,
+    MediaManagerPanel,
+} from '@/components/internal/admin/website-advanced-panels';
 import { dashboard, home } from '@/routes';
 import { admin as adminDashboard } from '@/routes/dashboard';
 
@@ -99,6 +103,10 @@ export default function AdminWebsite({
 
                         <PublicPortalCmsPanel />
                     </div>
+
+                    <CmsRevisionHistoryPanel />
+
+                    <MediaManagerPanel />
 
                     <div className="space-y-4">
                         <AdminSectionIntro

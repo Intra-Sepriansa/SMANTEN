@@ -1,11 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+    Activity,
     ArrowUpRight,
+    BarChart3,
     ChevronDown,
     ChevronRight,
     Clock3,
-    GraduationCap,
     MapPin,
     Mail,
     Menu,
@@ -15,6 +16,9 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import FlowingMenu from '@/components/FlowingMenu';
+import type { FlowingMenuItemData } from '@/components/FlowingMenu';
+import { GlobalCommandPalette } from '@/components/global-command-palette';
 import { Meteors } from '@/components/public/meteors';
 import { SchoolMark } from '@/components/public/school-mark';
 import { SocialLinks } from '@/components/public/social-links';
@@ -33,6 +37,10 @@ type NavigationPresentation = {
     eyebrow: string;
     summary: string;
     accentClassName: string;
+    heroImage: string;
+    heroImagePosition?: string;
+    menuImagePositions?: string[];
+    menuImageSize?: string;
 };
 
 const schoolContact = {
@@ -52,6 +60,8 @@ const navigationPresentations: Record<string, NavigationPresentation> = {
             'Ringkasan identitas, program, berita, dan akses utama sekolah.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(15,118,110,0.18),rgba(255,255,255,0.96),rgba(56,189,248,0.18))]',
+        heroImage: '/images/sekolah/guru_mengajar.jpg',
+        heroImagePosition: 'center 34%',
     },
     '/profil': {
         eyebrow: 'Profil',
@@ -59,59 +69,115 @@ const navigationPresentations: Record<string, NavigationPresentation> = {
             'Identitas, sejarah, visi-misi, fasilitas, dan prestasi sekolah.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(15,118,110,0.18),rgba(255,255,255,0.96),rgba(251,191,36,0.18))]',
+        heroImage: '/images/profil/hero-banner.png',
+        heroImagePosition: 'center 24%',
+        menuImagePositions: [
+            '12% 22%',
+            '36% 26%',
+            '58% 34%',
+            '28% 66%',
+            '78% 58%',
+        ],
+        menuImageSize: '185%',
     },
     '/akademik': {
         eyebrow: 'Akademik',
         summary: 'Kurikulum, pembelajaran, P5, dan data akademik utama.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(14,165,233,0.18),rgba(255,255,255,0.96),rgba(15,118,110,0.18))]',
+        heroImage: '/images/akademik/hero.png',
+        heroImagePosition: 'center 30%',
+        menuImagePositions: ['10% 26%', '42% 24%', '74% 46%'],
+        menuImageSize: '190%',
     },
     '/kesiswaan': {
         eyebrow: 'Kesiswaan',
         summary: 'OSIS, MPK, prestasi, beasiswa, BK, dan ekstrakurikuler.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(5,150,105,0.18),rgba(255,255,255,0.96),rgba(251,191,36,0.16))]',
+        heroImage: '/images/sekolah/kegiatan_siswa.jpg',
+        heroImagePosition: 'center 38%',
+        menuImagePositions: [
+            '10% 18%',
+            '28% 24%',
+            '52% 34%',
+            '74% 44%',
+            '44% 72%',
+            '18% 62%',
+        ],
+        menuImageSize: '190%',
     },
     '/ppdb': {
         eyebrow: 'PPDB',
         summary: 'Informasi pendaftaran, zonasi, alur, dan akses PPDB.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(245,158,11,0.18),rgba(255,255,255,0.96),rgba(34,197,94,0.18))]',
+        heroImage: '/images/profil/hero-banner.png',
+        heroImagePosition: 'center 30%',
     },
     '/media': {
         eyebrow: 'Dokumentasi',
         summary: 'Galeri foto dan video sekolah yang ringkas.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(14,165,233,0.18),rgba(255,255,255,0.96),rgba(16,185,129,0.16))]',
+        heroImage: '/images/sekolah/kegiatan_siswa.jpg',
+        heroImagePosition: 'center 42%',
+        menuImagePositions: ['12% 30%', '44% 24%', '70% 34%', '28% 68%'],
+        menuImageSize: '185%',
     },
     '/layanan': {
         eyebrow: 'Layanan',
         summary: 'FAQ, kontak, dan layanan publik sekolah.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(16,185,129,0.18),rgba(255,255,255,0.96),rgba(124,58,237,0.14))]',
+        heroImage: '/images/sekolah/murid_belajar.jpg',
+        heroImagePosition: 'center 34%',
     },
     '/dokumen': {
         eyebrow: 'Dokumen',
         summary: 'Unduhan, formulir, dan panduan resmi sekolah.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(15,118,110,0.18),rgba(255,255,255,0.96),rgba(251,191,36,0.16))]',
+        heroImage: '/images/profil/sarana.png',
+        heroImagePosition: 'center 42%',
     },
     '/berita': {
         eyebrow: 'Berita',
         summary: 'Rilis, artikel, dan informasi terbaru sekolah.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(2,132,199,0.16),rgba(255,255,255,0.96),rgba(147,197,253,0.18))]',
+        heroImage: '/images/sekolah/kegiatan_siswa.jpg',
+        heroImagePosition: 'center 34%',
     },
     '/organisasi': {
         eyebrow: 'Komunitas',
         summary: 'Struktur sekolah, guru, alumni, dan virtual tour.',
         accentClassName:
             'bg-[linear-gradient(155deg,rgba(124,58,237,0.16),rgba(255,255,255,0.96),rgba(15,118,110,0.16))]',
+        heroImage: '/images/sekolah/guru_mengajar.jpg',
+        heroImagePosition: 'center 38%',
+        menuImagePositions: [
+            '14% 26%',
+            '34% 30%',
+            '58% 28%',
+            '78% 48%',
+            '48% 72%',
+        ],
+        menuImageSize: '190%',
     },
 };
 
 const DESKTOP_DROPDOWN_WIDTH_CLASS =
     'w-[min(46rem,calc(100vw-2.5rem))] max-w-[calc(100vw-2.5rem)]';
+
+const DEFAULT_FLOWING_MENU_POSITIONS = [
+    '12% 22%',
+    '34% 30%',
+    '58% 26%',
+    '78% 48%',
+    '46% 72%',
+    '18% 62%',
+] as const;
 
 function normalizeNavigationHref(href: string): string {
     const [hrefWithoutQuery] = href.split('?');
@@ -196,6 +262,17 @@ function getCurrentNavigationLocation(pageUrl: string): string {
     return normalizeNavigationHref(pageUrl);
 }
 
+function getMobileSubmenuId(href: string): string {
+    const normalizedHref = normalizeNavigationHref(href);
+    const submenuKey =
+        normalizedHref
+            .replace(/[^a-z0-9]+/gi, '-')
+            .replace(/^-|-$/g, '')
+            .toLowerCase() || 'root';
+
+    return `mobile-submenu-${submenuKey}`;
+}
+
 function hasNavigationSubmenu(item: NavItem): boolean {
     return getNavigationSubmenuItems(item).length > 0;
 }
@@ -207,16 +284,70 @@ function getNavigationPresentation(item: NavItem): NavigationPresentation {
             summary: `Akses ringkas menuju halaman ${item.label.toLowerCase()}.`,
             accentClassName:
                 'bg-[linear-gradient(155deg,rgba(15,118,110,0.16),rgba(255,255,255,0.96),rgba(56,189,248,0.14))]',
+            heroImage: '/images/sekolah/guru_mengajar.jpg',
+            heroImagePosition: 'center 34%',
         }
     );
+}
+
+function buildDesktopFlowingMenuItems(
+    currentPath: string,
+    submenuItems: NonNullable<NavItem['children']>,
+    presentation: NavigationPresentation,
+): FlowingMenuItemData[] {
+    const imagePositions =
+        presentation.menuImagePositions &&
+        presentation.menuImagePositions.length > 0
+            ? presentation.menuImagePositions
+            : [...DEFAULT_FLOWING_MENU_POSITIONS];
+
+    return submenuItems.map((child, index) => ({
+        link: child.href,
+        text: child.label,
+        image: presentation.heroImage,
+        imagePosition: imagePositions[index % imagePositions.length],
+        imageSize: presentation.menuImageSize ?? '180%',
+        isActive: matchesCurrentPath(currentPath, child.href),
+    }));
 }
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
     const page = usePage<{
         auth?: { user?: { name?: string } | null };
+        publicRealtime?: {
+            liveOnline: number;
+            totalVisits: number;
+            todayVisits: number;
+            totalVisitors: number;
+            todayVisitors: number;
+            pageViews: number;
+            todayPageViews: number;
+            windowMinutes: number;
+            lastUpdatedAt: string;
+        };
         siteSettings?: SharedSiteSettings;
     }>();
     const { auth } = page.props;
+    const publicRealtime = page.props.publicRealtime ?? {
+        liveOnline: 0,
+        totalVisits: 0,
+        todayVisits: 0,
+        totalVisitors: 0,
+        todayVisitors: 0,
+        pageViews: 0,
+        todayPageViews: 0,
+        windowMinutes: 5,
+        lastUpdatedAt: new Date().toISOString(),
+    };
+    const numberFormatter = useMemo(() => new Intl.NumberFormat('id-ID'), []);
+    const realtimeUpdatedAt = useMemo(
+        () =>
+            new Intl.DateTimeFormat('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+            }).format(new Date(publicRealtime.lastUpdatedAt)),
+        [publicRealtime.lastUpdatedAt],
+    );
     const mobileNavOpen = useSiteUiStore((state) => state.mobileNavOpen);
     const setMobileNavOpen = useSiteUiStore((state) => state.setMobileNavOpen);
     const currentPath = getCurrentNavigationLocation(page.url);
@@ -301,6 +432,29 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         }, 150);
     }, []);
 
+    const closeMobileNavigation = useCallback(() => {
+        setMobileNavOpen(false);
+        setMobileExpanded(null);
+        setOpenDropdown(null);
+        setHoveredNav(null);
+    }, [setMobileNavOpen]);
+
+    useEffect(() => {
+        const resetNavigationState = window.setTimeout(() => {
+            closeMobileNavigation();
+        }, 0);
+
+        return () => {
+            window.clearTimeout(resetNavigationState);
+        };
+    }, [closeMobileNavigation, currentPath]);
+
+    const toggleMobileSection = useCallback((href: string) => {
+        setMobileExpanded((currentExpanded) =>
+            currentExpanded === href ? null : href,
+        );
+    }, []);
+
     const portalHref = auth?.user ? '/dashboard' : '/login';
     const portalLabel = auth?.user ? 'Dashboard' : 'Masuk Portal';
     const footerServiceLinks = [
@@ -376,6 +530,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                         </div>
 
                         <div className="flex items-center gap-2">
+                            <GlobalCommandPalette
+                                triggerLabel="Cari"
+                                triggerClassName="group inline-flex items-center gap-2 rounded-full border border-white/75 bg-white/80 px-3.5 py-1.5 text-[0.72rem] font-semibold text-(--school-ink) shadow-[0_10px_26px_-18px_rgba(4,47,46,0.24)] transition-all hover:-translate-y-0.5 hover:bg-white"
+                            />
                             <Link
                                 href="/berita"
                                 prefetch
@@ -430,6 +588,12 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 const isOpen = openDropdown === item.href;
                                 const presentation =
                                     getNavigationPresentation(item);
+                                const flowingMenuItems =
+                                    buildDesktopFlowingMenuItems(
+                                        currentPath,
+                                        submenuItems,
+                                        presentation,
+                                    );
                                 const dropdownPositionClass =
                                     getDesktopDropdownPosition(
                                         index,
@@ -581,11 +745,25 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                     <div className="grid gap-0 md:grid-cols-[0.92fr_1fr]">
                                                         <div
                                                             className={cn(
-                                                                'relative overflow-hidden px-5 py-5',
+                                                                'relative min-h-[24rem] overflow-hidden px-5 py-5',
                                                                 presentation.accentClassName,
                                                             )}
                                                         >
+                                                            <img
+                                                                src={
+                                                                    presentation.heroImage
+                                                                }
+                                                                alt=""
+                                                                aria-hidden="true"
+                                                                className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-28 mix-blend-multiply"
+                                                                style={{
+                                                                    objectPosition:
+                                                                        presentation.heroImagePosition ??
+                                                                        'center',
+                                                                }}
+                                                            />
                                                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.75),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(15,118,110,0.14),transparent_48%)]" />
+                                                            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(160deg,rgba(255,255,255,0.66),rgba(255,255,255,0.18),rgba(250,247,238,0.88))]" />
                                                             <div className="relative flex h-full flex-col justify-between gap-6">
                                                                 <div className="space-y-4">
                                                                     <div className="inline-flex items-center gap-2 rounded-full border border-white/75 bg-white/80 px-3 py-1 text-[0.7rem] font-bold tracking-[0.24em] text-(--school-green-700) uppercase">
@@ -631,83 +809,23 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                         </div>
 
                                                         <div className="bg-white/72 p-3">
-                                                            <div
-                                                                className={cn(
-                                                                    'grid gap-2',
-                                                                    submenuItems.length >
-                                                                        8 &&
-                                                                        'xl:grid-cols-2',
-                                                                )}
-                                                            >
-                                                                {submenuItems.map(
-                                                                    (child) => {
-                                                                        const childActive =
-                                                                            matchesCurrentPath(
-                                                                                currentPath,
-                                                                                child.href,
-                                                                            );
-
-                                                                        return (
-                                                                            <Link
-                                                                                key={
-                                                                                    child.href
-                                                                                }
-                                                                                href={
-                                                                                    child.href
-                                                                                }
-                                                                                prefetch
-                                                                                className={cn(
-                                                                                    'group relative overflow-hidden rounded-[1.35rem] border px-4 py-4 shadow-[0_14px_34px_-24px_rgba(4,47,46,0.22)] transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_22px_44px_-28px_rgba(4,47,46,0.25)]',
-                                                                                    childActive
-                                                                                        ? 'border-(--school-green-200) bg-(--school-green-50)/70'
-                                                                                        : 'border-white/70 bg-white/82 hover:border-(--school-green-100)',
-                                                                                )}
-                                                                                onClick={() =>
-                                                                                    setOpenDropdown(
-                                                                                        null,
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <div className="flex items-start justify-between gap-4">
-                                                                                    <div className="min-w-0">
-                                                                                        <div className="flex items-center gap-2">
-                                                                                            <span
-                                                                                                className={cn(
-                                                                                                    'size-2 rounded-full',
-                                                                                                    childActive
-                                                                                                        ? 'bg-(--school-green-600)'
-                                                                                                        : 'bg-(--school-green-200)',
-                                                                                                )}
-                                                                                            />
-                                                                                            <span
-                                                                                                className={cn(
-                                                                                                    'text-sm font-semibold transition-colors group-hover:text-(--school-green-700)',
-                                                                                                    childActive
-                                                                                                        ? 'text-(--school-green-700)'
-                                                                                                        : 'text-(--school-ink)',
-                                                                                                )}
-                                                                                            >
-                                                                                                {
-                                                                                                    child.label
-                                                                                                }
-                                                                                            </span>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <ChevronRight
-                                                                                        className={cn(
-                                                                                            'mt-0.5 size-4 shrink-0 transition-all group-hover:translate-x-0.5 group-hover:text-(--school-green-700)',
-                                                                                            childActive
-                                                                                                ? 'text-(--school-green-700) opacity-100'
-                                                                                                : 'text-(--school-muted) opacity-60',
-                                                                                        )}
-                                                                                    />
-                                                                                </div>
-                                                                            </Link>
-                                                                        );
-                                                                    },
-                                                                )}
-                                                            </div>
+                                                            <FlowingMenu
+                                                                items={
+                                                                    flowingMenuItems
+                                                                }
+                                                                speed={13}
+                                                                textColor="#315061"
+                                                                bgColor="rgba(255,255,255,0.72)"
+                                                                marqueeBgColor="rgba(250,247,238,0.96)"
+                                                                marqueeTextColor="#12232d"
+                                                                borderColor="rgba(148,163,184,0.18)"
+                                                                className="min-h-[24rem] rounded-[1.55rem] border border-white/75 bg-white/82 shadow-[0_18px_42px_-30px_rgba(4,47,46,0.18)]"
+                                                                onItemClick={() =>
+                                                                    setOpenDropdown(
+                                                                        null,
+                                                                    )
+                                                                }
+                                                            />
                                                         </div>
                                                     </div>
                                                 </motion.div>
@@ -731,7 +849,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     <Button
                         type="button"
                         variant="outline"
-                        className="rounded-full border-white/75 bg-white/82 shadow-[0_16px_34px_-22px_rgba(4,47,46,0.24)] lg:hidden"
+                        className="touch-manipulation rounded-full border-white/75 bg-white/82 shadow-[0_16px_34px_-22px_rgba(4,47,46,0.24)] lg:hidden"
                         onClick={() => setMobileNavOpen(!mobileNavOpen)}
                         aria-label={
                             mobileNavOpen ? 'Tutup navigasi' : 'Buka navigasi'
@@ -753,13 +871,15 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-40 bg-[rgba(4,47,46,0.36)] backdrop-blur-md lg:hidden"
+                        className="fixed inset-0 z-60 bg-[rgba(4,47,46,0.36)] backdrop-blur-md lg:hidden"
+                        onClick={closeMobileNavigation}
                     >
                         <motion.div
                             initial={{ y: -24, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -24, opacity: 0 }}
-                            className="mx-4 mt-20 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[2rem] border border-white/80 bg-[rgba(250,247,238,0.97)] p-4 shadow-[0_32px_90px_-46px_rgba(4,47,46,0.65)] md:mx-8"
+                            className="mx-4 mt-4 max-h-[calc(100dvh-2rem)] touch-pan-y overflow-y-auto overscroll-contain rounded-4xl border border-white/80 bg-[rgba(250,247,238,0.97)] p-4 shadow-[0_32px_90px_-46px_rgba(4,47,46,0.65)] md:mx-8"
+                            onClick={(event) => event.stopPropagation()}
                         >
                             <div className="rounded-[1.7rem] border border-white/80 bg-[linear-gradient(160deg,rgba(15,118,110,0.12),rgba(255,255,255,0.88),rgba(56,189,248,0.12))] p-5 shadow-[0_18px_40px_-28px_rgba(4,47,46,0.24)]">
                                 <div className="flex items-start justify-between gap-4">
@@ -776,25 +896,30 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                         </p>
                                     </div>
 
-                                    <div className="grid size-11 place-items-center rounded-2xl bg-white/85 text-(--school-green-700) shadow-[0_16px_34px_-24px_rgba(4,47,46,0.24)]">
-                                        <GraduationCap className="size-5" />
-                                    </div>
+                                    <button
+                                        type="button"
+                                        className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/85 text-(--school-green-700) shadow-[0_16px_34px_-24px_rgba(4,47,46,0.24)] touch-manipulation transition-colors hover:bg-white"
+                                        onClick={closeMobileNavigation}
+                                        aria-label="Tutup menu"
+                                    >
+                                        <X className="size-5" />
+                                    </button>
                                 </div>
 
                                 <div className="mt-5 flex flex-wrap gap-2">
                                     <Link
                                         href="/berita"
                                         prefetch
-                                        className="rounded-full border border-white/80 bg-white/82 px-3.5 py-2 text-sm font-semibold text-(--school-ink)"
-                                        onClick={() => setMobileNavOpen(false)}
+                                        className="touch-manipulation rounded-full border border-white/80 bg-white/82 px-3.5 py-2 text-sm font-semibold text-(--school-ink)"
+                                        onClick={closeMobileNavigation}
                                     >
                                         Info Terbaru
                                     </Link>
                                     <Link
                                         href={portalHref}
                                         prefetch="mount"
-                                        className="rounded-full border border-(--school-green-100) bg-(--school-green-50)/85 px-3.5 py-2 text-sm font-semibold text-(--school-green-700)"
-                                        onClick={() => setMobileNavOpen(false)}
+                                        className="touch-manipulation rounded-full border border-(--school-green-100) bg-(--school-green-50)/85 px-3.5 py-2 text-sm font-semibold text-(--school-green-700)"
+                                        onClick={closeMobileNavigation}
                                     >
                                         {portalLabel}
                                     </Link>
@@ -812,6 +937,8 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                     );
                                     const isExpanded =
                                         mobileExpanded === item.href;
+                                    const submenuId =
+                                        getMobileSubmenuId(item.href);
                                     const presentation =
                                         getNavigationPresentation(item);
 
@@ -827,28 +954,41 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                         >
                                             {hasChildren ? (
                                                 <>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                            setMobileExpanded(
-                                                                isExpanded
-                                                                    ? null
-                                                                    : item.href,
-                                                            )
-                                                        }
+                                                    <div
                                                         className={cn(
-                                                            'w-full rounded-[1.45rem] border px-4 py-4 text-left transition-all',
-                                                            active
+                                                            'overflow-hidden rounded-[1.45rem] border transition-all',
+                                                            active ||
+                                                                isExpanded
                                                                 ? 'border-(--school-green-200) bg-white shadow-[0_18px_34px_-24px_rgba(4,47,46,0.2)]'
                                                                 : 'border-transparent bg-white/60 hover:bg-white',
                                                         )}
                                                     >
-                                                        <div className="flex items-start justify-between gap-4">
-                                                            <div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                toggleMobileSection(
+                                                                    item.href,
+                                                                )
+                                                            }
+                                                            className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left touch-manipulation"
+                                                            aria-label={`${
+                                                                isExpanded
+                                                                    ? 'Tutup'
+                                                                    : 'Buka'
+                                                            } submenu ${item.label}`}
+                                                            aria-controls={
+                                                                submenuId
+                                                            }
+                                                            aria-expanded={
+                                                                isExpanded
+                                                            }
+                                                        >
+                                                            <div className="min-w-0 flex-1">
                                                                 <div
                                                                     className={cn(
                                                                         'text-base font-semibold',
-                                                                        active
+                                                                        active ||
+                                                                            isExpanded
                                                                             ? 'text-(--school-green-700)'
                                                                             : 'text-(--school-ink)',
                                                                     )}
@@ -861,21 +1001,29 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                                     }
                                                                 </div>
                                                             </div>
-                                                            <ChevronDown
+                                                            <span
                                                                 className={cn(
-                                                                    'mt-1 size-4 shrink-0 transition-transform duration-200',
-                                                                    active
-                                                                        ? 'text-(--school-green-700)'
-                                                                        : 'text-(--school-muted)',
-                                                                    isExpanded &&
-                                                                        'rotate-180',
+                                                                    'mt-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full border transition-colors',
+                                                                    active ||
+                                                                        isExpanded
+                                                                        ? 'border-(--school-green-100) bg-(--school-green-50) text-(--school-green-700)'
+                                                                        : 'border-black/5 bg-white/82 text-(--school-muted)',
                                                                 )}
-                                                            />
-                                                        </div>
-                                                    </button>
+                                                            >
+                                                                <ChevronDown
+                                                                    className={cn(
+                                                                        'size-4 shrink-0 transition-transform duration-200',
+                                                                        isExpanded &&
+                                                                            'rotate-180',
+                                                                    )}
+                                                                />
+                                                            </span>
+                                                        </button>
+                                                    </div>
                                                     <AnimatePresence>
                                                         {isExpanded && (
                                                             <motion.div
+                                                                id={submenuId}
                                                                 initial={{
                                                                     height: 0,
                                                                     opacity: 0,
@@ -891,9 +1039,28 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                                 transition={{
                                                                     duration: 0.2,
                                                                 }}
-                                                                className="overflow-hidden pt-2"
+                                                                className="overflow-hidden border-t border-black/5 px-2 pb-2"
                                                             >
-                                                                <div className="space-y-2 rounded-[1.4rem] border border-(--school-green-100) bg-white/80 p-2">
+                                                                <div className="space-y-2 pt-2">
+                                                                    <Link
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        prefetch
+                                                                        className="flex items-center justify-between rounded-[1.1rem] border border-(--school-green-100) bg-(--school-green-50)/85 px-3.5 py-3 text-sm font-semibold text-(--school-green-700) touch-manipulation transition-all hover:bg-white"
+                                                                        onClick={
+                                                                            closeMobileNavigation
+                                                                        }
+                                                                    >
+                                                                        <span>
+                                                                            Masuk
+                                                                            ke{' '}
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </span>
+                                                                        <ArrowUpRight className="size-4 shrink-0" />
+                                                                    </Link>
                                                                     {submenuItems.map(
                                                                         (
                                                                             child,
@@ -914,15 +1081,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                                                     }
                                                                                     prefetch
                                                                                     className={cn(
-                                                                                        'block rounded-[1.1rem] px-3.5 py-3 text-sm transition-all hover:bg-white hover:text-(--school-green-700)',
+                                                                                        'block rounded-[1.1rem] px-3.5 py-3 text-sm touch-manipulation transition-all hover:bg-white hover:text-(--school-green-700)',
                                                                                         childActive
                                                                                             ? 'bg-(--school-green-50)/80 text-(--school-green-700)'
                                                                                             : 'text-(--school-muted)',
                                                                                     )}
-                                                                                    onClick={() =>
-                                                                                        setMobileNavOpen(
-                                                                                            false,
-                                                                                        )
+                                                                                    onClick={
+                                                                                        closeMobileNavigation
                                                                                     }
                                                                                 >
                                                                                     <div
@@ -951,13 +1116,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                                     href={item.href}
                                                     prefetch
                                                     className={cn(
-                                                        'block rounded-[1.45rem] border px-4 py-4 text-base transition-all hover:bg-white',
+                                                        'block rounded-[1.45rem] border px-4 py-4 text-base touch-manipulation transition-all hover:bg-white',
                                                         active
                                                             ? 'border-(--school-green-200) bg-white text-(--school-green-700) shadow-[0_18px_34px_-24px_rgba(4,47,46,0.2)]'
                                                             : 'border-transparent bg-white/60 text-(--school-ink)',
                                                     )}
-                                                    onClick={() =>
-                                                        setMobileNavOpen(false)
+                                                    onClick={
+                                                        closeMobileNavigation
                                                     }
                                                 >
                                                     <div className="font-semibold">
@@ -1120,6 +1285,94 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             </span>
                             .
                         </p>
+                    </div>
+
+                    <div className="mt-8 flex justify-center">
+                        <div className="w-full max-w-5xl rounded-[1.75rem] border border-white/80 bg-white/88 p-3 shadow-[0_28px_80px_-48px_rgba(4,47,46,0.42)] ring-1 ring-slate-900/5 backdrop-blur-2xl">
+                            <div className="grid gap-3 lg:grid-cols-[1.08fr_0.92fr_0.78fr]">
+                                <div className="relative overflow-hidden rounded-[1.25rem] border border-emerald-100 bg-[linear-gradient(135deg,rgba(236,253,245,0.96),rgba(255,255,255,0.98))] p-4">
+                                    <div className="pointer-events-none absolute -top-10 -right-8 size-28 rounded-full bg-emerald-200/45 blur-2xl" />
+                                    <div className="relative flex items-start justify-between gap-4">
+                                        <div>
+                                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/85 px-3 py-1 text-[0.68rem] font-black tracking-[0.16em] text-emerald-700 uppercase">
+                                                <span className="relative flex size-2.5">
+                                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                                                    <span className="relative inline-flex size-2.5 rounded-full bg-emerald-500" />
+                                                </span>
+                                                Realtime
+                                            </div>
+                                            <div className="mt-4 text-[0.7rem] font-black tracking-[0.22em] text-slate-500 uppercase">
+                                                Live online
+                                            </div>
+                                            <div className="mt-1 flex items-end gap-2">
+                                                <span className="text-4xl font-black tracking-tight text-slate-950">
+                                                    {numberFormatter.format(
+                                                        publicRealtime.liveOnline,
+                                                    )}
+                                                </span>
+                                                <span className="pb-1 text-xs font-bold text-slate-500">
+                                                    aktif
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/25">
+                                            <Activity className="size-5" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-[1.25rem] border border-sky-100 bg-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div>
+                                            <div className="text-[0.7rem] font-black tracking-[0.22em] text-slate-500 uppercase">
+                                                Total pengunjung
+                                            </div>
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <span className="rounded-xl bg-slate-950 px-3 py-1 font-mono text-xs font-bold tracking-[0.14em] text-white">
+                                                    VISITOR
+                                                </span>
+                                                <span className="text-3xl font-black tracking-tight text-slate-950">
+                                                    {numberFormatter.format(
+                                                        publicRealtime.totalVisitors,
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="mt-3 text-xs font-semibold text-slate-500">
+                                                Dari cookie pengunjung publik
+                                                yang tercatat di server.
+                                            </div>
+                                        </div>
+                                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-sky-500 text-white shadow-lg shadow-sky-500/25">
+                                            <BarChart3 className="size-5" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-[1.25rem] border border-amber-100 bg-[linear-gradient(135deg,#ffffff,rgba(255,251,235,0.96))] p-4">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div>
+                                            <div className="text-[0.7rem] font-black tracking-[0.22em] text-slate-500 uppercase">
+                                                Pengunjung hari ini
+                                            </div>
+                                            <div className="mt-1 text-3xl font-black tracking-tight text-slate-950">
+                                                {numberFormatter.format(
+                                                    publicRealtime.todayVisitors,
+                                                )}
+                                            </div>
+                                            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/85 px-3 py-1 text-[0.68rem] font-bold text-slate-500">
+                                                <Clock3 className="size-3.5 text-amber-500" />
+                                                Update {realtimeUpdatedAt} •{' '}
+                                                {publicRealtime.windowMinutes}{' '}
+                                                menit
+                                            </div>
+                                        </div>
+                                        <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/25">
+                                            <Sparkles className="size-5" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </footer>

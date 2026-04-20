@@ -23,6 +23,17 @@ use Inertia\Response;
 
 class PublicSiteController extends Controller
 {
+    private const EXTRACURRICULAR_SLUGS = [
+        'paskibra',
+        'futsal',
+        'rohis',
+        'pmr',
+        'pramuka',
+        'pencak-silat',
+        'jurnalistik',
+        'tari-tradisional',
+    ];
+
     public function home(): Response
     {
         return Inertia::render('public/home', [
@@ -99,6 +110,16 @@ class PublicSiteController extends Controller
         ]);
     }
 
+    public function extracurricularShow(string $slug): Response
+    {
+        abort_unless(in_array($slug, self::EXTRACURRICULAR_SLUGS, true), 404);
+
+        return Inertia::render('public/extracurricular-show', [
+            'school' => $this->schoolPayload(),
+            'slug' => $slug,
+        ]);
+    }
+
     public function kesiswaan(): Response
     {
         return Inertia::render('public/kesiswaan', [
@@ -161,7 +182,16 @@ class PublicSiteController extends Controller
                 'priority' => '0.6',
             ]);
 
+        $extracurricularUrls = collect(self::EXTRACURRICULAR_SLUGS)
+            ->map(fn (string $slug): array => [
+                'loc' => route('extracurricular.show', $slug),
+                'lastmod' => $schoolUpdatedAt->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.6',
+            ]);
+
         $urls = $staticUrls
+            ->concat($extracurricularUrls)
             ->concat($storyUrls)
             ->concat($profileUrls)
             ->map(function (array $url): string {
