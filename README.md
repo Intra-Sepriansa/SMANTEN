@@ -97,8 +97,8 @@ This repository is optimized for **Laravel Herd** and macOS environments.
 ### 1. Cloning & Dependencies
 
 ```bash
-git clone https://github.com/Intra-Sepriansa/SAMANTEN.git
-cd SAMANTEN
+git clone https://github.com/Intra-Sepriansa/SMANTEN.git
+cd SMANTEN
 
 # Install PHP packages
 composer install
