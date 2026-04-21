@@ -97,7 +97,7 @@ export default function HomePage({
                     initial="hidden"
                     whileInView="show"
                     viewport={motionViewport}
-                    className="grid gap-5 md:grid-cols-4"
+                    className="flex snap-x snap-mandatory overflow-x-auto gap-5 pb-4 md:grid md:grid-cols-4 md:overflow-visible"
                 >
                     {[
                         {
@@ -169,7 +169,7 @@ export default function HomePage({
                             key={stat.label}
                             variants={fadeUp}
                             whileHover={{ y: -8, scale: 1.02 }}
-                            className="h-full"
+                            className="h-full w-[85vw] shrink-0 snap-center md:w-auto"
                         >
                             <BorderGlow
                                 borderRadius={32}
@@ -1187,7 +1187,7 @@ export default function HomePage({
                     </motion.div>
                 </section>
 
-                <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+                <section className="mx-auto max-w-4xl">
                     {/* ═══ PPDB / ADMISSIONS PULSE ═══ */}
                     <motion.div
                         variants={fadeUp}
@@ -1227,7 +1227,7 @@ export default function HomePage({
                                         initial="hidden"
                                         whileInView="show"
                                         viewport={motionViewport}
-                                        className="grid grid-cols-2 gap-3"
+                                        className="grid grid-cols-2 gap-3 md:grid-cols-4"
                                     >
                                         {ppdb.trackQuotas.map((quota, i) => {
                                             const accents = [
@@ -1353,7 +1353,7 @@ export default function HomePage({
                                         <Button
                                             asChild
                                             size="lg"
-                                            className="group/cta w-full rounded-2xl bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-(--school-ink) shadow-[0_8px_24px_-8px_rgba(245,158,11,0.4)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(245,158,11,0.55)]"
+                                            className="group/cta w-full rounded-2xl bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-(--school-ink) shadow-[0_8px_24px_-8px_rgba(245,158,11,0.4)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(245,158,11,0.55)] md:w-auto"
                                         >
                                             <Link href="/ppdb">
                                                 Mulai Simulasi Zona
@@ -1363,110 +1363,6 @@ export default function HomePage({
                                     </div>
                                 </div>
                             ) : null}
-                        </BorderGlow>
-                    </motion.div>
-
-                    {/* ═══ VIRTUAL TOUR SHELL ═══ */}
-                    <motion.div
-                        variants={fadeUp}
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={motionViewport}
-                        className="group h-full"
-                    >
-                        <BorderGlow
-                            borderRadius={32}
-                            colors={['#F59E0B', '#D97706', '#FBBF24']}
-                            className="relative flex h-full flex-col overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,247,237,0.88))] shadow-[0_28px_80px_-50px_rgba(245,158,11,0.3)]"
-                        >
-                            {/* Header */}
-                            <div className="p-8 pb-4">
-                                <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5">
-                                    <MapPinned className="size-3.5 text-amber-700" />
-                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-amber-700 uppercase">
-                                        Virtual Tour Shell
-                                    </span>
-                                </div>
-                                <h2 className="mt-5 font-heading text-3xl leading-tight text-(--school-ink) md:text-4xl">
-                                    Lahan, laboratorium, dan perpustakaan
-                                    disusun sebagai pengalaman jelajah.
-                                </h2>
-                            </div>
-
-                            {/* Scene cards */}
-                            <motion.div
-                                variants={staggerContainer}
-                                initial="hidden"
-                                whileInView="show"
-                                viewport={motionViewport}
-                                className="flex-1 space-y-3 px-6"
-                            >
-                                {virtualTourScenes.map((scene, i) => (
-                                    <motion.div
-                                        key={scene.id}
-                                        variants={fadeUp}
-                                        whileHover={{ x: 6 }}
-                                        className="group/scene relative overflow-hidden rounded-2xl border border-white/80 bg-white/70 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-[0_12px_36px_-12px_rgba(0,0,0,0.1)]"
-                                    >
-                                        <div
-                                            className="absolute top-0 left-0 h-full w-1 rounded-l-2xl transition-all duration-300 group-hover/scene:w-1.5"
-                                            style={{
-                                                backgroundColor:
-                                                    scene.accentColor,
-                                            }}
-                                        />
-                                        <div className="flex items-start gap-4 p-4 pl-5">
-                                            {/* Number badge */}
-                                            <div
-                                                className="flex size-9 shrink-0 items-center justify-center rounded-xl text-sm font-extrabold text-white"
-                                                style={{
-                                                    backgroundColor:
-                                                        scene.accentColor,
-                                                }}
-                                            >
-                                                {String(i + 1).padStart(2, '0')}
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <div
-                                                    className="text-[0.62rem] font-bold tracking-[0.24em] uppercase"
-                                                    style={{
-                                                        color: scene.accentColor,
-                                                    }}
-                                                >
-                                                    {scene.eyebrow}
-                                                </div>
-                                                <div className="mt-1 text-base font-bold text-(--school-ink)">
-                                                    {scene.title}
-                                                </div>
-                                                <p className="mt-1 text-[0.78rem] leading-relaxed text-(--school-muted) transition-colors group-hover/scene:text-(--school-ink)/70">
-                                                    {scene.description}
-                                                </p>
-                                            </div>
-                                            {/* Arrow hint */}
-                                            <ArrowRight
-                                                className="mt-1 size-4 shrink-0 text-(--school-muted) opacity-0 transition-all group-hover/scene:translate-x-1 group-hover/scene:opacity-100"
-                                                style={{
-                                                    color: scene.accentColor,
-                                                }}
-                                            />
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </motion.div>
-
-                            {/* CTA */}
-                            <div className="p-6 pt-4">
-                                <Button
-                                    asChild
-                                    className="group/vt w-full rounded-2xl border-2 border-amber-300 bg-[linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.08))] px-6 text-amber-800 shadow-none transition-all hover:bg-[linear-gradient(135deg,rgba(245,158,11,0.2),rgba(217,119,6,0.15))] hover:shadow-[0_8px_24px_-8px_rgba(245,158,11,0.3)]"
-                                >
-                                    <Link href="/virtual-tour">
-                                        <MapPinned className="mr-2 size-4" />
-                                        Buka Virtual Tour
-                                        <ArrowRight className="ml-2 size-4 transition-transform group-hover/vt:translate-x-1" />
-                                    </Link>
-                                </Button>
-                            </div>
                         </BorderGlow>
                     </motion.div>
                 </section>
@@ -1491,13 +1387,14 @@ export default function HomePage({
                         </Button>
                     </div>
 
-                    <motion.div
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={motionViewport}
-                        className="grid gap-6 sm:grid-cols-2 md:gap-x-8 lg:grid-cols-3"
-                    >
+                    {featuredArticles.length > 0 ? (
+                        <motion.div
+                            variants={staggerContainer}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={motionViewport}
+                            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                        >
                         {featuredArticles.map((article) => (
                             <Link
                                 key={article.id}
@@ -1565,7 +1462,32 @@ export default function HomePage({
                                 </motion.article>
                             </Link>
                         ))}
-                    </motion.div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            variants={fadeUp}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={motionViewport}
+                        >
+                            <BorderGlow
+                                borderRadius={27}
+                                className="overflow-hidden rounded-[1.7rem] border border-dashed border-sky-200 bg-white/70 shadow-[0_16px_50px_-30px_rgba(14,165,233,0.15)]"
+                            >
+                                <div className="flex flex-col items-center justify-center p-10 text-center md:p-14">
+                                    <div className="flex size-16 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">
+                                        <Newspaper className="size-7" />
+                                    </div>
+                                    <h4 className="mt-5 text-xl font-bold text-(--school-ink)">
+                                        Belum Ada Publikasi
+                                    </h4>
+                                    <p className="mt-2 max-w-md text-sm leading-7 text-(--school-muted)">
+                                        Kabar terbaru, pengumuman, dan sorotan aktivitas SMAN 1 Tenjo akan ditampilkan di sini.
+                                    </p>
+                                </div>
+                            </BorderGlow>
+                        </motion.div>
+                    )}
 
                     {/* ─── Eskul Cards Infinite Marquee ─── */}
                     <div className="relative -mx-4 flex w-full overflow-hidden px-4 py-6">
@@ -1792,7 +1714,7 @@ export default function HomePage({
                             initial="hidden"
                             whileInView="show"
                             viewport={motionViewport}
-                            className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+                            className="flex snap-x snap-mandatory overflow-x-auto gap-5 pb-4 md:grid md:grid-cols-2 xl:grid-cols-3 md:overflow-visible"
                         >
                             {[
                                 {
@@ -1832,12 +1754,12 @@ export default function HomePage({
                                     accent: '#0F766E',
                                 },
                             ].map((video) => (
-                                <Link
+                                <a
                                     key={video.id}
                                     href={`https://www.youtube.com/watch?v=${video.id}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="block rounded-[1.7rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-(--school-green-400)"
+                                    className="block w-[85vw] shrink-0 snap-center rounded-[1.7rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-(--school-green-400) md:w-auto"
                                 >
                                     <motion.div
                                         variants={fadeUp}
@@ -1918,7 +1840,7 @@ export default function HomePage({
                                             </div>
                                         </BorderGlow>
                                     </motion.div>
-                                </Link>
+                                </a>
                             ))}
                         </motion.div>
                     </div>

@@ -63,11 +63,6 @@ export const publicNavigation: NavItem[] = [
                 label: 'Tulis Cerita',
                 description: 'Kirim cerita alumni',
             },
-            {
-                href: '/virtual-tour',
-                label: 'Virtual Tour',
-                description: 'Jelajah sekolah',
-            },
         ],
     },
     {

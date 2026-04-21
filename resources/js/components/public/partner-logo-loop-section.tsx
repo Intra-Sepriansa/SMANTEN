@@ -10,37 +10,37 @@ const partnerLogos: PartnerLogo[] = [
     {
         src: '/images/partners/provinsi-jawa-barat.svg',
         alt: 'Provinsi Jawa Barat',
-        imageClassName: 'max-h-[4.9rem]',
+        imageClassName: 'max-h-7 md:max-h-[4.9rem]',
     },
     {
         src: '/images/logo_clean.png',
         alt: 'SMAN 1 Tenjo',
-        imageClassName: 'max-h-[4.8rem]',
+        imageClassName: 'max-h-7 md:max-h-[4.8rem]',
     },
     {
         src: '/images/partners/kurikulum-merdeka.svg',
         alt: 'Kurikulum Merdeka',
-        imageClassName: 'max-h-[3.6rem] max-w-[9.8rem]',
+        imageClassName: 'max-h-6 max-w-16 md:max-h-[3.6rem] md:max-w-[9.8rem]',
     },
     {
         src: '/images/partners/merdeka-belajar.png',
         alt: 'Merdeka Belajar',
-        imageClassName: 'max-h-[5rem]',
+        imageClassName: 'max-h-7 md:max-h-[5rem]',
     },
     {
         src: '/images/partners/merdeka-mengajar.png',
         alt: 'Merdeka Mengajar',
-        imageClassName: 'max-h-[4.5rem] max-w-[9.8rem]',
+        imageClassName: 'max-h-[1.6rem] max-w-16 md:max-h-[4.5rem] md:max-w-[9.8rem]',
     },
     {
         src: '/images/partners/tut-wuri-handayani.svg',
         alt: 'Tut Wuri Handayani',
-        imageClassName: 'max-h-[5.1rem]',
+        imageClassName: 'max-h-[1.8rem] md:max-h-[5.1rem]',
     },
     {
         src: '/images/partners/adiwiyata.png',
         alt: 'Adiwiyata',
-        imageClassName: 'max-h-[5rem]',
+        imageClassName: 'max-h-[1.8rem] md:max-h-[5rem]',
     },
 ];
 
