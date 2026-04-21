@@ -55,7 +55,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['organization_position_id', 'status', 'is_current']);
+            $table->index(['organization_position_id', 'status', 'is_current'], 'idx_org_assign_pos_status_curr');
         });
     }
 
