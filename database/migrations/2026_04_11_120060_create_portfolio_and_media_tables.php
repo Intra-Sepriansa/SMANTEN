@@ -50,7 +50,7 @@ return new class extends Migration
             $table->boolean('is_lead')->default(false);
             $table->timestamps();
 
-            $table->unique(['portfolio_project_id', 'student_profile_id']);
+            $table->unique(['portfolio_project_id', 'student_profile_id'], 'uq_port_proj_mem_id');
         });
 
         Schema::create('portfolio_items', function (Blueprint $table) {
