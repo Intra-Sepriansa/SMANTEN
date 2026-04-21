@@ -100,7 +100,7 @@ return new class extends Migration
             $table->json('metadata')->nullable();
             $table->timestamps();
 
-            $table->index(['ppdb_application_id', 'document_type']);
+            $table->index(['ppdb_application_id', 'document_type'], 'idx_ppdb_docs_app_id_type');
         });
 
         Schema::create('ppdb_application_reviews', function (Blueprint $table) {
