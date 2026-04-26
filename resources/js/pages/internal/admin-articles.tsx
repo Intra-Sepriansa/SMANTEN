@@ -1,5 +1,13 @@
 import { Head } from '@inertiajs/react';
-import { BookOpen, LayoutDashboard, Sparkles } from 'lucide-react';
+import {
+    BookOpen,
+    FileText,
+    LayoutDashboard,
+    PenLine,
+    ShieldCheck,
+    Sparkles,
+} from 'lucide-react';
+import { AdminAdvancedCommandCenter } from '@/components/internal/admin/admin-advanced-command-center';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -59,6 +67,12 @@ export default function AdminArticles({
     articleDesk,
 }: AdminArticlesProps) {
     const numberFormatter = new Intl.NumberFormat('id-ID');
+    const reviewQueueCount = articleDesk.recentArticles.filter(
+        (article) => article.status === 'in_review',
+    ).length;
+    const publishedRecentCount = articleDesk.recentArticles.filter(
+        (article) => article.status === 'published',
+    ).length;
 
     return (
         <>
@@ -88,7 +102,9 @@ export default function AdminArticles({
                     },
                     {
                         label: 'Featured',
-                        value: numberFormatter.format(articleDesk.featuredCount),
+                        value: numberFormatter.format(
+                            articleDesk.featuredCount,
+                        ),
                         helper: 'Konten unggulan',
                         tone: 'sky',
                     },
@@ -118,6 +134,98 @@ export default function AdminArticles({
                 ]}
             >
                 <section className="grid gap-6">
+                    <AdminAdvancedCommandCenter
+                        eyebrow="Editorial command"
+                        title="Artikel dipantau sebagai workflow redaksi."
+                        description="Draft, review, featured, dan publikasi terbaru dibaca sebagai pipeline keputusan agar admin cepat tahu konten mana yang perlu disentuh."
+                        icon={FileText}
+                        metrics={[
+                            {
+                                label: 'Live',
+                                value: numberFormatter.format(
+                                    stats.publishedArticleCount,
+                                ),
+                                helper: 'Artikel sudah tayang.',
+                                icon: BookOpen,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Review',
+                                value: numberFormatter.format(
+                                    stats.articleInReviewCount,
+                                ),
+                                helper: 'Menunggu approval redaksi.',
+                                icon: ShieldCheck,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Draft',
+                                value: numberFormatter.format(
+                                    stats.draftArticleCount,
+                                ),
+                                helper: 'Masih bisa dilengkapi.',
+                                icon: PenLine,
+                                tone: 'slate',
+                            },
+                            {
+                                label: 'Featured',
+                                value: numberFormatter.format(
+                                    articleDesk.featuredCount,
+                                ),
+                                helper: 'Siap jadi konten unggulan.',
+                                icon: Sparkles,
+                                tone: 'sky',
+                            },
+                        ]}
+                        lanes={[
+                            {
+                                label: 'Draft',
+                                title: 'Ide masuk dan naskah disiapkan',
+                                description:
+                                    'Admin bisa melihat stok draft sebelum konten masuk review.',
+                                value: numberFormatter.format(
+                                    stats.draftArticleCount,
+                                ),
+                                icon: PenLine,
+                                tone: 'slate',
+                            },
+                            {
+                                label: 'Review',
+                                title: 'Antrian approval redaksi',
+                                description:
+                                    'Artikel in review menjadi prioritas agar publikasi tidak tertahan.',
+                                value: numberFormatter.format(
+                                    reviewQueueCount ||
+                                        stats.articleInReviewCount,
+                                ),
+                                icon: ShieldCheck,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Publish',
+                                title: 'Artikel terbaru yang sudah live',
+                                description:
+                                    'Publikasi recent bisa diaudit sebelum ditampilkan lebih luas.',
+                                value: numberFormatter.format(
+                                    publishedRecentCount,
+                                ),
+                                icon: BookOpen,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Promote',
+                                title: 'Konten featured untuk permukaan publik',
+                                description:
+                                    'Artikel unggulan disiapkan untuk mengisi sorotan website.',
+                                value: numberFormatter.format(
+                                    articleDesk.featuredCount,
+                                ),
+                                icon: Sparkles,
+                                tone: 'sky',
+                            },
+                        ]}
+                    />
+
                     <div className="space-y-4">
                         <AdminSectionIntro
                             eyebrow="Author Pulse"

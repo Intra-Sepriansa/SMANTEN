@@ -1,5 +1,13 @@
 import { Head } from '@inertiajs/react';
-import { LayoutDashboard, Sparkles, Users } from 'lucide-react';
+import {
+    Award,
+    CheckCircle2,
+    Compass,
+    LayoutDashboard,
+    Sparkles,
+    Users,
+} from 'lucide-react';
+import { AdminAdvancedCommandCenter } from '@/components/internal/admin/admin-advanced-command-center';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -60,6 +68,13 @@ export default function AdminPortfolio({
     portfolioDesk,
 }: AdminPortfolioProps) {
     const numberFormatter = new Intl.NumberFormat('id-ID');
+    const recentSubmittedCount = portfolioDesk.recentItems.filter(
+        (item) => item.status === 'submitted',
+    ).length;
+    const recentPublishedCount = portfolioDesk.recentItems.filter(
+        (item) => item.status === 'published',
+    ).length;
+    const creatorCount = portfolioDesk.topCreators.length;
 
     return (
         <>
@@ -121,6 +136,96 @@ export default function AdminPortfolio({
                 ]}
             >
                 <section className="grid gap-6">
+                    <AdminAdvancedCommandCenter
+                        eyebrow="Portfolio command"
+                        title="Karya siswa dipantau sebagai pipeline kurasi."
+                        description="Submission, approval, featured, dan kreator aktif dirangkum supaya admin bisa memilih karya yang layak tayang dengan lebih cepat."
+                        icon={Compass}
+                        metrics={[
+                            {
+                                label: 'Submitted',
+                                value: numberFormatter.format(
+                                    stats.portfolioSubmittedCount,
+                                ),
+                                helper: 'Karya menunggu review.',
+                                icon: Compass,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Live',
+                                value: numberFormatter.format(
+                                    stats.portfolioPublishedCount,
+                                ),
+                                helper: 'Karya sudah tampil.',
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Featured',
+                                value: numberFormatter.format(
+                                    portfolioDesk.featuredCount,
+                                ),
+                                helper: 'Karya unggulan.',
+                                icon: Sparkles,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Kreator',
+                                value: numberFormatter.format(creatorCount),
+                                helper: 'Top creator tercatat.',
+                                icon: Users,
+                                tone: 'violet',
+                            },
+                        ]}
+                        lanes={[
+                            {
+                                label: 'Submit',
+                                title: 'Karya masuk dari siswa',
+                                description:
+                                    'Submission terbaru dibaca bersama kreator, proyek, dan tipe karya.',
+                                value: numberFormatter.format(
+                                    recentSubmittedCount ||
+                                        stats.portfolioSubmittedCount,
+                                ),
+                                icon: Compass,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Curate',
+                                title: 'Admin menilai kualitas karya',
+                                description:
+                                    'Approver, status, dan update terakhir membantu proses moderasi.',
+                                value: numberFormatter.format(
+                                    portfolioDesk.recentItems.length,
+                                ),
+                                icon: Award,
+                                tone: 'violet',
+                            },
+                            {
+                                label: 'Feature',
+                                title: 'Karya unggulan disiapkan',
+                                description:
+                                    'Karya featured bisa dinaikkan sebagai representasi prestasi sekolah.',
+                                value: numberFormatter.format(
+                                    portfolioDesk.featuredCount,
+                                ),
+                                icon: Sparkles,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Publish',
+                                title: 'Karya siap tayang publik',
+                                description:
+                                    'Item published recent menjadi sinyal keluaran kurasi.',
+                                value: numberFormatter.format(
+                                    recentPublishedCount,
+                                ),
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                        ]}
+                    />
+
                     <div className="space-y-4">
                         <AdminSectionIntro
                             eyebrow="Creator Pulse"
@@ -184,7 +289,9 @@ export default function AdminPortfolio({
                                                 <div className="text-sm text-neutral-500 dark:text-neutral-400">
                                                     {item.project ??
                                                         'Tanpa proyek'}{' '}
-                                                    • {item.creator ?? 'Belum ada kreator'}
+                                                    •{' '}
+                                                    {item.creator ??
+                                                        'Belum ada kreator'}
                                                 </div>
                                             </div>
                                             <div

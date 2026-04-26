@@ -39,6 +39,7 @@ import {
 import CardSwap, { Card } from '@/components/CardSwap';
 import { PpdbQuotaChart } from '@/components/charts/school-charts';
 import Cubes from '@/components/Cubes';
+import { AdvancedMenuStage } from '@/components/public/advanced-menu-stage';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Button } from '@/components/ui/button';
@@ -46,6 +47,8 @@ import { Input } from '@/components/ui/input';
 import { calculateHaversineKm } from '@/lib/geo';
 import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
 import { ppdbFaqs } from '@/lib/public-content';
+import { store as storePpdbApplication } from '@/routes/api/ppdb/applications';
+import { search as searchGeocode } from '@/routes/api/public/geocode';
 import type {
     GeocodeCandidate,
     PpdbPayload,
@@ -395,7 +398,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
 
         try {
             const response = await fetch(
-                `/api/public/geocode/search?q=${encodeURIComponent(addressLine)}&limit=5`,
+                searchGeocode.url({
+                    query: { q: addressLine, limit: 5 },
+                }),
                 { headers: { Accept: 'application/json' } },
             );
             const payload = await response.json();
@@ -486,7 +491,7 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
         setSubmissionResult(null);
 
         try {
-            const response = await fetch('/api/ppdb/applications', {
+            const response = await fetch(storePpdbApplication.url(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -652,6 +657,9 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
               `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km radius aktif`,
               'Klik grid untuk baca pola sebaran',
           ];
+    const totalQuotaSeats = ppdb
+        ? ppdb.trackQuotas.reduce((total, quota) => total + quota.quotaSeats, 0)
+        : 0;
 
     return (
         <>
@@ -939,6 +947,101 @@ export default function PpdbPage({ school, ppdb }: PpdbPageProps) {
                         </motion.div>
                     </motion.div>
                 </motion.section>
+
+                <AdvancedMenuStage
+                    tone="emerald"
+                    eyebrow="PPDB advanced control"
+                    title="Panel penerimaan dibuat seperti ruang operasi seleksi."
+                    description="Calon siswa langsung melihat jadwal, kuota, radius zonasi, simulasi jarak, dan kesiapan formulir dalam satu alur visual yang lebih cepat dipahami."
+                    metrics={[
+                        {
+                            label: 'Kapasitas',
+                            value: ppdb
+                                ? numberFormatter.format(ppdb.capacity)
+                                : 'Belum ada',
+                            helper: 'Total daya tampung siklus aktif.',
+                            icon: Users,
+                        },
+                        {
+                            label: 'Kursi Jalur',
+                            value: ppdb
+                                ? numberFormatter.format(totalQuotaSeats)
+                                : 'Belum ada',
+                            helper: 'Akumulasi kuota per jalur PPDB.',
+                            icon: Shield,
+                        },
+                        {
+                            label: 'Radius',
+                            value: `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km`,
+                            helper: 'Dipakai untuk simulasi zonasi rumah.',
+                            icon: Crosshair,
+                        },
+                        {
+                            label: 'Status Simulasi',
+                            value: preview
+                                ? preview.insideZone
+                                    ? 'Dalam Radius'
+                                    : 'Luar Radius'
+                                : 'Menunggu Titik',
+                            helper: preview
+                                ? `${numberFormatter.format(preview.distanceKm)} km dari sekolah`
+                                : 'Isi koordinat untuk membaca jarak.',
+                            icon: Zap,
+                        },
+                    ]}
+                    steps={[
+                        {
+                            label: '01',
+                            title: 'Baca Jadwal',
+                            description:
+                                'Tanggal buka, tutup, dan pengumuman ditampilkan sebagai checkpoint utama.',
+                            icon: Calendar,
+                        },
+                        {
+                            label: '02',
+                            title: 'Pilih Jalur',
+                            description:
+                                'Jalur zonasi, afirmasi, perpindahan, dan prestasi dibuat mudah dibandingkan.',
+                            icon: Award,
+                        },
+                        {
+                            label: '03',
+                            title: 'Cek Radius',
+                            description:
+                                'Alamat bisa diterjemahkan ke koordinat untuk membaca estimasi jarak.',
+                            icon: MapPin,
+                        },
+                        {
+                            label: '04',
+                            title: 'Kirim Formulir',
+                            description:
+                                'Data pendaftaran dikirim ke endpoint PPDB dan menghasilkan nomor registrasi.',
+                            icon: CheckCircle2,
+                        },
+                    ]}
+                    signals={[
+                        {
+                            label: 'Siklus',
+                            value: ppdb?.name ?? 'Menunggu',
+                        },
+                        {
+                            label: 'Jalur',
+                            value: `${ppdb?.trackQuotas.length ?? 0}`,
+                        },
+                        {
+                            label: 'Zona',
+                            value: `${numberFormatter.format(ppdb?.zoneRadiusKm ?? 5)} km`,
+                        },
+                        {
+                            label: 'Form',
+                            value: submissionResult ? 'Terkirim' : 'Siap',
+                        },
+                        {
+                            label: 'Validasi',
+                            value: preview ? 'Aktif' : 'Belum',
+                        },
+                    ]}
+                />
 
                 {/* ═══════════ TIMELINE JADWAL ═══════════ */}
                 <section id="timeline" className="scroll-mt-24 space-y-10">

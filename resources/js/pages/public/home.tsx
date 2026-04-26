@@ -24,6 +24,7 @@ import {
     Users,
     Wrench,
 } from 'lucide-react';
+import { ppdb as ppdbRoute } from '@/actions/App/Http/Controllers/PublicSiteController';
 import { SparklineChart } from '@/components/charts/school-charts';
 import { AnimatedCounter } from '@/components/public/animated-counter';
 import { BorderGlow } from '@/components/public/border-glow';
@@ -33,7 +34,7 @@ import { SectionHeading } from '@/components/public/section-heading';
 import { VisiPillarShowcase } from '@/components/public/visi-pillar-showcase';
 import { Button } from '@/components/ui/button';
 import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
-import { signaturePrograms, virtualTourScenes } from '@/lib/public-content';
+import { signaturePrograms } from '@/lib/public-content';
 import { cn } from '@/lib/utils';
 import type {
     AlumniSpotlight,
@@ -223,12 +224,12 @@ export default function HomePage({
                                         alt={`${school.principalName ?? 'Kepala Sekolah'} — Kepala SMA Negeri 1 Tenjo`}
                                         className="h-full w-full object-cover object-top"
                                     />
-                                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-transparent to-white/30" />
-                                    <div className="absolute inset-0 bg-linear-to-t from-[rgba(4,47,46,0.6)] via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-r from-[rgba(4,47,46,0.18)] via-transparent to-white/16" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-[rgba(4,47,46,0.92)] via-[rgba(4,47,46,0.16)] to-transparent" />
                                     {/* Name overlay on image */}
                                     <div className="absolute right-6 bottom-6 left-6">
-                                        <div className="rounded-2xl border border-white/15 bg-black/30 px-5 py-4 backdrop-blur-md">
-                                            <div className="text-[0.62rem] font-bold tracking-[0.3em] text-(--school-gold) uppercase">
+                                        <div className="rounded-2xl border border-white/18 bg-[linear-gradient(180deg,rgba(4,47,46,0.82),rgba(4,47,46,0.68))] px-5 py-4 shadow-[0_22px_44px_-26px_rgba(4,47,46,0.85)] backdrop-blur-md">
+                                            <div className="text-[0.62rem] font-bold tracking-[0.3em] text-(--school-gold-400) uppercase">
                                                 Kepala Sekolah
                                             </div>
                                             <div className="mt-1 text-lg font-bold text-white">
@@ -248,14 +249,14 @@ export default function HomePage({
                                     <Quote className="absolute top-8 right-8 size-20 text-(--school-green-100) opacity-40 lg:top-10 lg:right-10" />
 
                                     {/* Mobile portrait */}
-                                    <div className="mb-6 flex items-center gap-4 lg:hidden">
+                                    <div className="mb-6 flex items-center gap-4 rounded-[1.6rem] border border-(--school-green-100) bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,248,246,0.92))] p-3.5 shadow-[0_20px_46px_-30px_rgba(15,118,110,0.32)] lg:hidden">
                                         <img
                                             src="/images/principal-portrait.png"
                                             alt={
                                                 school.principalName ??
                                                 'Kepala Sekolah'
                                             }
-                                            className="size-20 rounded-2xl object-cover object-top shadow-lg"
+                                            className="size-20 rounded-[1.25rem] border border-white/70 object-cover object-top shadow-[0_16px_28px_-18px_rgba(4,47,46,0.35)]"
                                         />
                                         <div>
                                             <div className="text-[0.62rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
@@ -363,7 +364,7 @@ export default function HomePage({
                             >
                                 {/* Ambient light orbs */}
                                 <div className="pointer-events-none absolute -top-20 -right-20 size-112 rounded-full bg-white/4 blur-[100px] transition-transform duration-[1.2s] group-hover:-translate-x-16 group-hover:translate-y-8" />
-                                <div className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-(--school-gold)/10 blur-[80px] transition-all duration-[1.4s] group-hover:opacity-30" />
+                                <div className="pointer-events-none absolute -bottom-32 -left-20 size-72 rounded-full bg-[rgba(243,168,29,0.12)] blur-[80px] transition-all duration-[1.4s] group-hover:opacity-30" />
                                 {/* Subtle grid pattern overlay */}
                                 <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-60" />
 
@@ -371,9 +372,9 @@ export default function HomePage({
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-3">
                                         <div className="flex size-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 backdrop-blur-sm">
-                                            <Heart className="size-5 text-(--school-gold)" />
+                                            <Heart className="size-5 text-(--school-gold-400)" />
                                         </div>
-                                        <div className="inline-flex rounded-full border border-white/20 bg-white/8 px-4 py-1.5 text-[0.72rem] font-bold tracking-[0.28em] text-(--school-gold) uppercase backdrop-blur-sm">
+                                        <div className="inline-flex rounded-full border border-white/20 bg-white/8 px-4 py-1.5 text-[0.72rem] font-bold tracking-[0.28em] text-(--school-gold-400) uppercase backdrop-blur-sm">
                                             Nilai Inti
                                         </div>
                                     </div>
@@ -611,9 +612,9 @@ export default function HomePage({
                                     />
                                     <div className="absolute inset-0 bg-linear-to-b from-[rgba(4,47,46,0.4)] via-transparent to-[rgba(4,47,46,0.95)]" />
                                     {/* Floating VISI badge */}
-                                    <div className="absolute top-6 left-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-1.5 backdrop-blur-md">
-                                        <Trophy className="size-3.5 text-(--school-gold)" />
-                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
+                                    <div className="absolute top-5 left-5 inline-flex items-center gap-2 rounded-full border border-white/22 bg-black/20 px-4 py-2 shadow-[0_12px_28px_-18px_rgba(4,47,46,0.6)] backdrop-blur-md sm:top-6 sm:left-6">
+                                        <Trophy className="size-3.5 text-(--school-gold-400)" />
+                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-white/92 uppercase">
                                             Visi Sekolah
                                         </span>
                                     </div>
@@ -622,7 +623,7 @@ export default function HomePage({
                                 {/* Visi Content */}
                                 <div className="relative z-10 flex flex-1 flex-col justify-between p-8 md:p-10">
                                     {/* Ambient glow */}
-                                    <div className="pointer-events-none absolute -top-16 -right-16 size-72 rounded-full bg-(--school-gold)/8 blur-[100px]" />
+                                    <div className="pointer-events-none absolute -top-16 -right-16 size-72 rounded-full bg-[rgba(243,168,29,0.1)] blur-[100px]" />
 
                                     <div>
                                         <blockquote className="relative">
@@ -1187,7 +1188,7 @@ export default function HomePage({
                     </motion.div>
                 </section>
 
-                <section className="mx-auto max-w-4xl">
+                <section className="mx-auto max-w-6xl">
                     {/* ═══ PPDB / ADMISSIONS PULSE ═══ */}
                     <motion.div
                         variants={fadeUp}
@@ -1202,32 +1203,46 @@ export default function HomePage({
                             className="relative h-full overflow-hidden rounded-4xl border border-white/70 bg-white shadow-[0_28px_80px_-50px_rgba(15,118,110,0.4)]"
                         >
                             {/* Header gradient */}
-                            <div className="relative overflow-hidden bg-[linear-gradient(135deg,rgba(4,47,46,0.97),rgba(15,118,110,0.9)_60%,rgba(13,158,228,0.82))] px-8 pt-8 pb-10">
+                            <div className="relative overflow-hidden bg-[linear-gradient(135deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_58%,rgba(13,158,228,0.86))] px-5 pt-5 pb-6 sm:px-8 sm:pt-8 sm:pb-10">
                                 <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-white/5 blur-[60px]" />
-                                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-1.5 backdrop-blur-md">
-                                    <Radar className="size-3.5 text-(--school-gold)" />
-                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-gold) uppercase">
+                                <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-black/20 px-4 py-2 shadow-[0_12px_28px_-18px_rgba(4,47,46,0.6)] backdrop-blur-md">
+                                    <Radar className="size-3.5 text-(--school-gold-400)" />
+                                    <span className="text-[0.68rem] font-bold tracking-[0.28em] text-white/90 uppercase">
                                         Admissions Pulse
                                     </span>
                                 </div>
-                                <h2 className="mt-5 max-w-lg font-heading text-3xl leading-tight text-white md:text-4xl">
+                                <h2 className="mt-5 max-w-2xl font-heading text-3xl leading-[1.08] text-white sm:text-[2.45rem]">
                                     PPDB zonasi ditampilkan secara transparan.
                                 </h2>
-                                <p className="mt-3 max-w-lg text-sm leading-7 text-white/60">
+                                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/72 sm:text-base">
                                     Calon siswa dapat memeriksa jarak domisili,
                                     kuota, dan status zona melalui halaman PPDB.
                                 </p>
+                                <div className="mt-5 flex flex-wrap gap-2.5">
+                                    {[
+                                        'Jarak Domisili',
+                                        'Kuota Terbuka',
+                                        'Simulasi Zona',
+                                    ].map((item) => (
+                                        <span
+                                            key={item}
+                                            className="rounded-full border border-white/16 bg-white/10 px-3 py-1.5 text-[0.68rem] font-semibold tracking-[0.18em] text-white/80 uppercase backdrop-blur-sm"
+                                        >
+                                            {item}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* Quota grid */}
                             {ppdb ? (
-                                <div className="px-6 pt-6 pb-6">
+                                <div className="px-4 pt-4 pb-5 sm:px-6 sm:pt-6 sm:pb-6">
                                     <motion.div
                                         variants={staggerContainer}
                                         initial="hidden"
                                         whileInView="show"
                                         viewport={motionViewport}
-                                        className="grid grid-cols-2 gap-3 md:grid-cols-4"
+                                        className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
                                     >
                                         {ppdb.trackQuotas.map((quota, i) => {
                                             const accents = [
@@ -1255,11 +1270,11 @@ export default function HomePage({
                                                         y: -4,
                                                         scale: 1.02,
                                                     }}
-                                                    className="group/q relative overflow-hidden rounded-2xl border border-white/80 bg-white p-5 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.08)] transition-all hover:shadow-[0_20px_52px_-16px_rgba(0,0,0,0.14)]"
+                                                    className="group/q relative min-h-[10.5rem] overflow-hidden rounded-[1.6rem] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.94))] p-4 shadow-[0_18px_45px_-26px_rgba(15,23,42,0.12)] transition-all hover:shadow-[0_22px_56px_-24px_rgba(15,23,42,0.18)] sm:p-5"
                                                 >
                                                     {/* Accent strip */}
                                                     <div
-                                                        className="absolute top-0 left-0 h-full w-1 rounded-l-2xl"
+                                                        className="absolute inset-x-0 top-0 h-1.5 rounded-t-[1.6rem]"
                                                         style={{
                                                             backgroundColor:
                                                                 accent,
@@ -1276,13 +1291,13 @@ export default function HomePage({
 
                                                     <div className="relative z-10 flex items-start justify-between">
                                                         <div>
-                                                            <div className="text-[0.65rem] font-bold tracking-[0.22em] text-(--school-muted) uppercase">
+                                                            <div className="text-[0.68rem] font-bold tracking-[0.22em] text-(--school-muted) uppercase">
                                                                 {
                                                                     quota.trackType
                                                                 }
                                                             </div>
                                                             <div
-                                                                className="mt-2 text-3xl font-extrabold"
+                                                                className="mt-3 text-4xl font-extrabold sm:text-3xl xl:text-4xl"
                                                                 style={{
                                                                     color: accent,
                                                                 }}
@@ -1295,7 +1310,7 @@ export default function HomePage({
                                                             </div>
                                                         </div>
                                                         <div
-                                                            className="flex size-9 items-center justify-center rounded-xl border"
+                                                            className="flex size-10 items-center justify-center rounded-2xl border shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
                                                             style={{
                                                                 borderColor: `${accent}20`,
                                                                 backgroundColor: `${accent}08`,
@@ -1307,7 +1322,7 @@ export default function HomePage({
                                                     </div>
 
                                                     {/* Progress bar */}
-                                                    <div className="relative z-10 mt-3">
+                                                    <div className="relative z-10 mt-4">
                                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/4">
                                                             <motion.div
                                                                 initial={{
@@ -1353,9 +1368,9 @@ export default function HomePage({
                                         <Button
                                             asChild
                                             size="lg"
-                                            className="group/cta w-full rounded-2xl bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-(--school-ink) shadow-[0_8px_24px_-8px_rgba(245,158,11,0.4)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(245,158,11,0.55)] md:w-auto"
+                                            className="group/cta h-12 w-full rounded-[1.35rem] bg-[linear-gradient(135deg,var(--school-gold-500),var(--school-gold-400))] px-6 text-base font-semibold text-(--school-ink) shadow-[0_12px_30px_-12px_rgba(245,158,11,0.45)] transition-shadow hover:shadow-[0_16px_38px_-12px_rgba(245,158,11,0.58)] sm:w-auto"
                                         >
-                                            <Link href="/ppdb">
+                                            <Link href={ppdbRoute()}>
                                                 Mulai Simulasi Zona
                                                 <ArrowRight className="ml-2 size-4 transition-transform group-hover/cta:translate-x-1" />
                                             </Link>
@@ -1867,21 +1882,21 @@ export default function HomePage({
                             className="relative overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(160deg,rgba(4,47,46,0.97),rgba(15,118,110,0.92)_50%,rgba(13,158,228,0.85))] shadow-[0_38px_90px_-50px_rgba(4,47,46,0.75)]"
                         >
                             <div className="grid lg:grid-cols-[1fr_320px]">
-                                <div className="relative z-10 p-8 text-white lg:p-10">
+                                <div className="relative z-10 p-6 text-white sm:p-8 lg:p-10">
                                     {/* Ambient orb */}
                                     <div className="pointer-events-none absolute -top-20 -right-20 size-72 rounded-full bg-white/4 blur-[80px]" />
 
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-1.5 backdrop-blur-sm">
-                                        <GraduationCap className="size-3.5 text-(--school-gold)" />
-                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-(--school-green-700) uppercase">
+                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-black/20 px-4 py-2 shadow-[0_12px_28px_-18px_rgba(4,47,46,0.6)] backdrop-blur-md">
+                                        <GraduationCap className="size-3.5 text-(--school-gold-400)" />
+                                        <span className="text-[0.68rem] font-bold tracking-[0.28em] text-white/90 uppercase">
                                             Alumni Network
                                         </span>
                                     </div>
 
-                                    <h3 className="mt-5 font-heading text-2xl leading-tight md:text-3xl">
+                                    <h3 className="mt-5 font-heading text-2xl leading-tight sm:text-3xl">
                                         Dari SMAN 1 Tenjo ke Seluruh Indonesia
                                     </h3>
-                                    <p className="mt-3 max-w-lg text-sm leading-7 text-white/65">
+                                    <p className="mt-3 max-w-lg text-sm leading-7 text-white/72 sm:text-base">
                                         Lulusan kami tersebar di berbagai
                                         perguruan tinggi dan dunia kerja. Setiap
                                         jejak alumni menjadi inspirasi bagi

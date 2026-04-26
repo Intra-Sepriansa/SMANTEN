@@ -27,6 +27,12 @@ import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Button } from '@/components/ui/button';
 import { fadeUp, motionViewport, staggerContainer } from '@/lib/motion';
+import {
+    beasiswa,
+    bimbinganKonseling,
+    osisMpk,
+    prestasiSiswa,
+} from '@/routes/kesiswaan';
 import type { SchoolProfilePayload } from '@/types';
 
 type StudentAffairsPageProps = {
@@ -37,11 +43,10 @@ const numberFormatter = new Intl.NumberFormat('id-ID');
 
 const sectionMenu = [
     { id: 'snapshot-kesiswaan', label: 'Snapshot' },
-    { id: 'osis-mpk', label: 'OSIS & MPK' },
-    { id: 'prestasi-siswa', label: 'Prestasi' },
-    { id: 'beasiswa', label: 'Beasiswa' },
-    { id: 'bimbingan-konseling', label: 'BK' },
+    { id: 'layanan-khusus', label: 'Halaman Khusus' },
+    { id: 'jalur-pembinaan', label: 'Ritme Pembinaan' },
     { id: 'menu-terkait', label: 'Menu Terkait' },
+    { id: 'arah-berikutnya', label: 'Arah Berikutnya' },
 ] as const;
 
 const serviceCards = [
@@ -51,11 +56,10 @@ const serviceCards = [
         title: 'OSIS & MPK',
         icon: Megaphone,
         accent: '#0F766E',
+        href: osisMpk(),
         summary:
-            'Ruang aspirasi, koordinasi acara, dan regenerasi siswa dipusatkan agar program berjalan lebih rapi.',
+            'Ruang aspirasi, koordinasi acara, dan regenerasi kepemimpinan siswa.',
         chips: ['Forum aspirasi', 'Agenda siswa', 'Regenerasi'],
-        signalLabel: 'Fokus',
-        signal: 'Program siswa diarahkan untuk memiliki rencana, pelaksanaan, dan evaluasi.',
     },
     {
         id: 'prestasi-siswa',
@@ -63,11 +67,10 @@ const serviceCards = [
         title: 'Prestasi Siswa',
         icon: Award,
         accent: '#D97706',
+        href: prestasiSiswa(),
         summary:
-            'Capaian akademik dan non-akademik dipetakan agar orang tua dan calon siswa mudah melihat kualitas pembinaan.',
+            'Capaian akademik dan non-akademik ditampilkan di halaman prestasi khusus.',
         chips: ['Lomba', 'Portofolio', 'Apresiasi'],
-        signalLabel: 'Fokus',
-        signal: 'Prestasi dicatat agar capaian siswa mudah dipantau dan diapresiasi.',
     },
     {
         id: 'beasiswa',
@@ -75,11 +78,10 @@ const serviceCards = [
         title: 'Beasiswa',
         icon: GraduationCap,
         accent: '#7C3AED',
+        href: beasiswa(),
         summary:
-            'Informasi bantuan pendidikan, jalur seleksi, dan pendampingan administrasi disajikan secara jelas.',
+            'Informasi bantuan pendidikan, syarat, jadwal, dan pendampingan administrasi.',
         chips: ['Info peluang', 'Jadwal penting', 'Pendampingan'],
-        signalLabel: 'Fokus',
-        signal: 'Siswa mendapat informasi peluang bantuan pendidikan secara lebih tertata.',
     },
     {
         id: 'bimbingan-konseling',
@@ -87,11 +89,10 @@ const serviceCards = [
         title: 'Bimbingan Konseling',
         icon: BookOpenCheck,
         accent: '#DC2626',
+        href: bimbinganKonseling(),
         summary:
-            'BK diposisikan sebagai simpul pendampingan belajar, emosi, relasi sosial, dan arah masa depan siswa.',
+            'Pendampingan belajar, sosial emosi, relasi, dan arah masa depan siswa.',
         chips: ['Akademik', 'Sosial emosi', 'Karier'],
-        signalLabel: 'Fokus',
-        signal: 'Siswa mendapat ruang konsultasi awal sebelum persoalan berkembang lebih besar.',
     },
 ] as const;
 
@@ -99,7 +100,7 @@ const operationBoards = [
     {
         title: 'Agenda & Representasi',
         description:
-            'Kegiatan siswa, kepanitiaan, dan kebutuhan representasi sekolah dikendalikan dari ruang koordinasi yang sama.',
+            'Arah umum pembinaan siswa dibaca dari kebutuhan kegiatan, representasi, dan dukungan sekolah.',
         metric: 'Agenda',
         value: 'Tertata',
         icon: CalendarDays,
@@ -107,7 +108,7 @@ const operationBoards = [
     {
         title: 'Support Desk',
         description:
-            'Informasi beasiswa, kebutuhan pendampingan, dan tindak lanjut siswa disusun agar lebih cepat ditangani.',
+            'Setiap layanan siswa diarahkan ke halaman khusus agar tindak lanjut lebih jelas.',
         metric: 'Support',
         value: 'Responsif',
         icon: HandHeart,
@@ -115,7 +116,7 @@ const operationBoards = [
     {
         title: 'Apresiasi & Jejak',
         description:
-            'Prestasi, kegiatan, dan rekam pembinaan diarahkan ke halaman pendukung terkait.',
+            'Jejak pembinaan dan capaian siswa diarahkan ke halaman yang sesuai dengan fungsinya.',
         metric: 'Output',
         value: 'Terlihat',
         icon: Trophy,
@@ -127,25 +128,25 @@ const studentJourney = [
         step: '01',
         title: 'Terpetakan Sejak Awal',
         description:
-            'Minat, kebutuhan pembinaan, dan potensi siswa dipetakan sejak awal.',
+            'Minat, kebutuhan pembinaan, dan potensi siswa dibaca sebagai arah layanan.',
     },
     {
         step: '02',
-        title: 'Masuk Ekosistem',
+        title: 'Pilih Halaman Khusus',
         description:
-            'Siswa terhubung ke OSIS, kegiatan, prestasi, atau layanan pendampingan yang paling relevan.',
+            'Siswa diarahkan ke halaman OSIS, prestasi, beasiswa, atau BK sesuai kebutuhan.',
     },
     {
         step: '03',
-        title: 'Didampingi & Didorong',
+        title: 'Dapatkan Konteks',
         description:
-            'Beasiswa, BK, dan koordinasi pembina menjadi dukungan utama bagi siswa.',
+            'Setiap halaman memuat alur kerja dan informasi sesuai fungsi menu itu saja.',
     },
     {
         step: '04',
-        title: 'Tampil & Bertumbuh',
+        title: 'Tindak Lanjut',
         description:
-            'Hasil pembinaan diarahkan ke organisasi, kegiatan, atau program yang sesuai.',
+            'Pengunjung dapat melanjutkan ke menu pendukung tanpa mencampur fungsi layanan.',
     },
 ] as const;
 
@@ -176,7 +177,7 @@ export default function StudentAffairsPage({
         {
             label: 'Fokus Inti',
             value: '4',
-            detail: 'OSIS, prestasi, beasiswa, BK',
+            detail: 'halaman khusus untuk setiap layanan',
             icon: ShieldCheck,
         },
         {
@@ -396,12 +397,15 @@ export default function StudentAffairsPage({
                     </div>
                 </div>
 
-                <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6">
+                <section
+                    id="layanan-khusus"
+                    className="mx-auto max-w-7xl scroll-mt-28 space-y-8 px-4 sm:px-6"
+                >
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                         <SectionHeading
-                            eyebrow="Fokus Layanan"
-                            title="Empat area inti layanan kesiswaan."
-                            description="Informasi dipadatkan ke layanan yang paling dibutuhkan siswa dan orang tua."
+                            eyebrow="Halaman Khusus"
+                            title="Setiap layanan punya halaman sendiri."
+                            description="Dipisah per fungsi."
                         />
 
                         <Button
@@ -425,69 +429,74 @@ export default function StudentAffairsPage({
                         {serviceCards.map((service) => (
                             <motion.article
                                 key={service.id}
-                                id={service.id}
                                 variants={fadeUp}
-                                className="scroll-mt-28"
+                                whileHover={{ y: -6 }}
+                                className="group"
                             >
-                                <BorderGlow
-                                    borderRadius={34}
-                                    colors={[
-                                        service.accent,
-                                        '#0EA5E9',
-                                        '#FFFFFF',
-                                    ]}
-                                    className="h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_28px_75px_-50px_rgba(15,118,110,0.34)] backdrop-blur-xl"
+                                <Link
+                                    href={service.href}
+                                    prefetch
+                                    className="block h-full"
                                 >
-                                    <div className="space-y-6 p-6 md:p-7">
-                                        <div className="flex items-start justify-between gap-5">
-                                            <div>
-                                                <div className="inline-flex rounded-full border border-white/80 bg-white/82 px-4 py-1 text-[0.68rem] font-bold tracking-[0.24em] text-[var(--school-green-700)] uppercase">
-                                                    {service.eyebrow}
+                                    <BorderGlow
+                                        borderRadius={34}
+                                        colors={[
+                                            service.accent,
+                                            '#0EA5E9',
+                                            '#FFFFFF',
+                                        ]}
+                                        className="h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_28px_75px_-50px_rgba(15,118,110,0.34)] backdrop-blur-xl"
+                                    >
+                                        <div className="space-y-6 p-6 md:p-7">
+                                            <div className="flex items-start justify-between gap-5">
+                                                <div>
+                                                    <div className="inline-flex rounded-full border border-white/80 bg-white/82 px-4 py-1 text-[0.68rem] font-bold tracking-[0.24em] text-[var(--school-green-700)] uppercase">
+                                                        {service.eyebrow}
+                                                    </div>
+                                                    <h3 className="mt-4 font-heading text-3xl text-[var(--school-ink)]">
+                                                        {service.title}
+                                                    </h3>
                                                 </div>
-                                                <h3 className="mt-4 font-heading text-3xl text-[var(--school-ink)]">
-                                                    {service.title}
-                                                </h3>
-                                            </div>
-                                            <div
-                                                className="flex size-14 items-center justify-center rounded-3xl text-white shadow-[0_24px_60px_-30px_rgba(4,47,46,0.42)]"
-                                                style={{
-                                                    background: `linear-gradient(135deg, ${service.accent}, rgba(15,23,42,0.82))`,
-                                                }}
-                                            >
-                                                <service.icon className="size-5" />
-                                            </div>
-                                        </div>
-
-                                        <p className="text-sm leading-7 text-[var(--school-muted)] md:text-base">
-                                            {service.summary}
-                                        </p>
-
-                                        <div className="flex flex-wrap gap-2">
-                                            {service.chips.map((chip) => (
-                                                <span
-                                                    key={chip}
-                                                    className="rounded-full border px-3 py-1 text-xs font-semibold"
+                                                <div
+                                                    className="flex size-14 items-center justify-center rounded-3xl text-white shadow-[0_24px_60px_-30px_rgba(4,47,46,0.42)] transition group-hover:scale-105"
                                                     style={{
-                                                        borderColor: `${service.accent}26`,
-                                                        backgroundColor: `${service.accent}12`,
-                                                        color: service.accent,
+                                                        background: `linear-gradient(135deg, ${service.accent}, rgba(15,23,42,0.82))`,
                                                     }}
                                                 >
-                                                    {chip}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-4">
-                                            <div className="text-[0.68rem] font-bold tracking-[0.22em] text-[var(--school-green-700)] uppercase">
-                                                {service.signalLabel}
+                                                    <service.icon className="size-5" />
+                                                </div>
                                             </div>
-                                            <p className="mt-2 text-sm leading-7 text-[var(--school-ink)]">
-                                                {service.signal}
-                                            </p>
+
+                                            <div className="flex flex-wrap gap-2">
+                                                {service.chips.map((chip) => (
+                                                    <span
+                                                        key={chip}
+                                                        className="rounded-full border px-3 py-1 text-xs font-semibold"
+                                                        style={{
+                                                            borderColor: `${service.accent}26`,
+                                                            backgroundColor: `${service.accent}12`,
+                                                            color: service.accent,
+                                                        }}
+                                                    >
+                                                        {chip}
+                                                    </span>
+                                                ))}
+                                            </div>
+
+                                            <div className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-4">
+                                                <div className="text-sm font-bold text-[var(--school-ink)]">
+                                                    Buka halaman khusus
+                                                </div>
+                                                <ArrowRight
+                                                    className="size-4 shrink-0 transition group-hover:translate-x-1"
+                                                    style={{
+                                                        color: service.accent,
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                </BorderGlow>
+                                    </BorderGlow>
+                                </Link>
                             </motion.article>
                         ))}
                     </motion.div>

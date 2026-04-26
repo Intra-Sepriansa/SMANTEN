@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,6 @@ const slides = [
 
 export function HeroCarousel() {
     const [current, setCurrent] = useState(0);
-    const prefersReducedMotion = useReducedMotion();
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -97,48 +96,23 @@ export function HeroCarousel() {
                             <Button
                                 asChild
                                 size="lg"
-                                className="group/cta relative mt-6 h-auto min-h-0 overflow-hidden rounded-[8px] border border-white/16 bg-[linear-gradient(135deg,rgba(22,121,111,0.96),rgba(15,91,85,0.98))] px-0 py-0 text-sm font-semibold tracking-[0.18em] text-white uppercase shadow-[0_24px_60px_-24px_rgba(15,91,85,0.78)] transition-transform duration-500 hover:-translate-y-0.5 hover:shadow-[0_30px_70px_-24px_rgba(15,91,85,0.86)] focus-visible:ring-white/70"
+                                className="group/cta relative mt-6 h-auto min-h-0 w-full max-w-[22rem] overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/92 px-0 py-0 text-sm font-semibold text-(--school-ink) shadow-[0_26px_70px_-32px_rgba(15,23,42,0.58)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:bg-white hover:shadow-[0_32px_85px_-34px_rgba(15,23,42,0.62)] focus-visible:ring-white/80 sm:max-w-none"
                             >
                                 <Link
                                     href={beritaIndex()}
                                     prefetch
-                                    className="relative flex items-center gap-3 overflow-hidden px-5 py-4 sm:px-6"
+                                    className="relative flex w-full min-w-0 items-center justify-between gap-3 px-4 py-4 sm:min-w-[23rem] sm:px-5"
                                 >
-                                    <span className="pointer-events-none absolute inset-y-0 left-0 w-14 bg-[linear-gradient(180deg,rgba(243,168,29,0.22),rgba(247,191,89,0.05))]" />
-                                    <motion.span
-                                        aria-hidden="true"
-                                        className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.34)_50%,transparent_78%)]"
-                                        initial={
-                                            prefersReducedMotion
-                                                ? false
-                                                : { x: '-135%' }
-                                        }
-                                        animate={
-                                            prefersReducedMotion
-                                                ? { opacity: 0 }
-                                                : { x: '135%' }
-                                        }
-                                        transition={
-                                            prefersReducedMotion
-                                                ? { duration: 0 }
-                                                : {
-                                                      duration: 2.8,
-                                                      repeat: Infinity,
-                                                      ease: 'easeInOut',
-                                                      repeatDelay: 1.2,
-                                                  }
-                                        }
-                                    />
-                                    <span className="relative flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-white/18 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] backdrop-blur-sm transition-transform duration-500 group-hover/cta:scale-[1.05]">
-                                        <Sparkles className="size-4 text-(--school-gold-400)" />
+                                    <span className="flex size-11 shrink-0 items-center justify-center rounded-[1.1rem] border border-slate-200/90 bg-white text-(--school-gold-500) shadow-[0_14px_30px_-24px_rgba(15,23,42,0.5)] transition-all duration-500 group-hover/cta:border-(--school-green-100) group-hover/cta:bg-(--school-green-50)">
+                                        <Sparkles className="size-4" />
                                     </span>
-                                    <span className="relative flex min-w-0 items-center gap-3">
-                                        <span className="whitespace-nowrap text-left text-sm font-bold tracking-[0.22em] text-white uppercase sm:text-[0.92rem]">
+                                    <span className="flex min-w-0 flex-1 items-center">
+                                        <span className="truncate text-left text-sm font-bold tracking-[0.14em] text-(--school-ink) uppercase sm:text-[0.92rem]">
                                             Lihat Berita
                                         </span>
-                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-[8px] border border-white/14 bg-black/10 text-white/90 transition-all duration-500 group-hover/cta:translate-x-0.5 group-hover/cta:bg-white/12 group-hover/cta:text-(--school-gold-400)">
-                                            <ArrowUpRight className="size-4" />
-                                        </span>
+                                    </span>
+                                    <span className="flex size-10 shrink-0 items-center justify-center rounded-[1rem] border border-slate-200/90 bg-slate-50 text-(--school-ink) transition-all duration-500 group-hover/cta:-translate-y-0.5 group-hover/cta:border-(--school-green-200) group-hover/cta:bg-white group-hover/cta:text-(--school-green-700)">
+                                        <ArrowUpRight className="size-4" />
                                     </span>
                                 </Link>
                             </Button>

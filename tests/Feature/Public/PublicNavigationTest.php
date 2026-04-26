@@ -16,6 +16,10 @@ it('renders the public website routes for guests', function (string $routeName, 
     ['profile', 'public/profile'],
     ['akademik', 'public/akademik'],
     ['kesiswaan', 'public/kesiswaan'],
+    ['kesiswaan.osis-mpk', 'public/kesiswaan/osis-mpk'],
+    ['kesiswaan.prestasi-siswa', 'public/kesiswaan/prestasi-siswa'],
+    ['kesiswaan.beasiswa', 'public/kesiswaan/beasiswa'],
+    ['kesiswaan.bimbingan-konseling', 'public/kesiswaan/bimbingan-konseling'],
     ['ppdb', 'public/ppdb'],
     ['media', 'public/media'],
     ['layanan', 'public/layanan'],
@@ -60,6 +64,52 @@ it('renders the ppdb zonasi cubes matrix', function (): void {
         ->toContain('prefersReducedMotion')
         ->toContain('triggerRipple')
         ->toContain('handlePointerMove');
+});
+
+it('keeps the hero carousel news cta in a lighter white card style', function (): void {
+    $heroCarousel = file_get_contents(resource_path('js/components/public/hero-carousel.tsx'));
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('public/home'));
+
+    expect($heroCarousel)
+        ->toContain('w-full max-w-[22rem]')
+        ->toContain('rounded-[1.75rem] border border-white/70 bg-white/92')
+        ->toContain('shadow-[0_26px_70px_-32px_rgba(15,23,42,0.58)]')
+        ->toContain('justify-between gap-3 px-4 py-4 sm:min-w-[23rem] sm:px-5')
+        ->toContain('rounded-[1.1rem] border border-slate-200/90 bg-white text-(--school-gold-500)')
+        ->toContain('font-bold tracking-[0.14em] text-(--school-ink) uppercase')
+        ->toContain('rounded-[1rem] border border-slate-200/90 bg-slate-50 text-(--school-ink)')
+        ->not->toContain('bg-[linear-gradient(135deg,rgba(22,121,111,0.96),rgba(15,91,85,0.98))]')
+        ->not->toContain('bg-[linear-gradient(110deg,transparent_20%,rgba(255,255,255,0.34)_50%,transparent_78%)]')
+        ->not->toContain('const prefersReducedMotion = useReducedMotion();');
+});
+
+it('keeps home dark-surface labels readable and expands the ppdb spotlight for mobile', function (): void {
+    $homePage = file_get_contents(resource_path('js/pages/public/home.tsx'));
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('public/home'));
+
+    expect($homePage)
+        ->toContain("import { ppdb as ppdbRoute } from '@/actions/App/Http/Controllers/PublicSiteController';")
+        ->toContain('rounded-2xl border border-white/18 bg-[linear-gradient(180deg,rgba(4,47,46,0.82),rgba(4,47,46,0.68))]')
+        ->toContain('text-(--school-gold-400)')
+        ->toContain('rounded-full border border-white/22 bg-black/20 px-4 py-2')
+        ->toContain('text-white/92 uppercase')
+        ->toContain('text-white/90 uppercase')
+        ->toContain('mx-auto max-w-6xl')
+        ->toContain('sm:px-8 sm:pt-8 sm:pb-10')
+        ->toContain('Jarak Domisili')
+        ->toContain('Kuota Terbuka')
+        ->toContain('Simulasi Zona')
+        ->toContain('grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4')
+        ->toContain('min-h-[10.5rem]')
+        ->toContain('href={ppdbRoute()}')
+        ->not->toContain('href="/ppdb"')
+        ->not->toContain('text-(--school-gold)');
 });
 
 it('does not clip the desktop navbar dropdown container', function (): void {
@@ -122,15 +172,21 @@ it('renders desktop menu triggers for sections with submenu', function (): void 
         ->toContain('Struktur Organisasi')
         ->toContain('Tenaga Pendidik')
         ->toContain('Forum Alumni')
-        ->toContain('Virtual Tour')
+        ->toContain('Tulis Cerita')
         ->toContain('Kurikulum Merdeka')
         ->toContain('Projek P5')
         ->toContain('Ekstrakurikuler')
         ->toContain('Kesiswaan')
         ->toContain('OSIS & MPK')
+        ->toContain("href: '/kesiswaan/osis-mpk'")
         ->toContain('Prestasi Siswa')
+        ->toContain("href: '/kesiswaan/prestasi-siswa'")
         ->toContain('Beasiswa')
+        ->toContain("href: '/kesiswaan/beasiswa'")
         ->toContain('Bimbingan Konseling')
+        ->toContain("href: '/kesiswaan/bimbingan-konseling'")
+        ->not->toContain('Layanan Siswa Terpadu')
+        ->not->toContain("href: '/kesiswaan#layanan-siswa-terpadu'")
         ->toContain('Dokumentasi')
         ->toContain("description: 'Galeri foto dan video sekolah'")
         ->toContain('Layanan')
@@ -524,6 +580,11 @@ it('renders the strategic partner logo loop below the home hero', function (): v
         ->toContain('/images/partners/adiwiyata.png')
         ->toContain('Provinsi Jawa Barat')
         ->toContain('Adiwiyata')
+        ->toContain('max-h-10 md:max-h-[4.9rem]')
+        ->toContain('max-h-11 md:max-h-[4.8rem]')
+        ->toContain('max-h-8 max-w-24 md:max-h-[3.6rem] md:max-w-[9.8rem]')
+        ->toContain('max-h-9 max-w-24 md:max-h-[4.5rem] md:max-w-[9.8rem]')
+        ->toContain('max-w-[11rem]')
         ->not->toContain('/images/partners/disdik-jabar.png')
         ->not->toContain('Dinas Pendidikan Jawa Barat')
         ->not->toContain('lucide-react')
@@ -539,15 +600,11 @@ it('renders the strategic partner logo loop below the home hero', function (): v
 
     expect($heroCarouselSource)
         ->toContain("import { index as beritaIndex } from '@/routes/berita';")
-        ->toContain('useReducedMotion')
         ->toContain('href={beritaIndex()}')
         ->toContain('prefetch')
         ->toContain('group/cta relative mt-6')
-        ->toContain('rounded-[8px]')
-        ->toContain('bg-[linear-gradient(135deg,rgba(22,121,111,0.96),rgba(15,91,85,0.98))]')
-        ->toContain('Sparkles className="size-4 text-(--school-gold-400)"')
+        ->toContain('Lihat Berita')
         ->toContain('ArrowUpRight')
-        ->toContain('prefersReducedMotion')
         ->not->toContain('bg-[#0E9EE4]')
         ->not->toContain('rounded-none')
         ->not->toContain('absolute right-4 size-5 translate-x-4 opacity-0');
@@ -607,10 +664,14 @@ it('keeps the profile page focused on identity instead of duplicating other publ
 it('keeps the kesiswaan page focused on internal student affairs sections', function (): void {
     $this->get(route('kesiswaan'))
         ->assertOk()
-        ->assertSee('id="osis-mpk"', false)
-        ->assertSee('id="prestasi-siswa"', false)
-        ->assertSee('id="beasiswa"', false)
-        ->assertSee('id="bimbingan-konseling"', false)
+        ->assertSee('/kesiswaan/osis-mpk', false)
+        ->assertSee('/kesiswaan/prestasi-siswa', false)
+        ->assertSee('/kesiswaan/beasiswa', false)
+        ->assertSee('/kesiswaan/bimbingan-konseling', false)
+        ->assertDontSee('id="osis-mpk"', false)
+        ->assertDontSee('id="prestasi-siswa"', false)
+        ->assertDontSee('id="beasiswa"', false)
+        ->assertDontSee('id="bimbingan-konseling"', false)
         ->assertDontSeeText('Publikasi Kesiswaan')
         ->assertDontSee('/kesiswaan#ekstrakurikuler', false);
 });
@@ -620,9 +681,27 @@ it('renders the refreshed kesiswaan page structure', function (): void {
         ->assertOk()
         ->assertSeeText('Pembinaan siswa yang tertata,')
         ->assertSeeText('terarah, dan mudah diakses.')
+        ->assertSeeText('Setiap layanan punya halaman sendiri.')
         ->assertSeeText('Menu Terkait')
         ->assertSeeText('Informasi lanjutan tersedia di halaman khusus.');
 });
+
+it('renders dedicated student affairs pages without combining their functions', function (
+    string $routeName,
+    string $heading,
+    string $focusCopy,
+): void {
+    $this->get(route($routeName))
+        ->assertOk()
+        ->assertSeeText($heading)
+        ->assertSeeText($focusCopy)
+        ->assertSeeText('tanpa mencampur');
+})->with([
+    ['kesiswaan.osis-mpk', 'OSIS & MPK', 'Fokus halaman ini hanya organisasi siswa.'],
+    ['kesiswaan.prestasi-siswa', 'Prestasi Siswa', 'Fokus halaman ini hanya prestasi siswa.'],
+    ['kesiswaan.beasiswa', 'Beasiswa', 'Fokus halaman ini hanya beasiswa.'],
+    ['kesiswaan.bimbingan-konseling', 'Bimbingan Konseling', 'Fokus halaman ini hanya Bimbingan Konseling.'],
+]);
 
 it('keeps the layanan page as a service hub without repeating the update feed', function (): void {
     $this->get(route('layanan'))
@@ -644,6 +723,10 @@ it('keeps public page copy concise and removes old filler phrases', function ():
         'resources/js/pages/public/profile.tsx',
         'resources/js/pages/public/akademik.tsx',
         'resources/js/pages/public/kesiswaan.tsx',
+        'resources/js/pages/public/kesiswaan/osis-mpk.tsx',
+        'resources/js/pages/public/kesiswaan/prestasi-siswa.tsx',
+        'resources/js/pages/public/kesiswaan/beasiswa.tsx',
+        'resources/js/pages/public/kesiswaan/bimbingan-konseling.tsx',
         'resources/js/pages/public/layanan.tsx',
         'resources/js/pages/public/media.tsx',
         'resources/js/pages/public/berita/index.tsx',

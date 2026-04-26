@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, CalendarDays, Megaphone, Tag, User } from 'lucide-react';
 import { useRef } from 'react';
+import { AdvancedMenuStage } from '@/components/public/advanced-menu-stage';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,13 @@ export default function BeritaIndexPage({
 
     const featuredArticle = articles.length > 0 ? articles[0] : null;
     const remainingArticles = articles.length > 1 ? articles.slice(1) : [];
+    const categoryCount = new Set(
+        articles.map((article) => article.category).filter(Boolean),
+    ).size;
+    const authorCount = new Set(
+        articles.map((article) => article.authorName).filter(Boolean),
+    ).size;
+    const sourceCount = articles.filter((article) => article.source).length;
 
     return (
         <>
@@ -111,6 +119,91 @@ export default function BeritaIndexPage({
                         </div>
                     </motion.div>
                 </motion.section>
+
+                <AdvancedMenuStage
+                    tone="sky"
+                    eyebrow="Editorial intelligence"
+                    title="Berita dibuat seperti ruang redaksi digital."
+                    description="Pembaca melihat headline, arsip, kategori, sumber, dan ritme publikasi dalam tampilan editorial yang lebih hidup dan mudah dipindai."
+                    metrics={[
+                        {
+                            label: 'Publikasi',
+                            value: `${articles.length}`,
+                            helper: 'Artikel yang sudah tersedia untuk pembaca.',
+                            icon: Megaphone,
+                        },
+                        {
+                            label: 'Kategori',
+                            value: `${categoryCount}`,
+                            helper: 'Topik redaksi yang sedang aktif.',
+                            icon: Tag,
+                        },
+                        {
+                            label: 'Kontributor',
+                            value: `${authorCount}`,
+                            helper: 'Penulis atau redaksi yang tercatat.',
+                            icon: User,
+                        },
+                        {
+                            label: 'Sumber',
+                            value: `${sourceCount}`,
+                            helper: 'Artikel dengan sumber tambahan.',
+                            icon: CalendarDays,
+                        },
+                    ]}
+                    steps={[
+                        {
+                            label: '01',
+                            title: 'Headline',
+                            description:
+                                'Artikel terbaru ditempatkan sebagai sorotan utama dengan visual besar.',
+                            icon: Megaphone,
+                        },
+                        {
+                            label: '02',
+                            title: 'Konteks',
+                            description:
+                                'Kategori, tanggal, penulis, dan sumber dibuat cepat terbaca.',
+                            icon: Tag,
+                        },
+                        {
+                            label: '03',
+                            title: 'Arsip',
+                            description:
+                                'Artikel lain disusun sebagai grid kartu agar mudah dipilih.',
+                            icon: CalendarDays,
+                        },
+                        {
+                            label: '04',
+                            title: 'Detail',
+                            description:
+                                'Setiap artikel diarahkan ke halaman baca penuh dengan transisi Inertia.',
+                            icon: ArrowRight,
+                        },
+                    ]}
+                    signals={[
+                        {
+                            label: 'Headline',
+                            value: featuredArticle ? 'Aktif' : 'Kosong',
+                        },
+                        {
+                            label: 'Arsip',
+                            value: `${remainingArticles.length}`,
+                        },
+                        {
+                            label: 'Kategori',
+                            value: `${categoryCount}`,
+                        },
+                        {
+                            label: 'Penulis',
+                            value: `${authorCount}`,
+                        },
+                        {
+                            label: 'Sumber',
+                            value: `${sourceCount}`,
+                        },
+                    ]}
+                />
 
                 {/* ═══════════ MAIN CONTENT GRID ═══════════ */}
                 <div className="mx-auto max-w-7xl space-y-10 px-4 sm:px-6 lg:px-8">

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { InteractiveOrgChart } from '@/components/org/interactive-org-chart';
+import { AdvancedMenuStage } from '@/components/public/advanced-menu-stage';
 import { BorderGlow } from '@/components/public/border-glow';
 import { SectionHeading } from '@/components/public/section-heading';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -305,6 +306,95 @@ export default function OrganizationPage({
                         </motion.div>
                     </AnimatePresence>
                 </div>
+
+                <AdvancedMenuStage
+                    tone={scope === 'school_management' ? 'emerald' : 'amber'}
+                    eyebrow="Organization intelligence"
+                    title="Struktur dibuat seperti peta koordinasi yang hidup."
+                    description="Pengunjung dapat membaca scope organisasi, posisi aktif, arsip historis, dan prinsip tata kelola tanpa kehilangan konteks struktur yang sedang berjalan."
+                    metrics={[
+                        {
+                            label: 'Posisi Aktif',
+                            value: `${activeCount}`,
+                            helper: 'Figur yang sedang memegang peran.',
+                            icon: Crown,
+                        },
+                        {
+                            label: 'Total Node',
+                            value: `${items.length}`,
+                            helper: 'Jumlah posisi pada scope terpilih.',
+                            icon: Network,
+                        },
+                        {
+                            label: 'Arsip',
+                            value: historicalArchive
+                                ? `${historicalArchive.length}`
+                                : 'Memuat',
+                            helper: 'Riwayat struktur periode sebelumnya.',
+                            icon: History,
+                        },
+                        {
+                            label: 'Scope',
+                            value: config.shortLabel,
+                            helper: config.label,
+                            icon: ScopeIcon,
+                        },
+                    ]}
+                    steps={[
+                        {
+                            label: '01',
+                            title: 'Pilih Scope',
+                            description:
+                                'Manajemen sekolah dan organisasi siswa bisa dibaca secara terpisah.',
+                            icon: Building2,
+                        },
+                        {
+                            label: '02',
+                            title: 'Baca Hierarki',
+                            description:
+                                'Jenjang pimpinan, koordinator, dan pelaksana divisualkan dalam bagan.',
+                            icon: Crown,
+                        },
+                        {
+                            label: '03',
+                            title: 'Cek Arsip',
+                            description:
+                                'Riwayat kepengurusan lama dipisahkan dari struktur yang masih aktif.',
+                            icon: History,
+                        },
+                        {
+                            label: '04',
+                            title: 'Audit Prinsip',
+                            description:
+                                'Transparansi, akuntabilitas, partisipasi, dan keberlanjutan menjadi acuan.',
+                            icon: Shield,
+                        },
+                    ]}
+                    signals={[
+                        {
+                            label: 'Scope',
+                            value: config.shortLabel,
+                        },
+                        {
+                            label: 'Aktif',
+                            value: `${activeCount}`,
+                        },
+                        {
+                            label: 'Node',
+                            value: `${items.length}`,
+                        },
+                        {
+                            label: 'Arsip',
+                            value: historicalArchive
+                                ? `${historicalArchive.length}`
+                                : 'Memuat',
+                        },
+                        {
+                            label: 'Mode',
+                            value: isArchiveExpanded ? 'Arsip' : 'Ringkas',
+                        },
+                    ]}
+                />
 
                 {/* ═══════════════════ VISUALISASI HIERARKI INTRO ═══════════════════ */}
                 <div className="mx-auto max-w-7xl px-4 sm:px-6">

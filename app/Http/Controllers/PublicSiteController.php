@@ -128,6 +128,34 @@ class PublicSiteController extends Controller
         ]);
     }
 
+    public function osisMpk(): Response
+    {
+        return Inertia::render('public/kesiswaan/osis-mpk', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
+    public function prestasiSiswa(): Response
+    {
+        return Inertia::render('public/kesiswaan/prestasi-siswa', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
+    public function beasiswa(): Response
+    {
+        return Inertia::render('public/kesiswaan/beasiswa', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
+    public function bimbinganKonseling(): Response
+    {
+        return Inertia::render('public/kesiswaan/bimbingan-konseling', [
+            'school' => $this->schoolPayload(),
+        ]);
+    }
+
     public function sitemap(): HttpResponse
     {
         $schoolUpdatedAt = SchoolProfile::query()
@@ -140,6 +168,10 @@ class PublicSiteController extends Controller
             ['route' => 'profile', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['route' => 'akademik', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['route' => 'kesiswaan', 'priority' => '0.8', 'changefreq' => 'weekly'],
+            ['route' => 'kesiswaan.osis-mpk', 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['route' => 'kesiswaan.prestasi-siswa', 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['route' => 'kesiswaan.beasiswa', 'priority' => '0.7', 'changefreq' => 'weekly'],
+            ['route' => 'kesiswaan.bimbingan-konseling', 'priority' => '0.7', 'changefreq' => 'weekly'],
             ['route' => 'ppdb', 'priority' => '0.9', 'changefreq' => 'weekly'],
             ['route' => 'media', 'priority' => '0.8', 'changefreq' => 'daily'],
             ['route' => 'layanan', 'priority' => '0.7', 'changefreq' => 'weekly'],

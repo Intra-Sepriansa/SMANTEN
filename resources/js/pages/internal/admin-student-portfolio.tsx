@@ -1,5 +1,13 @@
 import { Head } from '@inertiajs/react';
-import { LayoutDashboard, Sparkles, Users } from 'lucide-react';
+import {
+    CheckCircle2,
+    LayoutDashboard,
+    Medal,
+    Sparkles,
+    UploadCloud,
+    Users,
+} from 'lucide-react';
+import { AdminAdvancedCommandCenter } from '@/components/internal/admin/admin-advanced-command-center';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -52,6 +60,10 @@ export default function AdminStudentPortfolio({
     portfolioDesk,
 }: AdminStudentPortfolioProps) {
     const numberFormatter = new Intl.NumberFormat('id-ID');
+    const leaderCount = studentDesk.portfolioLeaders.length;
+    const liveRecentCount = portfolioDesk.recentItems.filter(
+        (item) => item.status === 'published',
+    ).length;
 
     return (
         <>
@@ -111,6 +123,94 @@ export default function AdminStudentPortfolio({
                 ]}
             >
                 <section className="grid gap-6">
+                    <AdminAdvancedCommandCenter
+                        eyebrow="Student creation command"
+                        title="Dampak portofolio siswa dibuat lebih terbaca."
+                        description="Kontributor, submission, karya live, dan featured dipantau dari sudut pandang siswa agar sekolah tahu siapa yang perlu diapresiasi atau didampingi."
+                        icon={Sparkles}
+                        metrics={[
+                            {
+                                label: 'Siswa',
+                                value: numberFormatter.format(
+                                    stats.studentCount,
+                                ),
+                                helper: 'Akun yang bisa berkontribusi.',
+                                icon: Users,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Submitted',
+                                value: numberFormatter.format(
+                                    stats.portfolioSubmittedCount,
+                                ),
+                                helper: 'Karya masuk dari siswa.',
+                                icon: UploadCloud,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Live',
+                                value: numberFormatter.format(
+                                    stats.portfolioPublishedCount,
+                                ),
+                                helper: 'Karya sudah tayang.',
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Leader',
+                                value: numberFormatter.format(leaderCount),
+                                helper: 'Siswa paling produktif.',
+                                icon: Medal,
+                                tone: 'violet',
+                            },
+                        ]}
+                        lanes={[
+                            {
+                                label: 'Create',
+                                title: 'Siswa mengirim karya',
+                                description:
+                                    'Jumlah submitted menjadi sinyal aktivitas kreatif siswa.',
+                                value: numberFormatter.format(
+                                    stats.portfolioSubmittedCount,
+                                ),
+                                icon: UploadCloud,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Lead',
+                                title: 'Top creator teridentifikasi',
+                                description:
+                                    'Daftar leader membantu guru memberi apresiasi dan bimbingan.',
+                                value: numberFormatter.format(leaderCount),
+                                icon: Medal,
+                                tone: 'violet',
+                            },
+                            {
+                                label: 'Feature',
+                                title: 'Karya pilihan muncul ke permukaan',
+                                description:
+                                    'Featured live memperlihatkan karya yang paling siap disorot.',
+                                value: numberFormatter.format(
+                                    portfolioDesk.featuredCount,
+                                ),
+                                icon: Sparkles,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Publish',
+                                title: 'Karya live menjadi bukti capaian',
+                                description:
+                                    'Karya yang sudah tayang menguatkan rekam jejak belajar siswa.',
+                                value: numberFormatter.format(
+                                    liveRecentCount ||
+                                        stats.portfolioPublishedCount,
+                                ),
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                        ]}
+                    />
+
                     <div className="space-y-4">
                         <AdminSectionIntro
                             eyebrow="Top Students"

@@ -10,6 +10,10 @@ Route::middleware(TrackPublicPageVisit::class)->controller(PublicSiteController:
     Route::get('/profil', 'profile')->name('profile');
     Route::get('/akademik', 'akademik')->name('akademik');
     Route::get('/kesiswaan', 'kesiswaan')->name('kesiswaan');
+    Route::get('/kesiswaan/osis-mpk', 'osisMpk')->name('kesiswaan.osis-mpk');
+    Route::get('/kesiswaan/prestasi-siswa', 'prestasiSiswa')->name('kesiswaan.prestasi-siswa');
+    Route::get('/kesiswaan/beasiswa', 'beasiswa')->name('kesiswaan.beasiswa');
+    Route::get('/kesiswaan/bimbingan-konseling', 'bimbinganKonseling')->name('kesiswaan.bimbingan-konseling');
     Route::get('/ppdb', 'ppdb')->name('ppdb');
     Route::get('/media', 'media')->name('media');
     Route::get('/layanan', 'layanan')->name('layanan');

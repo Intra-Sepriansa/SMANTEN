@@ -50,6 +50,7 @@ import {
     AlumniAngkatanChart,
     CategoryPieChart,
 } from '@/components/charts/school-charts';
+import { AdvancedMenuStage } from '@/components/public/advanced-menu-stage';
 import { AlumniLocationPicker } from '@/components/public/alumni-location-picker';
 import { AnimatedCounter } from '@/components/public/animated-counter';
 import { BorderGlow } from '@/components/public/border-glow';
@@ -1102,6 +1103,15 @@ export default function AlumniPage({
 
     const totalLikes = allThreads.reduce((s, t) => s + t.likesCount, 0);
     const uniqueYears = new Set(allThreads.map((t) => t.graduationYear)).size;
+    const verifiedCount = allThreads.filter(
+        (thread) => thread.profile?.isVerified || thread.isVerified,
+    ).length;
+    const mentorshipCount = allThreads.filter(
+        (thread) => thread.isOpenToMentor || thread.mentorshipBadge,
+    ).length;
+    const hiringSignalCount = allThreads.filter(
+        (thread) => thread.hasHiringInfo || thread.hiringBadge,
+    ).length;
 
     const featuredThread =
         filteredThreads.find((t) => t.isFeatured) ??
@@ -1618,6 +1628,94 @@ export default function AlumniPage({
                         </div>
                     </motion.div>
                 </motion.section>
+
+                <AdvancedMenuStage
+                    tone="violet"
+                    eyebrow="Alumni network command"
+                    title="Forum alumni dibuat sebagai jaringan cerita, karir, dan mentoring."
+                    description="Halaman alumni sekarang menonjolkan koneksi lintas angkatan, sinyal karir, lokasi, apresiasi, dan ruang kontribusi cerita dalam pengalaman yang lebih interaktif."
+                    metrics={[
+                        {
+                            label: 'Total Cerita',
+                            value: `${allThreads.length}`,
+                            helper: 'Gabungan cerita forum dan profil alumni.',
+                            icon: Users,
+                        },
+                        {
+                            label: 'Forum Live',
+                            value: `${liveForumPosts.length}`,
+                            helper: 'Post asli yang masuk ke forum alumni.',
+                            icon: MessageSquare,
+                        },
+                        {
+                            label: 'Apresiasi',
+                            value: `${totalLikes}`,
+                            helper: 'Total suka dari seluruh cerita.',
+                            icon: Heart,
+                        },
+                        {
+                            label: 'Angkatan',
+                            value: `${uniqueYears}`,
+                            helper: 'Rentang kelulusan yang terhubung.',
+                            icon: GraduationCap,
+                        },
+                    ]}
+                    steps={[
+                        {
+                            label: '01',
+                            title: 'Temukan Alumni',
+                            description:
+                                'Filter angkatan, kota, kampus, profesi, dan kategori cerita.',
+                            icon: Search,
+                        },
+                        {
+                            label: '02',
+                            title: 'Baca Jejak',
+                            description:
+                                'Cerita karir, kampus, inspirasi, dan pengalaman alumni disusun sebagai feed.',
+                            icon: MessageSquare,
+                        },
+                        {
+                            label: '03',
+                            title: 'Bangun Koneksi',
+                            description:
+                                'Sinyal mentoring, hiring, lokasi, dan profil terverifikasi dibuat lebih terlihat.',
+                            icon: BadgeCheck,
+                        },
+                        {
+                            label: '04',
+                            title: 'Tulis Cerita',
+                            description:
+                                'Alumni bisa mengirim cerita baru lewat alur form multi-step.',
+                            icon: PenLine,
+                        },
+                    ]}
+                    signals={[
+                        {
+                            label: 'Verified',
+                            value: `${verifiedCount}`,
+                        },
+                        {
+                            label: 'Mentor',
+                            value: `${mentorshipCount}`,
+                        },
+                        {
+                            label: 'Hiring',
+                            value: `${hiringSignalCount}`,
+                        },
+                        {
+                            label: 'Filter',
+                            value:
+                                filteredThreads.length === allThreads.length
+                                    ? 'Semua'
+                                    : `${filteredThreads.length}`,
+                        },
+                        {
+                            label: 'Lokasi',
+                            value: `${allThreads.filter(hasGeoLocation).length}`,
+                        },
+                    ]}
+                />
 
                 {/* ═══════════════════ STATS BAR ═══════════════════ */}
                 <div className="relative z-20 mx-auto -mt-6 max-w-7xl px-4 sm:px-6 lg:-mt-8">

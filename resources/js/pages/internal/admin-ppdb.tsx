@@ -1,5 +1,14 @@
 import { Head } from '@inertiajs/react';
-import { Download, LayoutDashboard, Sparkles } from 'lucide-react';
+import {
+    CheckCircle2,
+    ClipboardList,
+    Download,
+    FileSearch,
+    LayoutDashboard,
+    ShieldCheck,
+    Sparkles,
+} from 'lucide-react';
+import { AdminAdvancedCommandCenter } from '@/components/internal/admin/admin-advanced-command-center';
 import {
     AdminPanel,
     AdminWorkspaceShell,
@@ -22,6 +31,19 @@ type AdminPpdbProps = {
 
 export default function AdminPpdb({ stats, ppdbDesk }: AdminPpdbProps) {
     const numberFormatter = new Intl.NumberFormat('id-ID');
+    const documentRiskCount = ppdbDesk.applications.filter(
+        (application) => application.documentsSummary.rejected > 0,
+    ).length;
+    const readyDecisionCount = ppdbDesk.applications.filter(
+        (application) =>
+            application.status === 'verified' ||
+            application.status === 'eligible',
+    ).length;
+    const trackCount = new Set(
+        ppdbDesk.applications
+            .map((application) => application.trackType)
+            .filter(Boolean),
+    ).size;
 
     return (
         <>
@@ -67,6 +89,95 @@ export default function AdminPpdb({ stats, ppdbDesk }: AdminPpdbProps) {
                 ]}
             >
                 <section className="space-y-4">
+                    <AdminAdvancedCommandCenter
+                        eyebrow="Selection command"
+                        title="PPDB dipantau sebagai pipeline verifikasi."
+                        description="Status pendaftar, risiko berkas, jalur masuk, dan kesiapan keputusan ditampilkan sebagai ringkasan operasional sebelum admin masuk ke daftar detail."
+                        icon={ClipboardList}
+                        metrics={[
+                            {
+                                label: 'Pendaftar',
+                                value: numberFormatter.format(
+                                    ppdbDesk.applications.length,
+                                ),
+                                helper: 'Total data dalam meja PPDB.',
+                                icon: ClipboardList,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Siap Putuskan',
+                                value: numberFormatter.format(
+                                    readyDecisionCount,
+                                ),
+                                helper: 'Status verified atau eligible.',
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Risiko Berkas',
+                                value: numberFormatter.format(
+                                    documentRiskCount,
+                                ),
+                                helper: 'Ada dokumen yang ditolak.',
+                                icon: FileSearch,
+                                tone: 'rose',
+                            },
+                            {
+                                label: 'Jalur Aktif',
+                                value: numberFormatter.format(trackCount),
+                                helper: 'Variasi jalur pada data masuk.',
+                                icon: ShieldCheck,
+                                tone: 'amber',
+                            },
+                        ]}
+                        lanes={[
+                            {
+                                label: 'Intake',
+                                title: 'Data pendaftaran baru masuk',
+                                description:
+                                    'Nama, jalur, kontak, sekolah asal, dan alamat siap dicari dari panel filter.',
+                                value: numberFormatter.format(
+                                    stats.ppdbSubmittedCount,
+                                ),
+                                icon: ClipboardList,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Review',
+                                title: 'Berkas dan status perlu dicek',
+                                description:
+                                    'Antrian under review dan dokumen bermasalah menjadi prioritas panitia.',
+                                value: numberFormatter.format(
+                                    stats.ppdbUnderReviewCount,
+                                ),
+                                icon: FileSearch,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Decision',
+                                title: 'Calon siswa siap diputuskan',
+                                description:
+                                    'Status verified atau eligible bisa langsung diarahkan ke evaluasi hasil.',
+                                value: numberFormatter.format(
+                                    readyDecisionCount,
+                                ),
+                                icon: CheckCircle2,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Result',
+                                title: 'Hasil penerimaan terpantau',
+                                description:
+                                    'Jumlah diterima tetap terlihat berdampingan dengan pipeline pendaftar.',
+                                value: numberFormatter.format(
+                                    stats.ppdbAcceptedCount,
+                                ),
+                                icon: ShieldCheck,
+                                tone: 'violet',
+                            },
+                        ]}
+                    />
+
                     <AdminPanel className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <div className="text-sm font-semibold text-neutral-950 dark:text-white">

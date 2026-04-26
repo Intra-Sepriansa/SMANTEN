@@ -1,5 +1,14 @@
 import { Head } from '@inertiajs/react';
-import { GraduationCap, LayoutDashboard, Users } from 'lucide-react';
+import {
+    Building2,
+    Crown,
+    GraduationCap,
+    LayoutDashboard,
+    Network,
+    ShieldCheck,
+    Users,
+} from 'lucide-react';
+import { AdminAdvancedCommandCenter } from '@/components/internal/admin/admin-advanced-command-center';
 import {
     AdminPanel,
     AdminSectionIntro,
@@ -46,6 +55,9 @@ export default function AdminOrganization({
     organizationDesk,
 }: AdminOrganizationProps) {
     const numberFormatter = new Intl.NumberFormat('id-ID');
+    const currentRecentCount = organizationDesk.recentAssignments.filter(
+        (assignment) => assignment.isCurrent,
+    ).length;
 
     return (
         <>
@@ -107,6 +119,98 @@ export default function AdminOrganization({
                 ]}
             >
                 <section className="grid gap-6">
+                    <AdminAdvancedCommandCenter
+                        eyebrow="Structure command"
+                        title="Organisasi dipantau sebagai peta jabatan aktif."
+                        description="Unit, posisi, current assignment, dan scope organisasi disatukan supaya admin bisa menjaga struktur tetap rapi dan publik tetap melihat data terbaru."
+                        icon={Network}
+                        metrics={[
+                            {
+                                label: 'Assignment',
+                                value: numberFormatter.format(
+                                    stats.activeOrganizationCount,
+                                ),
+                                helper: 'Data organisasi aktif.',
+                                icon: Network,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Current',
+                                value: numberFormatter.format(
+                                    stats.currentOrganizationCount,
+                                ),
+                                helper: 'Pemegang posisi saat ini.',
+                                icon: Crown,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Unit',
+                                value: numberFormatter.format(
+                                    organizationDesk.activeUnitCount,
+                                ),
+                                helper: 'Area organisasi berjalan.',
+                                icon: Building2,
+                                tone: 'amber',
+                            },
+                            {
+                                label: 'Posisi',
+                                value: numberFormatter.format(
+                                    organizationDesk.uniquePositionCount,
+                                ),
+                                helper: 'Jenis posisi unik.',
+                                icon: ShieldCheck,
+                                tone: 'violet',
+                            },
+                        ]}
+                        lanes={[
+                            {
+                                label: 'Scope',
+                                title: 'Struktur dipisah menurut area',
+                                description:
+                                    'Manajemen sekolah dan organisasi siswa bisa dibaca dari sebaran scope.',
+                                value: numberFormatter.format(
+                                    organizationDesk.scopeMix.length,
+                                ),
+                                icon: Building2,
+                                tone: 'sky',
+                            },
+                            {
+                                label: 'Role',
+                                title: 'Posisi dan unit dibuat jelas',
+                                description:
+                                    'Total posisi dan posisi unik membantu audit struktur organisasi.',
+                                value: numberFormatter.format(
+                                    organizationDesk.positionCount,
+                                ),
+                                icon: ShieldCheck,
+                                tone: 'violet',
+                            },
+                            {
+                                label: 'Current',
+                                title: 'Assignment aktif diprioritaskan',
+                                description:
+                                    'Recent assignment yang current menjadi sinyal data siap tampil publik.',
+                                value: numberFormatter.format(
+                                    currentRecentCount ||
+                                        stats.currentOrganizationCount,
+                                ),
+                                icon: Crown,
+                                tone: 'emerald',
+                            },
+                            {
+                                label: 'Publish',
+                                title: 'Halaman publik siap diaudit',
+                                description:
+                                    'Admin bisa langsung membuka tampilan organisasi dari sisi website.',
+                                value: numberFormatter.format(
+                                    organizationDesk.recentAssignments.length,
+                                ),
+                                icon: Users,
+                                tone: 'amber',
+                            },
+                        ]}
+                    />
+
                     <div className="space-y-4">
                         <AdminSectionIntro
                             eyebrow="Structure Mix"
@@ -127,7 +231,9 @@ export default function AdminOrganization({
                                             </div>
                                         </div>
                                         <div className="text-2xl font-bold text-(--school-green-700) dark:text-(--school-green-300)">
-                                            {numberFormatter.format(scope.count)}
+                                            {numberFormatter.format(
+                                                scope.count,
+                                            )}
                                         </div>
                                     </div>
                                 </AdminPanel>
